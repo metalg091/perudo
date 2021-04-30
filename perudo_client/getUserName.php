@@ -21,11 +21,10 @@
         }
         $sql = "SELECT cycle, playersInGame FROM game WHERE id = 0";
 	    $result = mysqli_query($conn, $sql);
-
         if (mysqli_num_rows($result) > 0) {
             $row = mysqli_fetch_assoc($result);
+            $into = $row["playersInGame"] + 1;
             if ($row["cycle"] == 1){
-                $into = $row["playersInGame"] + 1;
                 $sql = "UPDATE game SET name = '" . $_GET["username"] . "' where id = " . $into;
                 if (mysqli_query($conn, $sql)) {
                     echo "user registered succesfully";
@@ -35,7 +34,7 @@
                         $whatnow = 0;
                     }
                     else {
-                        echo "system message wasn't passed down";
+                        echo 'system message was not passed down';
                         $whatnow = 1;
                     }
                 }
@@ -79,14 +78,6 @@
     <h2>Ur numbers</h2>
     <p id="numbers">------</p>
     <h1>Please wait until your are registered!!!! (user registration in progress...)</h1>
-    <!--<form action="server_connecter.php" method="post">
-        <label for="guess">Your guess:</label>
-        <input type="radio" name="iguess" value="doubt">Doubt
-        <input type="radio" name="iguess" value="equal">Equal
-        <input type="radio" name="iguess">Number
-        <input type="text" id="guess" name="guess"><br><br>
-        <input type="submit" value="Submit">
-    </form>-->
     <script type="text/javascript">
         function listOfOthers(names){
             var list = document.createElement('ul');
@@ -99,16 +90,37 @@
         }
         var username = '<?php echo $_GET["username"]; ?>';
         document.getElementById("username").innerHTML = username;
+        
         var reload = '<?php echo $whatnow; ?>';
+        var id = '<?php echo $into; ?>';
         if(reload == 0){
-            location.href = "waitingForTurn.php?username="<?php echo $username; ?>;
+            location.href = 'waitingForTurn.php?id=' + id + '&username=' + username;
         }
         else {
             setTimeout(function(){location.reload()}, 15000);
         }
-        var array = new Array();
-        array = <?php echo $outOthers; ?>;
-        document.getElementById("others").appendChild(listOfOthers(array));
+        
+        var array = arraymaker('<?php echo $outOthers; ?>');
+        document.getElementById("others").appendChild(tableGenrator(array));
+        function tableGenrator (names){
+            var table = document.createElement("table");
+            for(let i = 0; i < names.length; i++){
+                var row = document.createElement("tr");
+                var tdname = document.createElement("td");
+                var textname = document.createTextNode(names[i]);
+                tdname.appendChild(textname);
+                row.appendChild(tdname);
+                table.appendChild(row);
+            }
+            return table;
+        }
+        function arraymaker(newarray){ //makes array from php string output
+            newarray = newarray.replace("[", "");
+            newarray = newarray.replace("]", "");
+            newarray = newarray.replaceAll('"', "");
+            newarray = newarray.split(",");
+            return newarray;
+        }
     </script>
 </body>
 </html>
