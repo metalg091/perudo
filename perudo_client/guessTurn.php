@@ -1,6 +1,7 @@
 <html>
 <head>
-    <link rel="stylesheet" href="dark_theme.css">
+    <link rel="stylesheet" href="dark_theme.css" id="theme">
+    <link rel="stylesheet" href="button.css">
     <?php 
         $servername = "localhost";
         $username = "root";
@@ -13,8 +14,7 @@
         $sql = "SELECT playersInGame, cPlayerId FROM game WHERE id = 0";
         $result = mysqli_query($conn, $sql);
         $row = mysqli_fetch_assoc($result);
-        $cpi = $row["cPlayerId"];
-        $sql = "SELECT name, cubes, guess FROM game WHERE id BETWEEN 1 AND " . $row['playersInGame'];
+        $sql = "SELECT name, cubes FROM game WHERE id BETWEEN 1 AND " . $row['playersInGame'];
         $result = mysqli_query($conn, $sql);
         if (mysqli_num_rows($result) > 0){
             $others = Array();
@@ -32,16 +32,14 @@
         $sql = "SELECT cubes, numbers FROM game WHERE id = " . $_GET["id"];
         $result = mysqli_query($conn, $sql);
         $row = mysqli_fetch_assoc($result);
-        if($cpi == $_GET["id"]){
-            $whatnow = true;
-        }
-        else{
-            $whatnow = false;
-        }
         mysqli_close($conn);
     ?>
 </head>
 <body>
+<label class="switch">
+    <input class="toggle-state" type="checkbox" name="check" value="check" onchange="themeSwitch()"/><div></div>
+</label>
+
     <h2>Your name</h2>
     <h3 id="username"></h3>
     <h2>Other players</h2>
@@ -59,21 +57,16 @@
         <input type="text" id="guess" name="guess"><br><br>
         <input type="submit" value="Submit">
     </form>
+    <button onclick="document.getElementById('eventGetter').src += '';">refresh</button>
     <iframe src="eventGetter.php" id="eventGetter" width="100%" height="1000px">
     </iframe>
     <script defer type="text/javascript">
+        var theme = 0;
+        var id = '<?php echo $_GET["id"] ?>';
         var username = '<?php echo $_GET["username"]; ?>'; //getting info specific to this user
-        document.getElementById("username").innerHTML = username + " your id is " + '<?php echo $_GET["id"] ?>';
+        document.getElementById("username").innerHTML = username + " your id is " + id;
         var nums = '<?php echo $row["numbers"]; ?>';
         document.getElementById("urnumbers").innerHTML = nums;
-
-        var reload = '<?php echo $whatnow; ?>'; //php runner, redirecter
-        if(reload){
-            location.href = 'guessTurn.php?id=' + id + '&username=' + username;
-        }
-        else {
-            setTimeout(function(){location.reload()}, 15000);
-        }
 
         arrayc = arraymaker('<?php echo $outCubesOfOthers; ?>'); //get info from other players
         var array = arraymaker('<?php echo $outOthers; ?>');
@@ -109,6 +102,17 @@
                 sol = sol + parseInt(num[i]);
             }
             return sol;
+        }
+
+        function themeSwitch(){
+            if(theme == 0){
+                document.getElementById("theme").setAttribute("href", "light_theme.css");3
+                theme++;
+            }
+            else{
+                document.getElementById("theme").setAttribute("href", "dark_theme.css");
+                theme--;
+            }
         }
     </script>
 </body>

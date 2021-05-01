@@ -16,7 +16,7 @@
         $result = mysqli_query($conn, $sql);
         $row = mysqli_fetch_assoc($result);
         $cpi = $row["cPlayerId"];
-        $sql = "SELECT name, cubes, guess FROM game WHERE id BETWEEN 1 AND " . $row['playersInGame'];
+        $sql = "SELECT name, cubes FROM game WHERE id BETWEEN 1 AND " . $row['playersInGame'];
         $result = mysqli_query($conn, $sql);
         if (mysqli_num_rows($result) > 0){
             $others = Array();
@@ -52,8 +52,9 @@
     <h2>Ur numbers</h2>
     <p id="urnumbers">------</p>
     <script defer type="text/javascript">
+        var id = '<?php echo $_GET["id"] ?>'
         var username = '<?php echo $_GET["username"]; ?>'; //getting info specific to this user
-        document.getElementById("username").innerHTML = username + " your id is " + '<?php echo $_GET["id"] ?>';
+        document.getElementById("username").innerHTML = username + " your id is " + id;
         var nums = '<?php echo $row["numbers"]; ?>';
         document.getElementById("urnumbers").innerHTML = nums;
 
