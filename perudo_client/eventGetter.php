@@ -55,60 +55,50 @@
         var arrayOfGuess = arraymaker('<?php echo $outGuess; ?>');
         var arrayOfINames = []
         for (var i = 0; i < arrayOfIde.length; i++){
-            arrayOfINames[i] = arrayOfNames[arrayOfIde[i]-1]; 
+            if (arrayOfIde[i] == 0){
+                arrayOfINames[i] = 0;
+            }
+            else{
+                arrayOfINames[i] = arrayOfNames[arrayOfIde[i]-1]; 
+            }
         }
         document.getElementById("event").appendChild(tableGenrator(arrayOfINames, arrayOfGuess));
         function tableGenrator (names, guess){
             var table = document.createElement("table");
             for(let i = 0; i < names.length; i++){
-                if(names == "0"){
-
-                }
-                if(!isNaN(parseInt(guess[i]))){
+                if(names[i] == "0"){
+                    switch(guess[i]){
+                        case "-1":
+                            var CubeEvent = "lost a Cube";
+                            break;
+                        case "-2":
+                            var CubeEvent = "lost all of their cubes";
+                            break;
+                        case "1":
+                            var CubeEvent = "Got an extra cube";
+                            break;
+                    }
                     var row = document.createElement("tr");
                     var tdname = document.createElement("td");
                     var tdguess = document.createElement("td");
                     var tdtext = document.createElement("td");
-                    var textguess = document.createTextNode(guess[i]);
-                    var textname = document.createTextNode(names[i]);
-                    var text = document.createTextNode("guessed");
+                    var textguess = document.createTextNode(CubeEvent);
+                    var textname = document.createTextNode(names[i-1]);
                     tdname.appendChild(textname);
-                    tdtext.appendChild(text);
                     tdguess.appendChild(textguess);
                     row.appendChild(tdname);
-                    row.appendChild(tdtext);
                     row.appendChild(tdguess);
                     table.appendChild(row);
                 }
                 else{
-                    if(guess[i] == "doubt"){
+                    if(!isNaN(parseInt(guess[i]))){
                         var row = document.createElement("tr");
                         var tdname = document.createElement("td");
                         var tdguess = document.createElement("td");
                         var tdtext = document.createElement("td");
-                        var tdfrom = document.createElement("td");
-                        var textguess = document.createTextNode(guess[i-1]);
+                        var textguess = document.createTextNode(guess[i]);
                         var textname = document.createTextNode(names[i]);
-                        var textfromname = document.createTextNode("from " + names[i-1]);
-                        var text = document.createTextNode("doubted the ");
-                        tdname.appendChild(textname);
-                        tdtext.appendChild(text);
-                        tdguess.appendChild(textguess);
-                        tdfrom.appendChild(textfromname);
-                        row.appendChild(tdname);
-                        row.appendChild(tdtext);
-                        row.appendChild(tdguess);
-                        row.appendChild(tdfrom);
-                        table.appendChild(row);
-                    }
-                    else if(guess[i] == "equal"){
-                        var row = document.createElement("tr");
-                        var tdname = document.createElement("td");
-                        var tdguess = document.createElement("td");
-                        var tdtext = document.createElement("td");
-                        var textguess = document.createTextNode(guess[i-1]);
-                        var textname = document.createTextNode(names[i]);
-                        var text = document.createTextNode("thinks there are exactly ");
+                        var text = document.createTextNode("guessed");
                         tdname.appendChild(textname);
                         tdtext.appendChild(text);
                         tdguess.appendChild(textguess);
@@ -118,7 +108,45 @@
                         table.appendChild(row);
                     }
                     else{
-                        break;
+                        if(guess[i] == "doubt"){
+                            var row = document.createElement("tr");
+                            var tdname = document.createElement("td");
+                            var tdguess = document.createElement("td");
+                            var tdtext = document.createElement("td");
+                            var tdfrom = document.createElement("td");
+                            var textguess = document.createTextNode(guess[i-1]);
+                            var textname = document.createTextNode(names[i]);
+                            var textfromname = document.createTextNode("from " + names[i-1]);
+                            var text = document.createTextNode("doubted the ");
+                            tdname.appendChild(textname);
+                            tdtext.appendChild(text);
+                            tdguess.appendChild(textguess);
+                                tdfrom.appendChild(textfromname);
+                            row.appendChild(tdname);
+                            row.appendChild(tdtext);
+                            row.appendChild(tdguess);
+                            row.appendChild(tdfrom);
+                            table.appendChild(row);
+                        }
+                        else if(guess[i] == "equal"){
+                            var row = document.createElement("tr");
+                            var tdname = document.createElement("td");
+                            var tdguess = document.createElement("td");
+                            var tdtext = document.createElement("td");
+                            var textguess = document.createTextNode(guess[i-1]);
+                            var textname = document.createTextNode(names[i]);
+                            var text = document.createTextNode("thinks there are exactly ");
+                            tdname.appendChild(textname);
+                            tdtext.appendChild(text);
+                            tdguess.appendChild(textguess);
+                            row.appendChild(tdname);
+                            row.appendChild(tdtext);
+                            row.appendChild(tdguess);
+                            table.appendChild(row);
+                        }
+                        else{
+                            break;
+                        }
                     }
                 }
             }

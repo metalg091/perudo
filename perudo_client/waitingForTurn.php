@@ -12,10 +12,11 @@
         if (!$conn){
             die("Connection failed: " . mysqli_connect_error());
         }
-        $sql = "SELECT playersInGame, cPlayerId FROM game WHERE id = 0";
+        $sql = "SELECT playersInGame, cPlayerId, cycle FROM game WHERE id = 0";
         $result = mysqli_query($conn, $sql);
         $row = mysqli_fetch_assoc($result);
         $cpi = $row["cPlayerId"];
+        $cycle = $row["cycle"];
         $sql = "SELECT name, cubes FROM game WHERE id BETWEEN 1 AND " . $row['playersInGame'];
         $result = mysqli_query($conn, $sql);
         if (mysqli_num_rows($result) > 0){
@@ -34,7 +35,7 @@
         $sql = "SELECT cubes, numbers FROM game WHERE id = " . $_GET["id"];
         $result = mysqli_query($conn, $sql);
         $row = mysqli_fetch_assoc($result);
-        if($cpi == $_GET["id"]){
+        if($cpi == $_GET["id"] && $cycle == 1){
             $whatnow = true;
         }
         else{
