@@ -8,63 +8,52 @@ namespace perudo
     {
         static void Main(string[] args)
         {
-            int ingame = 6;
-            Player player1 = new Player(); //registers 6 players, hardcoded
-            Player player2 = new Player();
-            Player player3 = new Player();
-            Player player4 = new Player();
-            Player player5 = new Player();
-            Player player6 = new Player();
-            var pid = new List<string> ();
-            var players = new List<Player> ();
-            while (Convert.ToBoolean(Console.ReadLine()))
+            Console.WriteLine("Enter the expected number of players!");
+            int ingame = Convert.ToInt32(Console.ReadLine());
+            var players = new List<Player>();
+            for (int i = 0; i < ingame; i++)
             {
-                SqlHandler.RegisteHandler();
+                int u = i + 1;
+                players.Add(new Player() { id = u });
             }
-            for (int i = 0; i < 6; i++) //gets did (names) of each player
+            List<string> names = new List<string>();
+            SqlHandler.GetUsernames(ref names);
+            for (int i = 0; i < ingame; i++) //gets did (names) of each player
             {
-                Console.WriteLine("Enter player " + Convert.ToInt32(i + 1));
+                /*Console.WriteLine("Enter player " + Convert.ToInt32(i + 1));
                 string a = Console.ReadLine();
                 if (a == "")
                 {
-                    pid.Add("ai"); //nameless player automatically an AI
+                    pname.Add("ai"); //nameless player automatically an AI
                 }
                 else
                 {
-                    pid.Add(a);
+                    pname.Add(a);
+                }*/
+                try
+                {
+                    players[i].name = names[i];
+                }
+                catch
+                {
+                    players[i].name = "ai";
                 }
             }
-            player1.did = pid[0]; //assign names
-            player2.did = pid[1];
-            player3.did = pid[2];
-            player4.did = pid[3];
-            player5.did = pid[4];
-            player6.did = pid[5];
-            player1.id = 1;
-            player2.id = 2;
-            player3.id = 3;
-            player4.id = 4;
-            player5.id = 5;
-            player6.id = 6;
-            players.Add(player1); //Adds players to a list
-            players.Add(player2);
-            players.Add(player3);
-            players.Add(player4);
-            players.Add(player5);
-            players.Add(player6);
             Player cplayer = players[0];
             int cpc = 0;
             Player lplayer = null;
-            foreach (Player f in players) //debug
+            List<string> numsOfPlayers = new List<string>();
+            foreach (Player f in players)
             {
+                numsOfPlayers.Add("0");
                 for (int i = 0; i < f.cubes; i++)
                 {
                     f.nums.Add(0);
-                    Console.WriteLine("num has been added to player" + f.id);
+                    //Console.WriteLine("num has been added to player" + f.id);
                 }
-                Console.WriteLine("its the after one " + f.nums);
+                //Console.WriteLine("its the after one " + f.nums);
             }
-            int cubesingame = player1.cubes * 6;
+            int cubesingame = players[0].cubes * 6; //end of setup
             while (ingame > 1) //separate first round cuz lack of lastplayer
             {
                 int lastguess = 10; //can't guess less the 1 piece of 1
@@ -75,12 +64,8 @@ namespace perudo
                 int n4 = 0;
                 int n5 = 0;
                 int n6 = 0;
-                roll.Roll(ref player1,
-                          ref player2,
-                          ref player3,
-                          ref player4,
-                          ref player5,
-                          ref player6,
+                roll.Roll(ref players,
+                          ref numsOfPlayers,
                           ref n1,
                           ref n2,
                           ref n3,
@@ -89,13 +74,14 @@ namespace perudo
                           ref n6);
                 int guessround = 0;
                 cplayer = players[cpc];
-                if (cplayer.did == "ai") //search for ai players
+                if (cplayer.name == "ai") //search for ai players
                 {
                     Ai.Aihandler(cubesingame, ref cplayer, ref lplayer, ref lastguess, n1, n2, n3, n4, n5, n6);
                 }
                 else
                 {
-                    Interact.UserInteract(ref cplayer, ref lplayer, ref lastguess, n1, n2, n3, n4, n5, n6, frun);
+                    //Interact.UserInteract(ref cplayer, ref lplayer, ref lastguess, n1, n2, n3, n4, n5, n6, frun);
+                    InteractOnline.ClientInteract(ref cplayer, ref lplayer, ref lastguess, n1, n2, n3, n4, n5, n6, frun);
                 }
                 lplayer = cplayer;
                 frun = false;
@@ -112,13 +98,14 @@ namespace perudo
                 {
                     int before = cplayer.cubes;
                     int lastbefore = lplayer.cubes;
-                    if (cplayer.did == "ai") // search for ai players
+                    if (cplayer.name == "ai") // search for ai players
                     {
                         Ai.Aihandler(cubesingame, ref cplayer, ref lplayer, ref lastguess, n1, n2, n3, n4, n5, n6);
                     }
                     else
                     {
-                        Interact.UserInteract(ref cplayer, ref lplayer, ref lastguess, n1, n2, n3, n4, n5, n6, frun);
+                        //Interact.UserInteract(ref cplayer, ref lplayer, ref lastguess, n1, n2, n3, n4, n5, n6, frun);
+                        InteractOnline.ClientInteract(ref cplayer, ref lplayer, ref lastguess, n1, n2, n3, n4, n5, n6, frun);
                     }
                     if (lplayer.cubes < 1) //checks if previous player is out of the game
                     {
@@ -148,7 +135,7 @@ namespace perudo
                     {
                         cplayer.nums.RemoveAt(cplayer.cubes);
                         guessround++;
-                        Console.WriteLine(cplayer.id + " has only " + cplayer.cubes + " cubes remaining");
+                        Console.WriteLine(cplayer.name + " has only " + cplayer.cubes + " cubes remaining");
                         cubesingame -= 1;
                     }
                     else if (lplayer.cubes < lastbefore) //checks for cube loss
@@ -156,13 +143,13 @@ namespace perudo
                         lplayer.nums.RemoveAt(lplayer.cubes);
                         cpc = players.IndexOf(lplayer);
                         guessround++;
-                        Console.WriteLine(lplayer.id + " has only " + lplayer.cubes + " cubes remaining");
+                        Console.WriteLine(lplayer.name + " has only " + lplayer.cubes + " cubes remaining");
                         cubesingame -= 1;
                     }
                     else if (cplayer.cubes > before)
                     {
                         guessround++;
-                        Console.WriteLine(cplayer.id + " own " + cplayer.cubes + " cubes now");
+                        Console.WriteLine(cplayer.name + " own " + cplayer.cubes + " cubes now");
                     }
                     else
                     {
@@ -179,7 +166,7 @@ namespace perudo
                     }
                 }
             }
-            Console.WriteLine(players[0].id + " has won");
+            Console.WriteLine(players[0].name + " has won");
         }
 
     }

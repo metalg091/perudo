@@ -17,7 +17,7 @@ namespace perudo
                                           int n6,
                                           bool frun)
         {
-            Console.WriteLine("Player " + cplayer.id + " please enter your guess!");
+            Console.WriteLine("Player " + cplayer.name + " please enter your guess!");
             foreach (int g in cplayer.nums)
             {
                 Console.WriteLine(g);

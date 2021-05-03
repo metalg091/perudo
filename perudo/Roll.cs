@@ -6,12 +6,8 @@ namespace perudo
 {
     class roll
     {
-        public static void Roll(ref Player player1,
-                                ref Player player2,
-                                ref Player player3,
-                                ref Player player4,
-                                ref Player player5,
-                                ref Player player6,
+        public static void Roll(ref List<Player> players, 
+                                ref List<string> numbers,
                                 ref int n1,
                                 ref int n2,
                                 ref int n3,
@@ -19,166 +15,42 @@ namespace perudo
                                 ref int n5,
                                 ref int n6)
         {
-            for (int i = 0; i < player1.cubes; i++) //generates random numbers for player1, stores and counts them
+            foreach (var user in players)
             {
-                var rnd = new Random();
-                int a = rnd.Next(1, 7);
-                player1.nums[i] = a;
-                switch(a)
+                for (int i = 0; i < user.cubes; i++)
                 {
-                    case 1:
-                        n1++;
-                        break;
-                    case 2:
-                        n2++;
-                        break;
-                    case 3:
-                        n3++;
-                        break;
-                    case 4:
-                        n4++;
-                        break;
-                    case 5:
-                        n5++;
-                        break;
-                    case 6:
-                        n6++;
-                        break;
+                    var rnd = new Random();
+                    int a = rnd.Next(1, 7);
+                    user.nums[i] = a;
+                    switch (a)
+                    {
+                        case 1:
+                            n1++;
+                            break;
+                        case 2:
+                            n2++;
+                            break;
+                        case 3:
+                            n3++;
+                            break;
+                        case 4:
+                            n4++;
+                            break;
+                        case 5:
+                            n5++;
+                            break;
+                        case 6:
+                            n6++;
+                            break;
+                    }
                 }
-            }
-            for (int i = 0; i < player2.cubes; i++)
-            {
-                var rnd = new Random();
-                int a = rnd.Next(1, 7);
-                player2.nums[i] = a;
-                switch (a)
+                int k = 0;
+                foreach (var client in players)
                 {
-                    case 1:
-                        n1++;
-                        break;
-                    case 2:
-                        n2++;
-                        break;
-                    case 3:
-                        n3++;
-                        break;
-                    case 4:
-                        n4++;
-                        break;
-                    case 5:
-                        n5++;
-                        break;
-                    case 6:
-                        n6++;
-                        break;
-                }
-            }
-            for (int i = 0; i < player3.cubes; i++)
-            {
-                var rnd = new Random();
-                int a = rnd.Next(1, 7);
-                player3.nums[i] = a;
-                switch (a)
-                {
-                    case 1:
-                        n1++;
-                        break;
-                    case 2:
-                        n2++;
-                        break;
-                    case 3:
-                        n3++;
-                        break;
-                    case 4:
-                        n4++;
-                        break;
-                    case 5:
-                        n5++;
-                        break;
-                    case 6:
-                        n6++;
-                        break;
-                }
-            }
-            for (int i = 0; i < player4.cubes; i++)
-            {
-                var rnd = new Random();
-                int a = rnd.Next(1, 7);
-                player4.nums[i] = a;
-                switch (a)
-                {
-                    case 1:
-                        n1++;
-                        break;
-                    case 2:
-                        n2++;
-                        break;
-                    case 3:
-                        n3++;
-                        break;
-                    case 4:
-                        n4++;
-                        break;
-                    case 5:
-                        n5++;
-                        break;
-                    case 6:
-                        n6++;
-                        break;
-                }
-            }
-            for (int i = 0; i < player5.cubes; i++)
-            {
-                var rnd = new Random();
-                int a = rnd.Next(1, 7);
-                player5.nums[i] = a;
-                switch (a)
-                {
-                    case 1:
-                        n1++;
-                        break;
-                    case 2:
-                        n2++;
-                        break;
-                    case 3:
-                        n3++;
-                        break;
-                    case 4:
-                        n4++;
-                        break;
-                    case 5:
-                        n5++;
-                        break;
-                    case 6:
-                        n6++;
-                        break;
-                }
-            }
-            for (int i = 0; i < player6.cubes; i++)
-            {
-                var rnd = new Random();
-                int a = rnd.Next(1, 7);
-                player6.nums[i] = a;
-                switch (a)
-                {
-                    case 1:
-                        n1++;
-                        break;
-                    case 2:
-                        n2++;
-                        break;
-                    case 3:
-                        n3++;
-                        break;
-                    case 4:
-                        n4++;
-                        break;
-                    case 5:
-                        n5++;
-                        break;
-                    case 6:
-                        n6++;
-                        break;
+                    string number = string.Join("", client.nums);
+                    numbers[k] = number;
+                    k++;
+                    SqlHandler.NumberUploader(client.id, Convert.ToInt32(number));
                 }
             }
         }

@@ -34,7 +34,7 @@ namespace perudo
             conn.Close();
             Console.WriteLine("Done.");
         }*/
-        public static void RegisteHandler()
+        public static List<string> GetUsernames(ref List<string> names)
         {
             string connStr = "server=localhost;user=root;database=perudo;port=3306;password=";
             MySqlConnection conn = new MySqlConnection(connStr);
@@ -43,13 +43,98 @@ namespace perudo
                 Console.WriteLine("Connecting to MySQL...");
                 conn.Open();
 
-                string sql = "UPDATE game SET cycle = 1 WHERE id = 0";
+                string sql = "SELECT playersInGame FROM game WHERE id = 0";
                 MySqlCommand cmd = new MySqlCommand(sql, conn);
                 MySqlDataReader rdr = cmd.ExecuteReader();
-
+                int a = 1;
                 while (rdr.Read())
                 {
-                    Console.WriteLine(rdr[0] + "--" + rdr[1]);
+                    //Console.WriteLine(rdr[0]);
+                    a = Convert.ToInt32(rdr[0]);
+
+                }
+                rdr.Close();
+
+                sql = "SELECT name FROM game WHERE id BETWEEN 1 AND " + a;
+                cmd = new MySqlCommand(sql, conn);
+                rdr = cmd.ExecuteReader();
+                while (rdr.Read())
+                {
+                    //Console.WriteLine(rdr[0]);
+                    names.Add(Convert.ToString(rdr[0]));
+                }
+                rdr.Close();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+            }
+            /*foreach (var player in names)
+            {
+                Console.WriteLine(player);
+            }*/
+            conn.Close();
+            Console.WriteLine("Done.");
+            return names;
+        }
+        public static string GetGuess()
+        {
+            string connStr = "server=localhost;user=root;database=perudo;port=3306;password=";
+            MySqlConnection conn = new MySqlConnection(connStr);
+            bool ClientTurn = true;
+            string guess = "empty";
+            try
+            {
+                while (ClientTurn)
+                {
+                    Console.WriteLine("Connecting to MySQL...");
+                    conn.Open();
+                    if (GetCycle() == 0)
+                    {
+                        ClientTurn = false;
+                        string sql = "SELECT guess FROM eventtable ORDER BY orders DESC LIMIT 1";
+                        MySqlCommand cmd = new MySqlCommand(sql, conn);
+                        MySqlDataReader rdr = cmd.ExecuteReader();
+                        while (rdr.Read())
+                        {
+                            //Console.WriteLine(rdr[0]);
+                            guess = Convert.ToString(rdr[0]);
+
+                        }
+                        rdr.Close();
+                    }
+                    else
+                    {
+                        continue;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+            }
+            conn.Close();
+            Console.WriteLine("Done.");
+            return guess;
+        }
+        private static int GetCycle()
+        {
+            string connStr = "server=localhost;user=root;database=perudo;port=3306;password=";
+            MySqlConnection conn = new MySqlConnection(connStr);
+            int a = 1;
+            try
+            {
+                Console.WriteLine("Connecting to MySQL...");
+                conn.Open();
+
+                string sql = "SELECT cycle FROM game WHERE id = 0";
+                MySqlCommand cmd = new MySqlCommand(sql, conn);
+                MySqlDataReader rdr = cmd.ExecuteReader();
+                while (rdr.Read())
+                {
+                    //Console.WriteLine(rdr[0]);
+                    a = Convert.ToInt32(rdr[0]);
+
                 }
                 rdr.Close();
             }
@@ -58,40 +143,50 @@ namespace perudo
                 Console.WriteLine(ex.ToString());
             }
             conn.Close();
-            Console.WriteLine("SQL connection closed");
-            
-            connStr = "server=localhost;user=root;database=perudo;port=3306;password=";
-            MySqlConnection conn2 = new MySqlConnection(connStr);
-            bool waiting = true;
+            Console.WriteLine("Done.");
+            return a;
+        }
+        public static void SetCycleTo1()
+        {
+            string connStr = "server=localhost;user=root;database=world;port=3306;password=******";
+            MySqlConnection conn = new MySqlConnection(connStr);
             try
             {
                 Console.WriteLine("Connecting to MySQL...");
-                conn2.Open();
-                while (waiting)
-                {
-                    string sql = "SELECT cycle FROM game WHERE id = 0";
-                    MySqlCommand cmd = new MySqlCommand(sql, conn2);
-                    MySqlDataReader rdr = cmd.ExecuteReader();
-                    Console.WriteLine("alive");
-                    while (rdr.Read())
-                    {
-                        //Console.WriteLine(rdr[0] + "--" + rdr[0]);
-                        if(Convert.ToInt32(rdr[0]) != 1)
-                        {
-                            waiting = false;
-                        }
-                        System.Threading.Thread.Sleep(2000);
-                    }
-                    rdr.Close();
-                    
-                }
+                conn.Open();
+
+                string sql = "UPDATE `game` SET `cycle`= 1 WHERE id = 0";
+                MySqlCommand cmd = new MySqlCommand(sql, conn);
+                cmd.ExecuteNonQuery();
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex.ToString());
             }
-            conn2.Close();
-            Console.WriteLine("SQL connection closed");
+
+            conn.Close();
+            Console.WriteLine("Done.");
+        }
+        public static void NumberUploader(int id, int number)
+        {
+            string connStr = "server=localhost;user=root;database=world;port=3306;password=******";
+            MySqlConnection conn = new MySqlConnection(connStr);
+            try
+            {
+                Console.WriteLine("Connecting to MySQL...");
+                conn.Open();
+
+                string sql = "UPDATE `game` SET `numbers`= " + number + " WHERE id =" + id;
+                MySqlCommand cmd = new MySqlCommand(sql, conn);
+                cmd.ExecuteNonQuery();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+            }
+
+            conn.Close();
+            Console.WriteLine("Done.");
         }
     }
 }
