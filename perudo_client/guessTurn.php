@@ -58,9 +58,11 @@
         <label for="guess">Your guess:</label>
         <input type="checkbox" value="<?php echo $_GET["id"]; ?>" name="id" checked style="display: none;">
         <input type="checkbox" value="<?php echo $_GET["username"]; ?>" name="username" checked style="display: none;">
-        <input type="radio" name="iguess" value="1">Doubt
-        <input type="radio" name="iguess" value="2">Equal
-        <input type="radio" name="iguess" value="3" checked>Number
+        <div id="raddiv" style="margin: 20px; display: inline;">
+        <input id="radio1" type="radio" name="iguess" value="1">Doubt
+        <input id="radio2" type="radio" name="iguess" value="2">Equal
+        <input id="radio3" type="radio" name="iguess" value="3" checked>Number
+        </div>
         <!--<input type="text" id="guess" name="guess"><br><br>-->
         <input type="text" value="<?php echo $lastguess; ?>" id="guess" name="guess1" onkeyup="inputValidator()">
         <input type="number" value="1" id="guess1" name="guess2" min="1" max="6" onkeyup="inputValidator()"><br><br>
@@ -81,6 +83,7 @@
         var array = arraymaker('<?php echo $outOthers; ?>');
         document.getElementById("others").appendChild(tableGenrator(array, arrayc));
         document.getElementById("allcubes").innerHTML = getSum(arrayc);
+
         function tableGenrator (names, cubes){
             var table = document.createElement("table");
             for(let i = 0; i < names.length; i++){
@@ -155,6 +158,14 @@
         var number = parseInt(document.getElementById("guess1").value);
         var rellastguess = '<?php echo $rellastguess; ?>';
         var lastguess = '<?php echo $lastguess; ?>';
+        if(rellastguess > 10){
+            
+        }else{
+            rellastguess = 10;
+            lastguess = 0;
+            document.getElementById("raddiv").style.display = "none";
+        }
+        
         var lastguesslastnum = rellastguess - lastguess * 10;
         var relnum = parseInt(times*10+number);
         console.log(rellastguess + " and " + relnum);

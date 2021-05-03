@@ -19,32 +19,25 @@
         if (!$conn){
             die("Connection failed: " . mysqli_connect_error());
         }
-        $sql = "SELECT cycle, playersInGame FROM game WHERE id = 0";
+        $sql = "SELECT playersInGame FROM game WHERE id = 0";
 	    $result = mysqli_query($conn, $sql);
         if (mysqli_num_rows($result) > 0) {
             $row = mysqli_fetch_assoc($result);
             $into = $row["playersInGame"] + 1;
-            if ($row["cycle"] == 1){
-                $sql = "UPDATE game SET name = '" . $_GET["username"] . "' where id = " . $into;
-                if (mysqli_query($conn, $sql)) {
-                    echo "user registered succesfully";
-                    $sql = "UPDATE game SET cycle = 0, playersInGame = '" . $into . "' WHERE id=0";
-                    if (mysqli_query($conn, $sql)) {
-                        echo "<br> done";
-                        $whatnow = 0;
-                    }
-                    else {
-                        echo 'system message was not passed down';
-                        $whatnow = 1;
-                    }
+            $sql = "UPDATE game SET name = '" . $_GET["username"] . "' WHERE id = " . $into;
+            if (mysqli_query($conn, $sql)) {
+                echo "user registered succesfully";
+                $sql = "UPDATE game SET playersInGame = " . $into . " WHERE id = 0";
+                if (mysqli_query($conn, $sql)){
+                    echo "done";
+                    $whatnow = 0;
                 }
                 else{
-                    echo "coudn't record player";
                     $whatnow = 1;
                 }
             }
             else{
-                echo "reload page/waiting for my turn";
+                echo "coudn't record player";
                 $whatnow = 1;
             }
         }
