@@ -28,10 +28,11 @@
                 $sql = "INSERT INTO eventtable (orders, ide, guess) VALUES (" . $neworderid . ", " . $_POST["id"] . ", " . $guess . ")";
                 break;
             case 2:
-                $sql = "INSERT INTO eventtable (orders, ide, guess) VALUES (" . $neworderid . ", " . $_POST["id"] . ", doubt)";
+                $sql = "INSERT INTO eventtable (orders, ide, guess) VALUES (" . $neworderid . ", " . $_POST["id"] . ", '''doubt''')";
                 break;
             case 1:
-                $sql = "INSERT INTO eventtable (orders, ide, guess) VALUES (" . $neworderid . ", " . $_POST["id"] . ", equal)";
+                $equal = "equal";
+                $sql = "INSERT INTO eventtable (orders, ide, guess) VALUES (" . $neworderid . ", " . $_POST["id"] . ", '''" . $equal . "''')";
                 break;
         }
         if(mysqli_query($conn, $sql)){

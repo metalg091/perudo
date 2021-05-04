@@ -32,12 +32,15 @@
         if (mysqli_num_rows($result) > 0){
             $guess = Array();
             $eventId = Array();
+            $who = Array();
             while($row = mysqli_fetch_assoc($result)){
                 $guess[] = $row["guess"];
                 $eventId[] = $row["ide"];
+                $who[]= $row["who"];
             }
             $outGuess = json_encode($guess);
             $outEventId = json_encode($eventId);
+            $outwho = json_encode($who);
         }
         else{
             echo "error";
@@ -53,7 +56,18 @@
         var arrayOfNames = arraymaker('<?php echo $outName; ?>');
         var arrayOfIde = arraymaker('<?php echo $outEventId; ?>');
         var arrayOfGuess = arraymaker('<?php echo $outGuess; ?>');
-        var arrayOfINames = []
+        try{
+            var arrayOfWho = arraymaker('<?php echo $outWho; ?>');
+            var arrayOfIWho = [];
+            for(var p = 0; p < arrayOfWho.length; p++){
+            arrayOfIWho[i] = arrayOfNames[arrayOfWho[i]-1]; 
+            }
+        }
+        catch{
+            console.log("error");
+        }
+        var arrayOfINames = [];
+        var whoid = 0;
         for (var i = 0; i < arrayOfIde.length; i++){
             if (arrayOfIde[i] == 0){
                 arrayOfINames[i] = 0;
@@ -62,6 +76,7 @@
                 arrayOfINames[i] = arrayOfNames[arrayOfIde[i]-1]; 
             }
         }
+        
         document.getElementById("event").appendChild(tableGenrator(arrayOfINames, arrayOfGuess));
         function tableGenrator (names, guess){
             var table = document.createElement("table");
@@ -70,12 +85,18 @@
                     switch(guess[i]){
                         case "-1":
                             var CubeEvent = "lost a Cube";
+                            var who = arrayOfIWho[whoid];
+                            whoid++;
                             break;
                         case "-2":
                             var CubeEvent = "lost all of their cubes";
+                            var who = arrayOfIWho[whoid];
+                            whoid++;
                             break;
                         case "1":
                             var CubeEvent = "Got an extra cube";
+                            var who = arrayOfIWho[whoid];
+                            whoid++;
                             break;
                     }
                     var row = document.createElement("tr");
@@ -83,7 +104,7 @@
                     var tdguess = document.createElement("td");
                     var tdtext = document.createElement("td");
                     var textguess = document.createTextNode(CubeEvent);
-                    var textname = document.createTextNode(names[i-1]);
+                    var textname = document.createTextNode(who);
                     tdname.appendChild(textname);
                     tdguess.appendChild(textguess);
                     row.appendChild(tdname);
