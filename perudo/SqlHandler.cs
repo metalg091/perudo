@@ -54,7 +54,6 @@ namespace perudo
 
                 }
                 rdr.Close();
-
                 sql = "SELECT name FROM game WHERE id BETWEEN 1 AND " + a;
                 cmd = new MySqlCommand(sql, conn);
                 rdr = cmd.ExecuteReader();
@@ -68,13 +67,11 @@ namespace perudo
             catch (Exception ex)
             {
                 Console.WriteLine(ex.ToString());
+                Thread.Sleep(5000);
+                GetUsernames(ref names);
             }
-            /*foreach (var player in names)
-            {
-                Console.WriteLine(player);
-            }*/
             conn.Close();
-            Console.WriteLine("Done.");
+            Console.WriteLine("GetUsernames done.");
             return names;
         }
         public static string GetGuess()
@@ -85,10 +82,11 @@ namespace perudo
             string guess = "empty";
             try
             {
+                conn.Open();
                 while (ClientTurn)
                 {
                     Console.WriteLine("Connecting to MySQL...");
-                    conn.Open();
+                    
                     if (GetCycle() == 0)
                     {
                         ClientTurn = false;
@@ -105,6 +103,8 @@ namespace perudo
                     }
                     else
                     {
+                        Thread.Sleep(5000);
+                        Console.WriteLine("waiting for turn...");
                         continue;
                     }
                 }
@@ -112,9 +112,12 @@ namespace perudo
             catch (Exception ex)
             {
                 Console.WriteLine(ex.ToString());
+                Thread.Sleep(5000);
+                GetGuess();
             }
+            SetCycleTo();
             conn.Close();
-            Console.WriteLine("Done.");
+            Console.WriteLine("GetGuess done.");
             return guess;
         }
         private static int GetCycle()
@@ -141,14 +144,16 @@ namespace perudo
             catch (Exception ex)
             {
                 Console.WriteLine(ex.ToString());
+                Thread.Sleep(5000);
+                GetCycle();
             }
             conn.Close();
-            Console.WriteLine("Done.");
+            Console.WriteLine("Getcycle done.");
             return a;
         }
-        public static void SetCycleTo1()
+        public static void SetCycleTo()
         {
-            string connStr = "server=localhost;user=root;database=world;port=3306;password=******";
+            string connStr = "server=localhost;user=root;database=perudo;port=3306;password=";
             MySqlConnection conn = new MySqlConnection(connStr);
             try
             {
@@ -162,14 +167,16 @@ namespace perudo
             catch (Exception ex)
             {
                 Console.WriteLine(ex.ToString());
+                Thread.Sleep(5000);
+                SetCycleTo();
             }
 
             conn.Close();
-            Console.WriteLine("Done.");
+            Console.WriteLine("SetCycle done.");
         }
         public static void NumberUploader(int id, int number)
         {
-            string connStr = "server=localhost;user=root;database=world;port=3306;password=******";
+            string connStr = "server=localhost;user=root;database=perudo;port=3306;password=";
             MySqlConnection conn = new MySqlConnection(connStr);
             try
             {
@@ -183,10 +190,69 @@ namespace perudo
             catch (Exception ex)
             {
                 Console.WriteLine(ex.ToString());
+                Thread.Sleep(5000);
+                NumberUploader(id, number);
+            }
+
+            conn.Close();
+            Console.WriteLine("numberuploader done.");
+        }
+        public static void ReportEvent(int i, Player user)
+        {
+            string connStr = "server=localhost;user=root;database=perudo;port=3306;password=";
+            MySqlConnection conn = new MySqlConnection(connStr);
+            try
+            {
+                Console.WriteLine("Connecting to MySQL...");
+                conn.Open();
+
+                string sql = "SELECT orders FROM eventtable ORDER BY orders DESC LIMIT 1";
+                MySqlCommand cmd = new MySqlCommand(sql, conn);
+                MySqlDataReader rdr = cmd.ExecuteReader();
+                int a = 0;
+                while (rdr.Read())
+                {
+                    a = Convert.ToInt32(rdr[0]);
+                }
+                rdr.Close();
+
+                sql = "INSERT INTO eventtable (orders, ide, guess, who) VALUES (" + a + ", 0, " +  i + ", " + user.id + ")";
+                cmd = new MySqlCommand(sql, conn);
+                cmd.ExecuteNonQuery();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+                Thread.Sleep(5000);
+                ReportEvent(i, user);
             }
 
             conn.Close();
             Console.WriteLine("Done.");
+        }
+        public static void ReportCPI(int cpi)
+        {
+            cpi++;
+            string connStr = "server=localhost;user=root;database=perudo;port=3306;password=";
+            MySqlConnection conn = new MySqlConnection(connStr);
+            try
+            {
+                Console.WriteLine("Connecting to MySQL...");
+                conn.Open();
+
+                string sql = "UPDATE `game` SET `cPlayerId`= " + cpi + " WHERE id = 0";
+                MySqlCommand cmd = new MySqlCommand(sql, conn);
+                cmd.ExecuteNonQuery();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+                Thread.Sleep(5000);
+                ReportCPI(cpi - 1);
+            }
+
+            conn.Close();
+            Console.WriteLine("cpi upload done.");
         }
     }
 }
