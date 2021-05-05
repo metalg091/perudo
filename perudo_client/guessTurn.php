@@ -2,6 +2,7 @@
 <head>
     <link rel="stylesheet" href="dark_theme.css" id="theme">
     <link rel="stylesheet" href="button.css">
+    <script src="themeSwitch.js"></script>
     <?php 
         $servername = "localhost";
         $username = "root";
@@ -72,7 +73,7 @@
     <iframe src="eventGetter.php" id="eventGetter" width="100%" height="1000px">
     </iframe>
     <script defer type="text/javascript">
-        var theme = 0;
+        //var theme = 0;
         var id = '<?php echo $_GET["id"] ?>';
         var username = '<?php echo $_GET["username"]; ?>'; //getting info specific to this user
         document.getElementById("username").innerHTML = username + " your id is " + id;
@@ -116,16 +117,16 @@
             return sol;
         }
 
-        function themeSwitch(){
+        /*function themeSwitch(){
             if(theme == 0){
-                document.getElementById("theme").setAttribute("href", "light_theme.css");3
+                document.getElementById("theme").setAttribute("href", "light_theme.css");
                 theme++;
             }
             else{
                 document.getElementById("theme").setAttribute("href", "dark_theme.css");
                 theme--;
             }
-        }
+        }*/
 
         function setInputFilter(textbox, inputFilter) {
         ["input", "keydown", "keyup", "mousedown", "mouseup", "select", "contextmenu", "drop"].forEach(function(event) {

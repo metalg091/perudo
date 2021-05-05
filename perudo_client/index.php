@@ -1,6 +1,8 @@
 <html>
 <head>
-    <link rel="stylesheet" href="dark_theme.css">
+    <link id="theme" rel="stylesheet" href="dark_theme.css">
+    <link rel="stylesheet" href="button.css">
+    <script src="themeSwitch.js"></script>
     <style>
         h2{
             padding: 6.25%;
@@ -12,6 +14,9 @@
     </style>
 </head>
 <body>
+<label class="switch">
+    <input class="toggle-state" type="checkbox" name="check" value="check" onchange="themeSwitch()"/><div></div>
+</label>
     <h2>Type in your username, or if u have dropped out of the game, enter your ID!</h2>
     
     <form action="getUserName.php" method="get">
