@@ -18,6 +18,7 @@ namespace perudo
                                           bool frun)
         {
             string guess = SqlHandler.GetGuess();
+            Console.WriteLine("got guess " + guess);
             string lgsrtd = Convert.ToString(lastguess);
             string numd = lgsrtd.Substring(lgsrtd.Length - 1, 1);
             try

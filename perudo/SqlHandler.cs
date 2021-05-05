@@ -40,7 +40,7 @@ namespace perudo
             MySqlConnection conn = new MySqlConnection(connStr);
             try
             {
-                Console.WriteLine("Connecting to MySQL...");
+                //Console.WriteLine("Connecting to MySQL...");
                 conn.Open();
 
                 string sql = "SELECT playersInGame FROM game WHERE id = 0";
@@ -85,7 +85,7 @@ namespace perudo
                 conn.Open();
                 while (ClientTurn)
                 {
-                    Console.WriteLine("Connecting to MySQL...");
+                    //Console.WriteLine("Connecting to MySQL...");
                     
                     if (GetCycle() == 0)
                     {
@@ -127,7 +127,7 @@ namespace perudo
             int a = 1;
             try
             {
-                Console.WriteLine("Connecting to MySQL...");
+                //Console.WriteLine("Connecting to MySQL...");
                 conn.Open();
 
                 string sql = "SELECT cycle FROM game WHERE id = 0";
@@ -157,7 +157,7 @@ namespace perudo
             MySqlConnection conn = new MySqlConnection(connStr);
             try
             {
-                Console.WriteLine("Connecting to MySQL...");
+                //Console.WriteLine("Connecting to MySQL...");
                 conn.Open();
 
                 string sql = "UPDATE `game` SET `cycle`= 1 WHERE id = 0";
@@ -180,7 +180,7 @@ namespace perudo
             MySqlConnection conn = new MySqlConnection(connStr);
             try
             {
-                Console.WriteLine("Connecting to MySQL...");
+                //Console.WriteLine("Connecting to MySQL...");
                 conn.Open();
 
                 string sql = "UPDATE `game` SET `numbers`= " + number + " WHERE id =" + id;
