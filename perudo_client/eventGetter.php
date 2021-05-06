@@ -3,7 +3,7 @@
         <link rel="stylesheet" href="dark_theme.css">
     </head>
     <body>
-    <?php 
+    <?php
         $servername = "localhost";
         $username = "root";
         $password = "";
@@ -38,9 +38,13 @@
                 $eventId[] = $row["ide"];
                 $who[]= $row["who"];
             }
+            for ($i = 0; $i < count($guess); $i++){
+                $guess[$i] = str_replace("'", "",$guess[$i]);
+            }
+            $arrayofremove = Array();
             $outGuess = json_encode($guess);
             $outEventId = json_encode($eventId);
-            $outwho = json_encode($who);
+            $outWho = json_encode($who);
         }
         else{
             echo "error";
@@ -56,16 +60,12 @@
         var arrayOfNames = arraymaker('<?php echo $outName; ?>');
         var arrayOfIde = arraymaker('<?php echo $outEventId; ?>');
         var arrayOfGuess = arraymaker('<?php echo $outGuess; ?>');
-        try{
-            var arrayOfWho = arraymaker('<?php echo $outWho; ?>');
-            var arrayOfIWho = [];
-            for(var p = 0; p < arrayOfWho.length; p++){
-            arrayOfIWho[i] = arrayOfNames[arrayOfWho[i]-1]; 
-            }
+        var arrayOfWho = arraymaker('<?php echo $outWho; ?>');
+        var arrayOfIWho = [];
+        for(var p = 0; p < arrayOfWho.length; p++){
+            arrayOfIWho[p] = arrayOfNames[arrayOfWho[p]-1]; 
         }
-        catch{
-            console.log("error");
-        }
+        console.log(arrayOfWho);
         var arrayOfINames = [];
         var whoid = 0;
         for (var i = 0; i < arrayOfIde.length; i++){
@@ -85,18 +85,18 @@
                     switch(guess[i]){
                         case "-1":
                             var CubeEvent = "lost a Cube";
-                            var who = arrayOfIWho[whoid];
-                            whoid++;
+                            var who = arrayOfIWho[i];
+                            //whoid++;
                             break;
                         case "-2":
                             var CubeEvent = "lost all of their cubes";
-                            var who = arrayOfIWho[whoid];
-                            whoid++;
+                            var who = arrayOfIWho[i];
+                            //whoid++;
                             break;
                         case "1":
                             var CubeEvent = "Got an extra cube";
-                            var who = arrayOfIWho[whoid];
-                            whoid++;
+                            var who = arrayOfIWho[i];
+                            //whoid++;
                             break;
                     }
                     var row = document.createElement("tr");

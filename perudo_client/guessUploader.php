@@ -27,10 +27,10 @@
                 echo $guess . "<br>";
                 $sql = "INSERT INTO eventtable (orders, ide, guess) VALUES (" . $neworderid . ", " . $_POST["id"] . ", " . $guess . ")";
                 break;
-            case 2:
+            case 1:
                 $sql = "INSERT INTO eventtable (orders, ide, guess) VALUES (" . $neworderid . ", " . $_POST["id"] . ", '''doubt''')";
                 break;
-            case 1:
+            case 2:
                 $equal = "equal";
                 $sql = "INSERT INTO eventtable (orders, ide, guess) VALUES (" . $neworderid . ", " . $_POST["id"] . ", '''" . $equal . "''')";
                 break;

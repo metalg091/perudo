@@ -71,7 +71,7 @@
     <h2>Ur numbers</h2>
     <p id="numbers">------</p>
     <h1>Please wait until your are registered!!!! (user registration in progress...)</h1>
-    <script type="text/javascript">
+    <script defer type="text/javascript">
         function listOfOthers(names){
             var list = document.createElement('ul');
             for (var i = 0; i < names.length; i++){

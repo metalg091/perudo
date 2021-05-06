@@ -52,6 +52,8 @@
     <p id="allcubes"></p>
     <h2>Ur numbers</h2>
     <p id="urnumbers">------</p>
+    <iframe src="eventGetter.php" id="eventGetter" width="100%" height="1000px">
+    </iframe>
     <script defer type="text/javascript">
         var id = '<?php echo $_GET["id"] ?>'
         var username = '<?php echo $_GET["username"]; ?>'; //getting info specific to this user
