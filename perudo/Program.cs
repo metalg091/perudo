@@ -8,6 +8,7 @@ namespace perudo
     {
         static void Main(string[] args)
         {
+            SqlHandler.CleanUp();
             Console.WriteLine("Enter the expected number of players!");
             int ingame = Convert.ToInt32(Console.ReadLine());
             var players = new List<Player>();
@@ -112,6 +113,7 @@ namespace perudo
                     if (lplayer.cubes < 1) //checks if previous player is out of the game
                     {
                         lplayer.HasCube = false;
+                        SqlHandler.cubeUpdater(lplayer.id, 0);
                         ingame -= 1;
                         players.Remove(lplayer);
                         cpc = players.IndexOf(cplayer);
@@ -125,6 +127,7 @@ namespace perudo
                     else if (cplayer.cubes < 1) //checks if current player is out of the game
                     {
                         cplayer.HasCube = false;
+                        SqlHandler.cubeUpdater(cplayer.id, 0);
                         if (cpc + 1 == ingame)
                         {
                             cpc = 0;
@@ -142,6 +145,7 @@ namespace perudo
                         cplayer.nums.RemoveAt(cplayer.cubes);
                         guessround++;
                         Console.WriteLine(cplayer.name + " has only " + cplayer.cubes + " cubes remaining");
+                        SqlHandler.cubeUpdater(cplayer.id, cplayer.cubes);
                         SqlHandler.ReportEvent(-1, cplayer);
                         cubesingame -= 1;
                     }
@@ -151,6 +155,7 @@ namespace perudo
                         cpc = players.IndexOf(lplayer);
                         guessround++;
                         Console.WriteLine(lplayer.name + " has only " + lplayer.cubes + " cubes remaining");
+                        SqlHandler.cubeUpdater(lplayer.id, lplayer.cubes);
                         SqlHandler.ReportEvent(-1, lplayer);
                         SqlHandler.ReportCPI(cpc);
                         cubesingame -= 1;
@@ -178,6 +183,7 @@ namespace perudo
                 }
             }
             Console.WriteLine(players[0].name + " has won");
+            SqlHandler.CleanUp();
         }
 
     }

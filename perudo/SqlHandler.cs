@@ -118,6 +118,7 @@ namespace perudo
             SetCycleTo();
             conn.Close();
             Console.WriteLine("GetGuess done.");
+            guess = guess.Replace("'", "");
             return guess;
         }
         private static int GetCycle()
@@ -197,6 +198,29 @@ namespace perudo
             conn.Close();
             Console.WriteLine("numberuploader done.");
         }
+        public static void cubeUpdater(int id, int cubes)
+        {
+            string connStr = "server=localhost;user=root;database=perudo;port=3306;password=";
+            MySqlConnection conn = new MySqlConnection(connStr);
+            try
+            {
+                //Console.WriteLine("Connecting to MySQL...");
+                conn.Open();
+
+                string sql = "UPDATE `game` SET `cubes`= " + cubes + " WHERE id =" + id;
+                MySqlCommand cmd = new MySqlCommand(sql, conn);
+                cmd.ExecuteNonQuery();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+                Thread.Sleep(5000);
+                NumberUploader(id, cubes);
+            }
+
+            conn.Close();
+            Console.WriteLine("numberuploader done.");
+        }
         public static void ReportEvent(int i, Player user)
         {
             string connStr = "server=localhost;user=root;database=perudo;port=3306;password=";
@@ -215,7 +239,7 @@ namespace perudo
                     a = Convert.ToInt32(rdr[0]);
                 }
                 rdr.Close();
-
+                a++;
                 sql = "INSERT INTO eventtable (orders, ide, guess, who) VALUES (" + a + ", 0, " +  i + ", " + user.id + ")";
                 cmd = new MySqlCommand(sql, conn);
                 cmd.ExecuteNonQuery();
@@ -253,6 +277,30 @@ namespace perudo
 
             conn.Close();
             Console.WriteLine("cpi upload done.");
+        }
+        public static void CleanUp()
+        {
+            string connStr = "server=localhost;user=root;database=perudo;port=3306;password=";
+            MySqlConnection conn = new MySqlConnection(connStr);
+            try
+            {
+                //Console.WriteLine("Connecting to MySQL...");
+                conn.Open();
+
+                string sql = "TRUNCATE eventtable";
+                MySqlCommand cmd = new MySqlCommand(sql, conn);
+                cmd.ExecuteNonQuery();
+                sql = "Update game SET playersInGame = 0, cPlayerId = 0 WHERE id = 0";
+                cmd = new MySqlCommand(sql, conn);
+                cmd.ExecuteNonQuery();
+                Console.WriteLine("Reset done");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+                Console.WriteLine("Cleanup failed");
+            }
+            conn.Close();
         }
     }
 }
