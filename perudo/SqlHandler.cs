@@ -8,32 +8,6 @@ namespace perudo
 {
     class SqlHandler
     {
-        /*private static void SqlHandler()
-        {
-            string connStr = "server=localhost;user=root;database=perudo;port=3306;password=";
-            MySqlConnection conn = new MySqlConnection(connStr);
-            try
-            {
-                Console.WriteLine("Connecting to MySQL...");
-                conn.Open();
-
-                string sql = "UPDATE game SET playersInGame = REPLACE(playersInGame, 1, 0) WHERE id LIKE 0";
-                MySqlCommand cmd = new MySqlCommand(sql, conn);
-                MySqlDataReader rdr = cmd.ExecuteReader();
-
-                while (rdr.Read())
-                {
-                    Console.WriteLine(rdr[0] + " -- " + rdr[1]);
-                }
-                rdr.Close();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.ToString());
-            }
-            conn.Close();
-            Console.WriteLine("Done.");
-        }*/
         public static List<string> GetUsernames(ref List<string> names)
         {
             string connStr = "server=localhost;user=root;database=perudo;port=3306;password=";
