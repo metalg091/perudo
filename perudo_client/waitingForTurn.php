@@ -1,6 +1,8 @@
 <html>
 <head>
-    <link rel="stylesheet" href="dark_theme.css">
+    <link id="theme" rel="stylesheet" href="dark_theme.css">
+    <link rel="stylesheet" href="button.css">
+    <script src="themeSwitch.js"></script>
 </head>
 <body>
 <?php 
@@ -43,6 +45,9 @@
         }
         mysqli_close($conn);
     ?>
+    <label class="switch">
+        <input class="toggle-state" type="checkbox" name="check" value="check" onchange="themeSwitch()"/><div></div>
+    </label>
     <h2>Your name</h2>
     <h3 id="username"></h3>
     <h2>Other players</h2>

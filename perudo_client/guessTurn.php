@@ -60,7 +60,7 @@
         <input type="checkbox" value="<?php echo $_GET["id"]; ?>" name="id" checked style="display: none;">
         <input type="checkbox" value="<?php echo $_GET["username"]; ?>" name="username" checked style="display: none;">
         <div id="raddiv" style="margin: 20px; display: inline;">
-        <input id="radio1" type="radio" name="iguess" value="1">Doubt
+        <input id="radio1" type="radio" name="iguess" value="1" onclick="document.getElementById("raddiv").style.display = "inline";">Doubt
         <input id="radio2" type="radio" name="iguess" value="2">Equal
         <input id="radio3" type="radio" name="iguess" value="3" checked>Number
         </div>

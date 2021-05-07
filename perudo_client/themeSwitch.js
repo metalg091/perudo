@@ -1,7 +1,7 @@
 var theme = 0;
 function themeSwitch(){
     if(theme == 0){
-        document.getElementById("theme").setAttribute("href", "light_theme.css");3
+        document.getElementById("theme").setAttribute("href", "light_theme.css");
         theme++;
     }
     else{
