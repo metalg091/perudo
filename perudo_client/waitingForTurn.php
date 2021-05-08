@@ -3,6 +3,7 @@
     <link id="theme" rel="stylesheet" href="dark_theme.css">
     <link rel="stylesheet" href="button.css">
     <script src="themeSwitch.js"></script>
+    <script src="otherPlayers.js"></script>
 </head>
 <body>
 <?php 
@@ -77,38 +78,7 @@
         arrayc = arraymaker('<?php echo $outCubesOfOthers; ?>'); //get info from other players
         var array = arraymaker('<?php echo $outOthers; ?>');
         document.getElementById("others").appendChild(tableGenrator(array, arrayc));
-        document.getElementById("allcubes").innerHTML = getSum(arrayc);
-        function tableGenrator (names, cubes){
-            var table = document.createElement("table");
-            for(let i = 0; i < names.length; i++){
-                var row = document.createElement("tr");
-                var tdname = document.createElement("td");
-                var tdcube = document.createElement("td");
-                var textcube = document.createTextNode(cubes[i]);
-                var textname = document.createTextNode(names[i]);
-                tdname.appendChild(textname);
-                tdcube.appendChild(textcube);
-                row.appendChild(tdname);
-                row.appendChild(tdcube);
-                table.appendChild(row);
-            }
-            return table;
-        }
-        function arraymaker(newarray){ //makes array from php string output
-            newarray = newarray.replace("[", "");
-            newarray = newarray.replace("]", "");
-            newarray = newarray.replaceAll('"', "");
-            newarray = newarray.split(",");
-            return newarray;
-        }
-
-        function getSum(num){
-            var sol = 0;
-            for(let i = 0; i<num.length; i++){
-                sol = sol + parseInt(num[i]);
-            }
-            return sol;
-        }
+        document.getElementById("allcubes").innerHTML = getSum(arrayc);   
     </script>
 </body>
 </html>

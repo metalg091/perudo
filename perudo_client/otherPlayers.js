@@ -21,3 +21,10 @@ function arraymaker(newarray){ //makes array from php string output
     newarray = newarray.split(",");
     return newarray;
 }
+function getSum(num){
+    var sol = 0;
+    for(let i = 0; i<num.length; i++){
+        sol = sol + parseInt(num[i]);
+    }
+    return sol;
+}

@@ -1,6 +1,7 @@
 <html>
     <head>
         <link rel="stylesheet" href="dark_theme.css">
+        <script src="otherPlayers.js"></script>
     </head>
     <body>
     <?php
@@ -77,8 +78,8 @@
             }
         }
         
-        document.getElementById("event").appendChild(tableGenrator(arrayOfINames, arrayOfGuess));
-        function tableGenrator (names, guess){
+        document.getElementById("event").appendChild(guessTableGenrator(arrayOfINames, arrayOfGuess));
+        function guessTableGenrator (names, guess){
             var table = document.createElement("table");
             for(let i = 0; i < names.length; i++){
                 if(names[i] == "0"){
@@ -142,7 +143,7 @@
                             tdname.appendChild(textname);
                             tdtext.appendChild(text);
                             tdguess.appendChild(textguess);
-                                tdfrom.appendChild(textfromname);
+                            tdfrom.appendChild(textfromname);
                             row.appendChild(tdname);
                             row.appendChild(tdtext);
                             row.appendChild(tdguess);
@@ -172,13 +173,6 @@
                 }
             }
             return table;
-        }
-        function arraymaker(newarray){ //makes array from php string output
-            newarray = newarray.replace("[", "");
-            newarray = newarray.replace("]", "");
-            newarray = newarray.replaceAll('"', "");
-            newarray = newarray.split(",");
-            return newarray;
         }
     </script>
     </body>
