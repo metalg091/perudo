@@ -26,7 +26,7 @@
             $outName = json_encode($names);
         }
         else{
-            echo "error";
+            echo "Game hasn't started yet!";
         }
         $sql = "SELECT * FROM eventtable";
         $result = mysqli_query($conn, $sql);
@@ -57,7 +57,6 @@
 
     </div>
     <script defer type="text/javascript">
-        //setTimeout(function(){location.reload()}, 15000);
         var arrayOfNames = arraymaker('<?php echo $outName; ?>');
         var arrayOfIde = arraymaker('<?php echo $outEventId; ?>');
         var arrayOfGuess = arraymaker('<?php echo $outGuess; ?>');
@@ -174,6 +173,7 @@
             }
             return table;
         }
+        setTimeout(function(){location.reload()}, 5000);
     </script>
     </body>
 </html>
