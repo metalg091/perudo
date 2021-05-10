@@ -19,7 +19,7 @@ namespace perudo
             }
             List<string> names = new List<string>();
             SqlHandler.GetUsernames(ref names);
-            for (int i = 0; i < ingame; i++) //gets did (names) of each player
+            for (int i = 0; i < ingame; i++) //manual name input for local play
             {
                 /*Console.WriteLine("Enter player " + Convert.ToInt32(i + 1));
                 string a = Console.ReadLine();

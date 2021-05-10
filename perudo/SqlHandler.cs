@@ -8,7 +8,7 @@ namespace perudo
 {
     class SqlHandler
     {
-        public static List<string> GetUsernames(ref List<string> names)
+        public static void GetUsernames(ref List<string> names)
         {
             string connStr = "server=localhost;user=root;database=perudo;port=3306;password=";
             MySqlConnection conn = new MySqlConnection(connStr);
@@ -46,7 +46,6 @@ namespace perudo
             }
             conn.Close();
             Console.WriteLine("GetUsernames done.");
-            return names;
         }
         public static string GetGuess()
         {
