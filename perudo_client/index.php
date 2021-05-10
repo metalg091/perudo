@@ -17,7 +17,7 @@
 <label class="switch">
     <input class="toggle-state" type="checkbox" name="check" value="check" onchange="themeSwitch()"/><div></div>
 </label>
-    <h2>Type in your username, or if u have dropped out of the game, enter your ID!</h2>
+    <h2>Type in your username!</h2>
     
     <form action="getUserName.php" method="get">
         <input type="text" id="username" name="username"><br><br>

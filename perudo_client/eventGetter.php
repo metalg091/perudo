@@ -48,7 +48,7 @@
             $outWho = json_encode($who);
         }
         else{
-            echo "error";
+            echo "Game hasn't started yet!";
         }
         mysqli_close($conn);
     ?>

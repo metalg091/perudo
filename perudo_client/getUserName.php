@@ -24,6 +24,7 @@
         if (mysqli_num_rows($result) > 0) {
             $row = mysqli_fetch_assoc($result);
             $into = $row["playersInGame"] + 1;
+            echo $into;
             $sql = "UPDATE game SET name = '" . $_GET["username"] . "' WHERE id = " . $into;
             if (mysqli_query($conn, $sql)) {
                 echo "user registered succesfully";
@@ -44,19 +45,6 @@
         else {
             echo "no result/operational error";
             $whatnow = 1;
-        }
-        $sql = "SELECT name FROM game WHERE id BETWEEN 1 AND " . $row["playersInGame"];
-        $result = mysqli_query($conn, $sql);
-        $_SESSION['PIG'] = $row["playersInGame"];
-        if (mysqli_num_rows($result) > 0){
-            $others = Array();
-            while($row = mysqli_fetch_assoc($result)){
-                $others[] = $row["name"];
-            }
-            $outOthers = json_encode($others);
-        }
-        else{
-
         }
         mysqli_close($conn);
     ?>
@@ -91,28 +79,6 @@
         }
         else {
             setTimeout(function(){location.reload()}, 15000);
-        }
-        
-        var array = arraymaker('<?php echo $outOthers; ?>');
-        document.getElementById("others").appendChild(tableGenrator(array));
-        function tableGenrator (names){
-            var table = document.createElement("table");
-            for(let i = 0; i < names.length; i++){
-                var row = document.createElement("tr");
-                var tdname = document.createElement("td");
-                var textname = document.createTextNode(names[i]);
-                tdname.appendChild(textname);
-                row.appendChild(tdname);
-                table.appendChild(row);
-            }
-            return table;
-        }
-        function arraymaker(newarray){ //makes array from php string output
-            newarray = newarray.replace("[", "");
-            newarray = newarray.replace("]", "");
-            newarray = newarray.replaceAll('"', "");
-            newarray = newarray.split(",");
-            return newarray;
         }
     </script>
 </body>
