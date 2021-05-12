@@ -50,14 +50,14 @@
         <input class="toggle-state" type="checkbox" name="check" value="check" onchange="themeSwitch()"/><div></div>
     </label>
     <h2>Your name</h2>
-    <h3 id="username"></h3>
+    <h3 id="username" class="data"></h3>
     <h2>Other players</h2>
-    <div id="others">
+    <div id="others" class="data">
     </div>
     <h2>Cubes in game</h2>
-    <p id="allcubes"></p>
+    <p id="allcubes" class="data"></p>
     <h2>Ur numbers</h2>
-    <p id="urnumbers">------</p>
+    <p id="urnumbers" class="data">------</p>
     <iframe src="eventGetter.php" id="eventGetter">
     </iframe>
     <script defer type="text/javascript">

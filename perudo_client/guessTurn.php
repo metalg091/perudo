@@ -47,19 +47,18 @@
     <label class="switch">
         <input class="toggle-state" type="checkbox" name="check" value="check" onchange="themeSwitch()"/><div></div>
     </label>
-    <button onclick="document.getElementById('eventGetter').src += '';">refresh</button>
     <iframe src="eventGetter.php?style=dark_theme.css" id="eventGetter">
     </iframe>
-
+    <button id="themb" onclick="document.getElementById('eventGetter').src += '';">refresh</button>
     <h2>Your name</h2>
-    <h3 id="username"></h3>
+    <h3 id="username" class="data"></h3>
     <h2>Other players</h2>
-    <div id="others">
+    <div id="others" class="data">
     </div>
     <h2>Cubes in game</h2>
-    <p id="allcubes"></p>
+    <p id="allcubes" class="data"></p>
     <h2>Ur numbers</h2>
-    <p id="urnumbers">------</p>
+    <p id="urnumbers" class="data">------</p>
     <form action="guessUploader.php" method="post">
         <label for="guess">Your guess:</label>
         <input type="checkbox" value="<?php echo $_GET["id"]; ?>" name="id" checked style="display: none;">
@@ -72,7 +71,7 @@
             <input id="radio2" type="radio" name="iguess" value="2">Equal
         </div>
         <div id="rad3">
-            <input id="radio3" type="radio" name="iguess" value="3" checked>Number
+            <input id="radio3" type="radio" name="iguess" value="3" checked>Number:
         </div>
         </div>
         <!--<input type="text" id="guess" name="guess"><br><br>-->

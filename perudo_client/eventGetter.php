@@ -3,7 +3,7 @@
         <link rel="stylesheet" href="<?php echo $_GET["style"]?>">
         <script src="otherPlayers.js"></script>
     </head>
-    <body>
+    <body id="event">
     <?php
         $servername = "localhost";
         $username = "root";

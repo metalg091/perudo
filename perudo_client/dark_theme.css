@@ -2,9 +2,12 @@ body{
     background-color: black;
     color: white;
 }
+form{
+    margin: 1em 0 0 0;
+}
 input[type=text] {
     padding: 10px;
-    width: 30%;
+    width: 12em;
     border: none;
     border-radius: 100px;
     display: inline-block;
@@ -12,7 +15,7 @@ input[type=text] {
 }
 #rad1, #rad2, #rad3{
     display: block;
-    margin: 1%;
+    margin: 0.75em;
 }
 input[type=text]:focus{
     background-color: lightgray;
@@ -23,13 +26,16 @@ input[type=submit]{
     padding:  10 20 10 20px;
     border-radius: 100px;
 }
+input[type=submit]:hover{
+    background-color: rgb(212, 212, 212);
+}
 input[type=number] {
     padding: 10px;
-    width: 30%;
+    width: 12em;
     border: none;
     border-radius: 100px;
     display: inline-block;
-    margin: 2.5% 0 0 0;
+    margin: 1em 0 0 0;
 }
 input[type=number]:focus{
     background-color: lightgray;
@@ -37,7 +43,29 @@ input[type=number]:focus{
 #eventGetter{
     width: 100%;
 }
+#event{
+    background-color: #222222;
+}
+.data{
+    margin: 0 0 0 0.75em;
+}
+#themb{
+    position: relative;
+    left: 2%;
+    top: 0.95em;
+    border: none;
+    border-radius: 20px;
+    padding: 10px;
+}
+#themb:hover{
+    background-color: rgb(212, 212, 212);
+}
 @media only screen and (min-width: 768px){
+    #themb{
+        position: relative;
+        left: 48.75%;
+        top: 0.25em;
+    }
     #eventGetter{
         width: 50%;
         height: 80%;
@@ -45,24 +73,24 @@ input[type=number]:focus{
         display: block;
         right: 0;
         top: 0;
-        margin: 7.5% 2.5% 5% 0;
+        margin: 3.5em 1.5em 1.5em 0;
     }
     input[type=number] {
         padding: 10px;
-        width: 12.5%;
+        width: 10em;
         border: none;
         border-radius: 100px;
-        margin: 0 0 0 1.5%;
+        margin: 0 0 0 1em;
     }
     input[type=text] {
         padding: 10px;
-        width: 12.5%;
+        width: 10em;
         border: none;
         border-radius: 100px;
         margin: 0;
     }
     #rad1, #rad2, #rad3{
         display: block;
-        margin: 1%;
+        margin: 0.75em;
     }
 }
