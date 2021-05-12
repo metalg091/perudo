@@ -1,6 +1,6 @@
 <html>
     <head>
-        <link rel="stylesheet" href="dark_theme.css">
+        <link rel="stylesheet" href="<?php echo $_GET["style"]?>">
         <script src="otherPlayers.js"></script>
     </head>
     <body>

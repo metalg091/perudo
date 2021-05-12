@@ -6,7 +6,7 @@
     <script src="otherPlayers.js"></script>
 </head>
 <body>
-<?php 
+    <?php 
         $servername = "localhost";
         $username = "root";
         $password = "";
@@ -58,7 +58,7 @@
     <p id="allcubes"></p>
     <h2>Ur numbers</h2>
     <p id="urnumbers">------</p>
-    <iframe src="eventGetter.php" id="eventGetter" width="100%" height="1000px">
+    <iframe src="eventGetter.php" id="eventGetter">
     </iframe>
     <script defer type="text/javascript">
         var id = '<?php echo $_GET["id"] ?>'

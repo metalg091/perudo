@@ -4,6 +4,7 @@
     <link rel="stylesheet" href="button.css">
     <script src="themeSwitch.js"></script>
     <script src="otherPlayers.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <?php 
         $servername = "localhost";
         $username = "root";
@@ -43,9 +44,12 @@
     ?>
 </head>
 <body>
-<label class="switch">
-    <input class="toggle-state" type="checkbox" name="check" value="check" onchange="themeSwitch()"/><div></div>
-</label>
+    <label class="switch">
+        <input class="toggle-state" type="checkbox" name="check" value="check" onchange="themeSwitch()"/><div></div>
+    </label>
+    <button onclick="document.getElementById('eventGetter').src += '';">refresh</button>
+    <iframe src="eventGetter.php?style=dark_theme.css" id="eventGetter">
+    </iframe>
 
     <h2>Your name</h2>
     <h3 id="username"></h3>
@@ -61,18 +65,22 @@
         <input type="checkbox" value="<?php echo $_GET["id"]; ?>" name="id" checked style="display: none;">
         <input type="checkbox" value="<?php echo $_GET["username"]; ?>" name="username" checked style="display: none;">
         <div id="raddiv" style="margin: 20px; display: inline;">
-        <input id="radio1" type="radio" name="iguess" value="1" onclick="document.getElementById("raddiv").style.display = "inline";">Doubt
-        <input id="radio2" type="radio" name="iguess" value="2">Equal
-        <input id="radio3" type="radio" name="iguess" value="3" checked>Number
+        <div id="rad1">
+            <input id="radio1" type="radio" name="iguess" value="1" onclick="document.getElementById("raddiv").style.display = "inline";">Doubt
+        </div>
+        <div id="rad2">
+            <input id="radio2" type="radio" name="iguess" value="2">Equal
+        </div>
+        <div id="rad3">
+            <input id="radio3" type="radio" name="iguess" value="3" checked>Number
+        </div>
         </div>
         <!--<input type="text" id="guess" name="guess"><br><br>-->
         <input type="text" value="<?php echo $lastguess; ?>" id="guess" name="guess1" onkeyup="inputValidator()">
         <input type="number" value="1" id="guess1" name="guess2" min="1" max="6" onkeyup="inputValidator()"><br><br>
         <input id="submit" type="submit" value="Submit" style="display: none">
     </form>
-    <button onclick="document.getElementById('eventGetter').src += '';">refresh</button>
-    <iframe src="eventGetter.php" id="eventGetter" width="100%" height="1000px">
-    </iframe>
+    
     <script defer type="text/javascript">
         //var theme = 0;
         var id = '<?php echo $_GET["id"] ?>';
@@ -87,49 +95,76 @@
         document.getElementById("allcubes").innerHTML = getSum(arrayc);
         
         function setInputFilter(textbox, inputFilter) {
-        ["input", "keydown", "keyup", "mousedown", "mouseup", "select", "contextmenu", "drop"].forEach(function(event) {
-        textbox.addEventListener(event, function() {
-            if (inputFilter(this.value)) {
-                this.oldValue = this.value;
-                this.oldSelectionStart = this.selectionStart;
-                this.oldSelectionEnd = this.selectionEnd;
-            }
-            else if (this.hasOwnProperty("oldValue")) {
-                this.value = this.oldValue;
-                this.setSelectionRange(this.oldSelectionStart, this.oldSelectionEnd);
-            }
-            else {
-                this.value = "";
-            }
-        });
-    });
-}
-
-    setInputFilter(document.getElementById("guess"), function(value) {
-    return /^\d*$/.test(value); });
-    setInputFilter(document.getElementById("guess1"), function(value) {
-    return /^\d*$/.test(value); });
-    
-    inputValidator();
-
-    function inputValidator(){
-        var times = parseInt(document.getElementById("guess").value);
-        var number = parseInt(document.getElementById("guess1").value);
-        var rellastguess = '<?php echo $rellastguess; ?>';
-        var lastguess = '<?php echo $lastguess; ?>';
-        if(rellastguess > 10){
-            
-        }else{
-            rellastguess = 10;
-            lastguess = 0;
-            document.getElementById("raddiv").style.display = "none";
+            ["input", "keydown", "keyup", "mousedown", "mouseup", "select", "contextmenu", "drop"].forEach(function(event) {
+                textbox.addEventListener(event, function() {
+                    if (inputFilter(this.value)) {
+                        this.oldValue = this.value;
+                        this.oldSelectionStart = this.selectionStart;
+                        this.oldSelectionEnd = this.selectionEnd;
+                    }
+                    else if (this.hasOwnProperty("oldValue")) {
+                        this.value = this.oldValue;
+                        this.setSelectionRange(this.oldSelectionStart, this.oldSelectionEnd);
+                    }
+                    else {
+                        this.value = "";
+                    }
+                });
+            });
         }
+
+        setInputFilter(document.getElementById("guess"), function(value) {
+        return /^\d*$/.test(value); });
+        setInputFilter(document.getElementById("guess1"), function(value) {
+        return /^\d*$/.test(value); });
+    
+        inputValidator();
+
+        function inputValidator(){
+            var times = parseInt(document.getElementById("guess").value);
+            var number = parseInt(document.getElementById("guess1").value);
+            var rellastguess = '<?php echo $rellastguess; ?>';
+            var lastguess = '<?php echo $lastguess; ?>';
+            if(rellastguess > 10){
+            
+            }else{
+                rellastguess = 10;
+                lastguess = 0;
+                document.getElementById("raddiv").style.display = "none";
+            }
         
-        var lastguesslastnum = rellastguess - lastguess * 10;
-        var relnum = parseInt(times*10+number);
-        console.log(rellastguess + " and " + relnum);
-        if(lastguesslastnum == 1 || number == 1){
-            if(lastguesslastnum == 1 && number == 1){
+            var lastguesslastnum = rellastguess - lastguess * 10;
+            var relnum = parseInt(times*10+number);
+            console.log(rellastguess + " and " + relnum);
+            if(lastguesslastnum == 1 || number == 1){
+                if(lastguesslastnum == 1 && number == 1){
+                    if(relnum > rellastguess){
+                        document.getElementById("submit").style.display ="block";
+                    }
+                    else{
+                        document.getElementById("submit").style.display ="none";
+                    }
+                }
+                else{
+                    if(number == 1){
+                        if(relnum > rellastguess/2){
+                            document.getElementById("submit").style.display ="block";
+                        }
+                        else{
+                            document.getElementById("submit").style.display ="none";
+                        }
+                    }
+                    else{
+                        if(relnum > rellastguess * 2){
+                            document.getElementById("submit").style.display ="block";
+                        }
+                        else{
+                            document.getElementById("submit").style.display ="none";
+                        }
+                    }
+                }
+            }
+            else{
                 if(relnum > rellastguess){
                     document.getElementById("submit").style.display ="block";
                 }
@@ -137,34 +172,7 @@
                     document.getElementById("submit").style.display ="none";
                 }
             }
-            else{
-                if(number == 1){
-                    if(relnum > rellastguess/2){
-                        document.getElementById("submit").style.display ="block";
-                    }
-                    else{
-                        document.getElementById("submit").style.display ="none";
-                    }
-                }
-                else{
-                    if(relnum > rellastguess * 2){
-                        document.getElementById("submit").style.display ="block";
-                    }
-                    else{
-                        document.getElementById("submit").style.display ="none";
-                    }
-                }
-            }
         }
-        else{
-            if(relnum > rellastguess){
-                document.getElementById("submit").style.display ="block";
-            }
-            else{
-                document.getElementById("submit").style.display ="none";
-            }
-        }
-    }
     </script>
 </body>
 </html>
