@@ -56,11 +56,15 @@
     </div>
     <h2>Cubes in game</h2>
     <p id="allcubes" class="data"></p>
-    <h2>Ur numbers</h2>
+    <h2>Your numbers</h2>
     <p id="urnumbers" class="data">------</p>
-    <iframe src="eventGetter.php" id="eventGetter">
+    <iframe src="eventGetter.php?style=dark_theme.css" id="eventGetter">
     </iframe>
     <script defer type="text/javascript">
+        var a = '<?php echo $cycle; ?>';
+        if(a == '2'){
+            location.href = 'winpage.php';
+        }
         var id = '<?php echo $_GET["id"] ?>'
         var username = '<?php echo $_GET["username"]; ?>'; //getting info specific to this user
         document.getElementById("username").innerHTML = username + " your id is " + id;
@@ -72,11 +76,21 @@
             location.href = 'guessTurn.php?id=' + id + '&username=' + username;
         }
         else {
-            setTimeout(function(){location.reload()}, 15000);
+            setTimeout(function(){location.reload()}, 7500);
         }
 
-        arrayc = arraymaker('<?php echo $outCubesOfOthers; ?>'); //get info from other players
+        var arrayc = arraymaker('<?php echo $outCubesOfOthers; ?>'); //get info from other players
         var array = arraymaker('<?php echo $outOthers; ?>');
+        for(var i = 0; i<arrayc.length; i++){
+            var lost = arrayc.indexOf('0');
+            if(lost == -1){
+                continue;
+            }
+            else{
+                arrayc.splice(lost, 1);
+                array.splice(lost, 1);
+            }
+        }
         document.getElementById("others").appendChild(tableGenrator(array, arrayc));
         document.getElementById("allcubes").innerHTML = getSum(arrayc);   
     </script>

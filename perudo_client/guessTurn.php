@@ -14,6 +14,10 @@
         if (!$conn){
             die("Connection failed: " . mysqli_connect_error());
         }
+        $sql = "SELECT cycle FROM game WHERE id = 0";
+        $result = mysqli_query($conn, $sql);
+        $row = mysqli_fetch_assoc($result);
+        $cycle = $row["cycle"];
         $sql = "SELECT playersInGame, cPlayerId FROM game WHERE id = 0";
         $result = mysqli_query($conn, $sql);
         $row = mysqli_fetch_assoc($result);
@@ -44,12 +48,13 @@
     ?>
 </head>
 <body>
+    <!--button id="themb" onclick="document.getElementById('eventGetter').src += '';">refresh</button-->
     <label class="switch">
         <input class="toggle-state" type="checkbox" name="check" value="check" onchange="themeSwitch()"/><div></div>
     </label>
     <iframe src="eventGetter.php?style=dark_theme.css" id="eventGetter">
     </iframe>
-    <button id="themb" onclick="document.getElementById('eventGetter').src += '';">refresh</button>
+    <div id="container">
     <h2>Your name</h2>
     <h3 id="username" class="data"></h3>
     <h2>Other players</h2>
@@ -57,7 +62,7 @@
     </div>
     <h2>Cubes in game</h2>
     <p id="allcubes" class="data"></p>
-    <h2>Ur numbers</h2>
+    <h2>Your numbers</h2>
     <p id="urnumbers" class="data">------</p>
     <form action="guessUploader.php" method="post">
         <label for="guess">Your guess:</label>
@@ -79,9 +84,12 @@
         <input type="number" value="1" id="guess1" name="guess2" min="1" max="6" onkeyup="inputValidator()"><br><br>
         <input id="submit" type="submit" value="Submit" style="display: none">
     </form>
-    
+    </div>
     <script defer type="text/javascript">
-        //var theme = 0;
+        var a = '<?php echo $cycle; ?>';
+        if(a == '2'){
+            location.href = 'winpage.php';
+        }
         var id = '<?php echo $_GET["id"] ?>';
         var username = '<?php echo $_GET["username"]; ?>'; //getting info specific to this user
         document.getElementById("username").innerHTML = username + " your id is " + id;
@@ -90,6 +98,16 @@
 
         arrayc = arraymaker('<?php echo $outCubesOfOthers; ?>'); //get info from other players
         var array = arraymaker('<?php echo $outOthers; ?>');
+        for(var i = -1; i<arrayc.length; i++){
+            var lost = arrayc.indexOf('0');
+            if(lost == -1){
+                continue;
+            }
+            else{
+                arrayc.splice(lost, 1);
+                array.splice(lost, 1);
+            }
+        }
         document.getElementById("others").appendChild(tableGenrator(array, arrayc));
         document.getElementById("allcubes").innerHTML = getSum(arrayc);
         

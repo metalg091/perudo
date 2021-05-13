@@ -173,7 +173,7 @@
             }
             return table;
         }
-        setTimeout(function(){location.reload()}, 5000);
+        //setTimeout(function(){location.reload()}, 5000);
     </script>
     </body>
 </html>
