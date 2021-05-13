@@ -41,7 +41,7 @@ namespace perudo
             catch (Exception ex)
             {
                 Console.WriteLine(ex.ToString());
-                Thread.Sleep(5000);
+                Thread.Sleep(2500);
                 GetUsernames(ref names);
             }
             conn.Close();
@@ -76,7 +76,7 @@ namespace perudo
                     }
                     else
                     {
-                        Thread.Sleep(5000);
+                        Thread.Sleep(2500);
                         Console.WriteLine("waiting for turn...");
                         continue;
                     }
@@ -118,7 +118,7 @@ namespace perudo
             catch (Exception ex)
             {
                 Console.WriteLine(ex.ToString());
-                Thread.Sleep(5000);
+                Thread.Sleep(2500);
                 GetCycle();
             }
             conn.Close();
@@ -141,7 +141,7 @@ namespace perudo
             catch (Exception ex)
             {
                 Console.WriteLine(ex.ToString());
-                Thread.Sleep(5000);
+                Thread.Sleep(2500);
                 SetCycleTo();
             }
 
@@ -164,14 +164,14 @@ namespace perudo
             catch (Exception ex)
             {
                 Console.WriteLine(ex.ToString());
-                Thread.Sleep(5000);
+                Thread.Sleep(2500);
                 NumberUploader(id, number);
             }
 
             conn.Close();
             Console.WriteLine("numberuploader done.");
         }
-        public static void cubeUpdater(int id, int cubes)
+        public static void CubeUpdater(int id, int cubes)
         {
             string connStr = "server=localhost;user=root;database=perudo;port=3306;password=";
             MySqlConnection conn = new MySqlConnection(connStr);
@@ -187,7 +187,7 @@ namespace perudo
             catch (Exception ex)
             {
                 Console.WriteLine(ex.ToString());
-                Thread.Sleep(5000);
+                Thread.Sleep(2500);
                 NumberUploader(id, cubes);
             }
 
@@ -220,7 +220,7 @@ namespace perudo
             catch (Exception ex)
             {
                 Console.WriteLine(ex.ToString());
-                Thread.Sleep(5000);
+                Thread.Sleep(2500);
                 ReportEvent(i, user);
             }
 
@@ -244,7 +244,7 @@ namespace perudo
             catch (Exception ex)
             {
                 Console.WriteLine(ex.ToString());
-                Thread.Sleep(5000);
+                Thread.Sleep(2500);
                 ReportCPI(cpi - 1);
             }
 
@@ -274,6 +274,52 @@ namespace perudo
                 Console.WriteLine("Cleanup failed");
             }
             conn.Close();
+        }
+        public static void PIGUpdate(int i)
+        {
+            string connStr = "server=localhost;user=root;database=perudo;port=3306;password=";
+            MySqlConnection conn = new MySqlConnection(connStr);
+            try
+            {
+                Console.WriteLine("Connecting to MySQL...");
+                conn.Open();
+
+                string sql = "UPDATE `game` SET `numbers`= " + i + " WHERE id = 0";
+                MySqlCommand cmd = new MySqlCommand(sql, conn);
+                cmd.ExecuteNonQuery();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+                Thread.Sleep(2500);
+                PIGUpdate(i);
+            }
+
+            conn.Close();
+            Console.WriteLine("Done.");
+        }
+        public static void Win(int winner)
+        {
+            string connStr = "server=localhost;user=root;database=perudo;port=3306;password=";
+            MySqlConnection conn = new MySqlConnection(connStr);
+            try
+            {
+                //Console.WriteLine("Connecting to MySQL...");
+                conn.Open();
+
+                string sql = "UPDATE `game` SET `cycle`= 2, cPlayerId = " + winner + " WHERE id = 0";
+                MySqlCommand cmd = new MySqlCommand(sql, conn);
+                cmd.ExecuteNonQuery();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+                Thread.Sleep(2500);
+                SetCycleTo();
+            }
+
+            conn.Close();
+            Console.WriteLine("SetCycle done.");
         }
     }
 }

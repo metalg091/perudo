@@ -53,6 +53,7 @@ namespace perudo
                     f.nums.Add(0);
                     //Console.WriteLine("num has been added to player" + f.id);
                 }
+                SqlHandler.CubeUpdater(f.id, f.cubes);
                 //Console.WriteLine("its the after one " + f.nums);
             }
             int cubesingame = players[0].cubes * 6; //end of setup
@@ -113,8 +114,9 @@ namespace perudo
                     if (lplayer.cubes < 1) //checks if previous player is out of the game
                     {
                         lplayer.HasCube = false;
-                        SqlHandler.cubeUpdater(lplayer.id, 0);
+                        SqlHandler.CubeUpdater(lplayer.id, 0);
                         ingame -= 1;
+                        SqlHandler.PIGUpdate(ingame);
                         players.Remove(lplayer);
                         cpc = players.IndexOf(cplayer);
                         guessround++;
@@ -127,13 +129,14 @@ namespace perudo
                     else if (cplayer.cubes < 1) //checks if current player is out of the game
                     {
                         cplayer.HasCube = false;
-                        SqlHandler.cubeUpdater(cplayer.id, 0);
+                        SqlHandler.CubeUpdater(cplayer.id, 0);
                         if (cpc + 1 == ingame)
                         {
                             cpc = 0;
                             SqlHandler.ReportCPI(cpc);
                         }
                         ingame -= 1;
+                        SqlHandler.PIGUpdate(ingame);
                         players.Remove(cplayer);
                         guessround++;
                         Console.WriteLine(cplayer.id + " is out of the game");
@@ -145,7 +148,7 @@ namespace perudo
                         cplayer.nums.RemoveAt(cplayer.cubes);
                         guessround++;
                         Console.WriteLine(cplayer.name + " has only " + cplayer.cubes + " cubes remaining");
-                        SqlHandler.cubeUpdater(cplayer.id, cplayer.cubes);
+                        SqlHandler.CubeUpdater(cplayer.id, cplayer.cubes);
                         SqlHandler.ReportEvent(-1, cplayer);
                         cubesingame -= 1;
                     }
@@ -155,7 +158,7 @@ namespace perudo
                         cpc = players.IndexOf(lplayer);
                         guessround++;
                         Console.WriteLine(lplayer.name + " has only " + lplayer.cubes + " cubes remaining");
-                        SqlHandler.cubeUpdater(lplayer.id, lplayer.cubes);
+                        SqlHandler.CubeUpdater(lplayer.id, lplayer.cubes);
                         SqlHandler.ReportEvent(-1, lplayer);
                         SqlHandler.ReportCPI(cpc);
                         cubesingame -= 1;
@@ -165,6 +168,7 @@ namespace perudo
                         guessround++;
                         Console.WriteLine(cplayer.name + " own " + cplayer.cubes + " cubes now");
                         SqlHandler.ReportEvent(1, cplayer);
+                        SqlHandler.CubeUpdater(cplayer.id, cplayer.cubes);
                     }
                     else
                     {
@@ -183,6 +187,7 @@ namespace perudo
                 }
             }
             Console.WriteLine(players[0].name + " has won");
+            Thread.Sleep(60000);
             SqlHandler.CleanUp();
         }
 
