@@ -51,10 +51,9 @@ namespace perudo
                 for (int i = 0; i < f.cubes; i++)
                 {
                     f.nums.Add(0);
-                    //Console.WriteLine("num has been added to player" + f.id);
                 }
-                SqlHandler.CubeUpdater(f.id, f.cubes);
-                //Console.WriteLine("its the after one " + f.nums);
+                Console.WriteLine("updating cubes at game start");
+                SqlHandler.SqlExecute("UPDATE `game` SET `cubes`= " + f.cubes + " WHERE id =" + f.id);
             }
             int cubesingame = players[0].cubes * 6; //end of setup
             while (ingame > 1) //separate first round cuz lack of lastplayer
@@ -114,9 +113,10 @@ namespace perudo
                     if (lplayer.cubes < 1) //checks if previous player is out of the game
                     {
                         lplayer.HasCube = false;
-                        SqlHandler.CubeUpdater(lplayer.id, 0);
+                        Console.WriteLine("Update cubes");
+                        SqlHandler.SqlExecute("UPDATE `game` SET `cubes`= 0 WHERE id =" + lplayer.id);
                         ingame -= 1;
-                        SqlHandler.PIGUpdate(ingame);
+                        SqlHandler.SqlExecute("UPDATE `game` SET `numbers`= " + ingame + " WHERE id = 0");
                         players.Remove(lplayer);
                         cpc = players.IndexOf(cplayer);
                         guessround++;
@@ -129,14 +129,15 @@ namespace perudo
                     else if (cplayer.cubes < 1) //checks if current player is out of the game
                     {
                         cplayer.HasCube = false;
-                        SqlHandler.CubeUpdater(cplayer.id, 0);
+                        Console.WriteLine("Update cubes");
+                        SqlHandler.SqlExecute("UPDATE `game` SET `cubes`= 0 WHERE id =" + cplayer.id);
                         if (cpc + 1 == ingame)
                         {
                             cpc = 0;
                             SqlHandler.ReportCPI(cpc);
                         }
                         ingame -= 1;
-                        SqlHandler.PIGUpdate(ingame);
+                        SqlHandler.SqlExecute("UPDATE `game` SET `numbers`= " + ingame + " WHERE id = 0");
                         players.Remove(cplayer);
                         guessround++;
                         Console.WriteLine(cplayer.id + " is out of the game");
@@ -148,7 +149,8 @@ namespace perudo
                         cplayer.nums.RemoveAt(cplayer.cubes);
                         guessround++;
                         Console.WriteLine(cplayer.name + " has only " + cplayer.cubes + " cubes remaining");
-                        SqlHandler.CubeUpdater(cplayer.id, cplayer.cubes);
+                        Console.WriteLine("Update cubes");
+                        SqlHandler.SqlExecute("UPDATE `game` SET `cubes`= " + cplayer.cubes + " WHERE id =" + cplayer.id);
                         SqlHandler.ReportEvent(-1, cplayer);
                         cubesingame -= 1;
                     }
@@ -158,7 +160,8 @@ namespace perudo
                         cpc = players.IndexOf(lplayer);
                         guessround++;
                         Console.WriteLine(lplayer.name + " has only " + lplayer.cubes + " cubes remaining");
-                        SqlHandler.CubeUpdater(lplayer.id, lplayer.cubes);
+                        Console.WriteLine("Update cubes");
+                        SqlHandler.SqlExecute("UPDATE `game` SET `cubes`= " + lplayer.cubes + " WHERE id =" + lplayer.id);
                         SqlHandler.ReportEvent(-1, lplayer);
                         SqlHandler.ReportCPI(cpc);
                         cubesingame -= 1;
@@ -168,7 +171,8 @@ namespace perudo
                         guessround++;
                         Console.WriteLine(cplayer.name + " own " + cplayer.cubes + " cubes now");
                         SqlHandler.ReportEvent(1, cplayer);
-                        SqlHandler.CubeUpdater(cplayer.id, cplayer.cubes);
+                        Console.WriteLine("Update cubes");
+                        SqlHandler.SqlExecute("UPDATE `game` SET `cubes`= " + cplayer.cubes + " WHERE id =" + cplayer.id);
                     }
                     else
                     {
@@ -187,6 +191,7 @@ namespace perudo
                 }
             }
             Console.WriteLine(players[0].name + " has won");
+            SqlHandler.SqlExecute("UPDATE `game` SET `cycle`= 2, cPlayerId = " + players[0].id + " WHERE id = 0");
             Thread.Sleep(60000);
             SqlHandler.CleanUp();
         }

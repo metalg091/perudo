@@ -50,7 +50,7 @@ namespace perudo
                     string number = string.Join("", client.nums);
                     numbers[k] = number;
                     k++;
-                    SqlHandler.NumberUploader(client.id, Convert.ToInt32(number));
+                    SqlHandler.SqlExecute("UPDATE `game` SET `numbers`= " + number + " WHERE id =" + client.id);
                 }
             }
         }

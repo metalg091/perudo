@@ -88,7 +88,7 @@ namespace perudo
                 Thread.Sleep(5000);
                 GetGuess();
             }
-            SetCycleTo();
+            SqlExecute("UPDATE `game` SET `cycle`= 1 WHERE id = 0");
             conn.Close();
             Console.WriteLine("GetGuess done.");
             guess = guess.Replace("'", "");
@@ -124,75 +124,6 @@ namespace perudo
             conn.Close();
             Console.WriteLine("Getcycle done.");
             return a;
-        }
-        public static void SetCycleTo()
-        {
-            string connStr = "server=localhost;user=root;database=perudo;port=3306;password=";
-            MySqlConnection conn = new MySqlConnection(connStr);
-            try
-            {
-                //Console.WriteLine("Connecting to MySQL...");
-                conn.Open();
-
-                string sql = "UPDATE `game` SET `cycle`= 1 WHERE id = 0";
-                MySqlCommand cmd = new MySqlCommand(sql, conn);
-                cmd.ExecuteNonQuery();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.ToString());
-                Thread.Sleep(2500);
-                SetCycleTo();
-            }
-
-            conn.Close();
-            Console.WriteLine("SetCycle done.");
-        }
-        public static void NumberUploader(int id, int number)
-        {
-            string connStr = "server=localhost;user=root;database=perudo;port=3306;password=";
-            MySqlConnection conn = new MySqlConnection(connStr);
-            try
-            {
-                //Console.WriteLine("Connecting to MySQL...");
-                conn.Open();
-
-                string sql = "UPDATE `game` SET `numbers`= " + number + " WHERE id =" + id;
-                MySqlCommand cmd = new MySqlCommand(sql, conn);
-                cmd.ExecuteNonQuery();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.ToString());
-                Thread.Sleep(2500);
-                NumberUploader(id, number);
-            }
-
-            conn.Close();
-            Console.WriteLine("numberuploader done.");
-        }
-        public static void CubeUpdater(int id, int cubes)
-        {
-            string connStr = "server=localhost;user=root;database=perudo;port=3306;password=";
-            MySqlConnection conn = new MySqlConnection(connStr);
-            try
-            {
-                //Console.WriteLine("Connecting to MySQL...");
-                conn.Open();
-
-                string sql = "UPDATE `game` SET `cubes`= " + cubes + " WHERE id =" + id;
-                MySqlCommand cmd = new MySqlCommand(sql, conn);
-                cmd.ExecuteNonQuery();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.ToString());
-                Thread.Sleep(2500);
-                NumberUploader(id, cubes);
-            }
-
-            conn.Close();
-            Console.WriteLine("numberuploader done.");
         }
         public static void ReportEvent(int i, Player user)
         {
@@ -275,30 +206,7 @@ namespace perudo
             }
             conn.Close();
         }
-        public static void PIGUpdate(int i)
-        {
-            string connStr = "server=localhost;user=root;database=perudo;port=3306;password=";
-            MySqlConnection conn = new MySqlConnection(connStr);
-            try
-            {
-                Console.WriteLine("Connecting to MySQL...");
-                conn.Open();
-
-                string sql = "UPDATE `game` SET `numbers`= " + i + " WHERE id = 0";
-                MySqlCommand cmd = new MySqlCommand(sql, conn);
-                cmd.ExecuteNonQuery();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.ToString());
-                Thread.Sleep(2500);
-                PIGUpdate(i);
-            }
-
-            conn.Close();
-            Console.WriteLine("Done.");
-        }
-        public static void Win(int winner)
+        public static void SqlExecute(string sql)
         {
             string connStr = "server=localhost;user=root;database=perudo;port=3306;password=";
             MySqlConnection conn = new MySqlConnection(connStr);
@@ -307,7 +215,6 @@ namespace perudo
                 //Console.WriteLine("Connecting to MySQL...");
                 conn.Open();
 
-                string sql = "UPDATE `game` SET `cycle`= 2, cPlayerId = " + winner + " WHERE id = 0";
                 MySqlCommand cmd = new MySqlCommand(sql, conn);
                 cmd.ExecuteNonQuery();
             }
@@ -315,11 +222,11 @@ namespace perudo
             {
                 Console.WriteLine(ex.ToString());
                 Thread.Sleep(2500);
-                SetCycleTo();
+                SqlExecute(sql);
             }
 
             conn.Close();
-            Console.WriteLine("SetCycle done.");
+            Console.WriteLine("Done.");
         }
     }
 }
