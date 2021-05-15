@@ -1,8 +1,8 @@
 <html>
 <head>
-    <link rel="stylesheet" href="dark_theme.css" id="theme">
-    <link rel="stylesheet" href="button.css">
-    <script src="themeSwitch.js"></script>
+    <link rel="stylesheet" href="../dark_theme.css" id="theme">
+    <link rel="stylesheet" href="../button.css">
+    <script src="../themeSwitch.js"></script>
     <script src="otherPlayers.js"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <?php 

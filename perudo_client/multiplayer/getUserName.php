@@ -1,12 +1,7 @@
 <html>
 <head>
-    <link rel="stylesheet" href="dark_theme.css">
-    <style>
-        #username{
-            margin: 0 0 0 30px;
-            color: lightblue;
-        }
-    </style>
+    <link rel="stylesheet" href="../dark_theme.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!--<meta id="meta" http-equiv="refresh" content="">-->
 </head>
 <body>

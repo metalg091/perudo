@@ -1,17 +1,9 @@
 <html>
 <head>
-    <link id="theme" rel="stylesheet" href="dark_theme.css">
-    <link rel="stylesheet" href="button.css">
-    <script src="themeSwitch.js"></script>
-    <style>
-        h2{
-            padding: 6.25%;
-            text-align: center;
-        }
-        form {
-            text-align: center;
-        }
-    </style>
+    <link id="theme" rel="stylesheet" href="../dark_theme.css">
+    <link rel="stylesheet" href="../button.css">
+    <script src="../themeSwitch.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 <body>
 <label class="switch">

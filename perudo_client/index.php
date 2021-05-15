@@ -3,6 +3,7 @@
     <link id="theme" rel="stylesheet" href="dark_theme.css">
     <link rel="stylesheet" href="button.css">
     <script src="themeSwitch.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
         h2{
             padding: 6.25%;
@@ -19,7 +20,7 @@
 </label>
     <h2>Type in your username!</h2>
     
-    <form action="getUserName.php" method="get">
+    <form action="multiplayer/getUserName.php" method="get">
         <input type="text" id="username" name="username"><br><br>
         <input type="submit" value="Submit">
     </form>

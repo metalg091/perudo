@@ -1,9 +1,10 @@
 <html>
 <head>
-    <link id="theme" rel="stylesheet" href="dark_theme.css">
-    <link rel="stylesheet" href="button.css">
-    <script src="themeSwitch.js"></script>
+    <link id="theme" rel="stylesheet" href="../dark_theme.css">
+    <link rel="stylesheet" href="../button.css">
+    <script src="../themeSwitch.js"></script>
     <script src="otherPlayers.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 <body>
     <?php 
@@ -58,7 +59,7 @@
     <p id="allcubes" class="data"></p>
     <h2>Your numbers</h2>
     <p id="urnumbers" class="data">------</p>
-    <iframe src="eventGetter.php?style=dark_theme.css" id="eventGetter">
+    <iframe src="eventGetter.php?style=../dark_theme.css" id="eventGetter">
     </iframe>
     <script defer type="text/javascript">
         var a = '<?php echo $cycle; ?>';
