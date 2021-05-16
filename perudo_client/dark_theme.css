@@ -45,6 +45,7 @@ input[type=number]:focus{
 }
 #event{
     background-color: #222222;
+    color: #fff;
 }
 .data{
     margin: 0 0 0 0.75em;

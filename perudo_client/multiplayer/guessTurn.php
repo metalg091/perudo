@@ -52,8 +52,6 @@
     <label class="switch">
         <input class="toggle-state" type="checkbox" name="check" value="check" onchange="themeSwitch()"/><div></div>
     </label>
-    <iframe src="eventGetter.php?style=dark_theme.css" id="eventGetter">
-    </iframe>
     <div id="container">
     <h2>Your name</h2>
     <h3 id="username" class="data"></h3>
@@ -85,6 +83,8 @@
         <input id="submit" type="submit" value="Submit" style="display: none">
     </form>
     </div>
+    <iframe src="eventGetter.php?style=../dark_theme.css" id="eventGetter">
+    </iframe>
     <script defer type="text/javascript">
         var a = '<?php echo $cycle; ?>';
         if(a == '2'){

@@ -50,6 +50,7 @@
     <label class="switch">
         <input class="toggle-state" type="checkbox" name="check" value="check" onchange="themeSwitch()"/><div></div>
     </label>
+    <div id="container">
     <h2>Your name</h2>
     <h3 id="username" class="data"></h3>
     <h2>Other players</h2>
@@ -59,6 +60,7 @@
     <p id="allcubes" class="data"></p>
     <h2>Your numbers</h2>
     <p id="urnumbers" class="data">------</p>
+    </div>
     <iframe src="eventGetter.php?style=../dark_theme.css" id="eventGetter">
     </iframe>
     <script defer type="text/javascript">
