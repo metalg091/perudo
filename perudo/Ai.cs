@@ -16,7 +16,7 @@ namespace perudo
                 case 1:
                     if (n1 * 10 + 1 == lastguess)
                     {
-                        if (cplayer.cubes == 6)
+                        if (cplayer.cubes == 5)
                         {
                             break;
                         }
@@ -34,7 +34,7 @@ namespace perudo
                 case 2:
                     if (n2 * 10 + 2 + n1 * 10 == lastguess)
                     {
-                        if (cplayer.cubes == 6)
+                        if (cplayer.cubes == 5)
                         {
                             break;
                         }
@@ -52,7 +52,7 @@ namespace perudo
                 case 3:
                     if (n3 * 10 + 3 + n1 * 10 == lastguess)
                     {
-                        if (cplayer.cubes == 6)
+                        if (cplayer.cubes == 5)
                         {
                             break;
                         }
@@ -70,7 +70,7 @@ namespace perudo
                 case 4:
                     if (n4 * 10 + 4 + n1 * 10 == lastguess)
                     {
-                        if (cplayer.cubes == 6)
+                        if (cplayer.cubes == 5)
                         {
                             break;
                         }
@@ -88,7 +88,7 @@ namespace perudo
                 case 5:
                     if (n5 * 10 + 5 + n1 * 10 == lastguess)
                     {
-                        if (cplayer.cubes == 6)
+                        if (cplayer.cubes == 5)
                         {
                             break;
                         }
@@ -106,7 +106,7 @@ namespace perudo
                 case 6:
                     if (n6 * 10 + 6 + n1 * 10 == lastguess)
                     {
-                        if (cplayer.cubes == 6)
+                        if (cplayer.cubes == 5)
                         {
                             break;
                         }
@@ -131,7 +131,7 @@ namespace perudo
             switch (Convert.ToInt32(numd))
             {
                 case 1:
-                    if (n1 * 10 + 1 > lastguess)
+                    if (n1 * 10 + 1 >= lastguess)
                     {
                         cplayer.cubes = cplayer.cubes - 1;
                     }
@@ -141,7 +141,7 @@ namespace perudo
                     }
                     break;
                 case 2:
-                    if (n2 * 10 + 2 + n1 * 10 > lastguess)
+                    if (n2 * 10 + 2 + n1 * 10 >= lastguess)
                     {
                         cplayer.cubes = cplayer.cubes - 1;
                     }
@@ -151,7 +151,7 @@ namespace perudo
                     }
                     break;
                 case 3:
-                    if (n3 * 10 + 3 + n1 * 10 > lastguess)
+                    if (n3 * 10 + 3 + n1 * 10 >= lastguess)
                     {
                         cplayer.cubes = cplayer.cubes - 1;
                     }
@@ -161,7 +161,7 @@ namespace perudo
                     }
                     break;
                 case 4:
-                    if (n4 * 10 + 4 + n1 * 10 > lastguess)
+                    if (n4 * 10 + 4 + n1 * 10 >= lastguess)
                     {
                         cplayer.cubes = cplayer.cubes - 1;
                     }
@@ -171,7 +171,7 @@ namespace perudo
                     }
                     break;
                 case 5:
-                    if (n5 * 10 + 5 + n1 * 10 > lastguess)
+                    if (n5 * 10 + 5 + n1 * 10 >= lastguess)
                     {
                         cplayer.cubes = cplayer.cubes - 1;
                     }
@@ -181,7 +181,7 @@ namespace perudo
                     }
                     break;
                 case 6:
-                    if (n6 * 10 + 6 + n1 * 10 > lastguess)
+                    if (n6 * 10 + 6 + n1 * 10 >= lastguess)
                     {
                         cplayer.cubes = cplayer.cubes - 1;
                     }
