@@ -192,8 +192,8 @@ namespace perudo
             }
             Console.WriteLine(players[0].name + " has won");
             SqlHandler.SqlExecute("UPDATE `game` SET `cycle`= 2, cPlayerId = " + players[0].id + " WHERE id = 0");
-            Thread.Sleep(60000);
-            SqlHandler.CleanUp();
+            /*Thread.Sleep(60000);
+            SqlHandler.CleanUp();*/
         }
 
     }

@@ -117,183 +117,11 @@ namespace perudo
                     string numd = lgsrtd.Substring(lgsrtd.Length - 1, 1);
                     if (guess == "doubt")
                     {
-                        switch (Convert.ToInt32(numd))
-                        {
-                            case 1:
-                                if (n1 * 10 + 1 >= lastguess)
-                                {
-                                    cplayer.cubes--;
-                                }
-                                else
-                                {
-                                    lplayer.cubes--;
-                                }
-                                break;
-                            case 2:
-                                if (n2 * 10 + 2 + n1 * 10 >= lastguess)
-                                {
-                                    cplayer.cubes = cplayer.cubes - 1;
-                                }
-                                else
-                                {
-                                    lplayer.cubes = lplayer.cubes - 1;
-                                }
-                                break;
-                            case 3:
-                                if (n3 * 10 + 3 + n1 * 10 >= lastguess)
-                                {
-                                    cplayer.cubes = cplayer.cubes - 1;
-                                }
-                                else
-                                {
-                                    lplayer.cubes = lplayer.cubes - 1;
-                                }
-                                break;
-                            case 4:
-                                if (n4 * 10 + 4 + n1 * 10 >= lastguess)
-                                {
-                                    cplayer.cubes = cplayer.cubes - 1;
-                                }
-                                else
-                                {
-                                    lplayer.cubes = lplayer.cubes - 1;
-                                }
-                                break;
-                            case 5:
-                                if (n5 * 10 + 5 + n1 * 10 >= lastguess)
-                                {
-                                    cplayer.cubes = cplayer.cubes - 1;
-                                }
-                                else
-                                {
-                                    lplayer.cubes = lplayer.cubes - 1;
-                                }
-                                break;
-                            case 6:
-                                if (n6 * 10 + 6 + n1 * 10 >= lastguess)
-                                {
-                                    cplayer.cubes = cplayer.cubes - 1;
-                                }
-                                else
-                                {
-                                    lplayer.cubes = lplayer.cubes - 1;
-                                }
-                                break;
-                        }
+                        Doubt(ref cplayer, ref lplayer, lastguess, numd, n1, n2, n3, n4, n5, n6);
                     }
                     else if (guess == "equal")
                     {
-                        switch (Convert.ToInt32(numd))
-                        {
-                            case 1:
-                                if (n1 * 10 + 1 == lastguess)
-                                {
-                                    if (cplayer.cubes == 5)
-                                    {
-                                        break;
-                                    }
-                                    else
-                                    {
-                                        cplayer.cubes = cplayer.cubes + 1;
-                                        cplayer.nums.Add(0);
-                                    }
-                                }
-                                else
-                                {
-                                    cplayer.cubes = cplayer.cubes - 1;
-                                }
-                                break;
-                            case 2:
-                                if (n2 * 10 + 2 + n1 * 10 == lastguess)
-                                {
-                                    if (cplayer.cubes == 5)
-                                    {
-                                        break;
-                                    }
-                                    else
-                                    {
-                                        cplayer.cubes = cplayer.cubes + 1;
-                                        cplayer.nums.Add(0);
-                                    }
-                                }
-                                else
-                                {
-                                    cplayer.cubes = cplayer.cubes - 1;
-                                }
-                                break;
-                            case 3:
-                                if (n3 * 10 + 3 + n1 * 10 == lastguess)
-                                {
-                                    if (cplayer.cubes == 5)
-                                    {
-                                        break;
-                                    }
-                                    else
-                                    {
-                                        cplayer.cubes = cplayer.cubes + 1;
-                                        cplayer.nums.Add(0);
-                                    }
-                                }
-                                else
-                                {
-                                    cplayer.cubes--;
-                                }
-                                break;
-                            case 4:
-                                if (n4 * 10 + 4 + n1 * 10 == lastguess)
-                                {
-                                    if (cplayer.cubes == 5)
-                                    {
-                                        break;
-                                    }
-                                    else
-                                    {
-                                        cplayer.cubes = cplayer.cubes + 1;
-                                        cplayer.nums.Add(0);
-                                    }
-                                }
-                                else
-                                {
-                                    cplayer.cubes--;
-                                }
-                                break;
-                            case 5:
-                                if (n5 * 10 + 5 + n1 * 10 == lastguess)
-                                {
-                                    if (cplayer.cubes == 5)
-                                    {
-                                        break;
-                                    }
-                                    else
-                                    {
-                                        cplayer.cubes++;
-                                        cplayer.nums.Add(0);
-                                    }
-                                }
-                                else
-                                {
-                                    cplayer.cubes = cplayer.cubes - 1;
-                                }
-                                break;
-                            case 6:
-                                if (n6 * 10 + 6 + n1 * 10 == lastguess)
-                                {
-                                    if (cplayer.cubes == 5)
-                                    {
-                                        break;
-                                    }
-                                    else
-                                    {
-                                        cplayer.cubes = cplayer.cubes + 1;
-                                        cplayer.nums.Add(0);
-                                    }
-                                }
-                                else
-                                {
-                                    cplayer.cubes = cplayer.cubes - 1;
-                                }
-                                break;
-                        }
+                        Equal(ref cplayer, lastguess, numd, n1, n2, n3, n4, n5, n6);
                     }
                     else
                     {
@@ -301,6 +129,203 @@ namespace perudo
                         UserInteract(ref cplayer, ref lplayer, ref lastguess, n1, n2, n3, n4, n5, n6, frun);
                     }
                 }
+            }
+        }
+        public static void Doubt(ref Player cplayer,
+                                 ref Player lplayer,
+                                 int lastguess,
+                                 string numd,
+                                 int n1,
+                                 int n2,
+                                 int n3,
+                                 int n4,
+                                 int n5,
+                                 int n6)
+        {
+            switch (Convert.ToInt32(numd))
+            {
+                case 1:
+                    if (n1 * 10 + 1 >= lastguess)
+                    {
+                        cplayer.cubes--;
+                    }
+                    else
+                    {
+                        lplayer.cubes--;
+                    }
+                    break;
+                case 2:
+                    if (n2 * 10 + 2 + n1 * 10 >= lastguess)
+                    {
+                        cplayer.cubes = cplayer.cubes - 1;
+                    }
+                    else
+                    {
+                        lplayer.cubes = lplayer.cubes - 1;
+                    }
+                    break;
+                case 3:
+                    if (n3 * 10 + 3 + n1 * 10 >= lastguess)
+                    {
+                        cplayer.cubes = cplayer.cubes - 1;
+                    }
+                    else
+                    {
+                        lplayer.cubes = lplayer.cubes - 1;
+                    }
+                    break;
+                case 4:
+                    if (n4 * 10 + 4 + n1 * 10 >= lastguess)
+                    {
+                        cplayer.cubes = cplayer.cubes - 1;
+                    }
+                    else
+                    {
+                        lplayer.cubes = lplayer.cubes - 1;
+                    }
+                    break;
+                case 5:
+                    if (n5 * 10 + 5 + n1 * 10 >= lastguess)
+                    {
+                        cplayer.cubes = cplayer.cubes - 1;
+                    }
+                    else
+                    {
+                        lplayer.cubes = lplayer.cubes - 1;
+                    }
+                    break;
+                case 6:
+                    if (n6 * 10 + 6 + n1 * 10 >= lastguess)
+                    {
+                        cplayer.cubes = cplayer.cubes - 1;
+                    }
+                    else
+                    {
+                        lplayer.cubes = lplayer.cubes - 1;
+                    }
+                    break;
+            }
+        }
+        public static void Equal(ref Player cplayer,
+                                 int lastguess,
+                                 string numd,
+                                 int n1,
+                                 int n2,
+                                 int n3,
+                                 int n4,
+                                 int n5,
+                                 int n6)
+        {
+            switch (Convert.ToInt32(numd))
+            {
+                case 1:
+                    if (n1 * 10 + 1 == lastguess)
+                    {
+                        if (cplayer.cubes == 5)
+                        {
+                            break;
+                        }
+                        else
+                        {
+                            cplayer.cubes = cplayer.cubes + 1;
+                            cplayer.nums.Add(0);
+                        }
+                    }
+                    else
+                    {
+                        cplayer.cubes = cplayer.cubes - 1;
+                    }
+                    break;
+                case 2:
+                    if (n2 * 10 + 2 + n1 * 10 == lastguess)
+                    {
+                        if (cplayer.cubes == 5)
+                        {
+                            break;
+                        }
+                        else
+                        {
+                            cplayer.cubes = cplayer.cubes + 1;
+                            cplayer.nums.Add(0);
+                        }
+                    }
+                    else
+                    {
+                        cplayer.cubes = cplayer.cubes - 1;
+                    }
+                    break;
+                case 3:
+                    if (n3 * 10 + 3 + n1 * 10 == lastguess)
+                    {
+                        if (cplayer.cubes == 5)
+                        {
+                            break;
+                        }
+                        else
+                        {
+                            cplayer.cubes = cplayer.cubes + 1;
+                            cplayer.nums.Add(0);
+                        }
+                    }
+                    else
+                    {
+                        cplayer.cubes--;
+                    }
+                    break;
+                case 4:
+                    if (n4 * 10 + 4 + n1 * 10 == lastguess)
+                    {
+                        if (cplayer.cubes == 5)
+                        {
+                            break;
+                        }
+                        else
+                        {
+                            cplayer.cubes = cplayer.cubes + 1;
+                            cplayer.nums.Add(0);
+                        }
+                    }
+                    else
+                    {
+                        cplayer.cubes--;
+                    }
+                    break;
+                case 5:
+                    if (n5 * 10 + 5 + n1 * 10 == lastguess)
+                    {
+                        if (cplayer.cubes == 5)
+                        {
+                            break;
+                        }
+                        else
+                        {
+                            cplayer.cubes++;
+                            cplayer.nums.Add(0);
+                        }
+                    }
+                    else
+                    {
+                        cplayer.cubes = cplayer.cubes - 1;
+                    }
+                    break;
+                case 6:
+                    if (n6 * 10 + 6 + n1 * 10 == lastguess)
+                    {
+                        if (cplayer.cubes == 5)
+                        {
+                            break;
+                        }
+                        else
+                        {
+                            cplayer.cubes = cplayer.cubes + 1;
+                            cplayer.nums.Add(0);
+                        }
+                    }
+                    else
+                    {
+                        cplayer.cubes = cplayer.cubes - 1;
+                    }
+                    break;
             }
         }
     }
