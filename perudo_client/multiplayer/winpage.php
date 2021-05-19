@@ -9,6 +9,7 @@
 <label class="switch">
     <input class="toggle-state" type="checkbox" name="check" value="check" onchange="themeSwitch()"/><div></div>
 </label>
+<div id="winner">
 <?php 
     $servername = "localhost";
     $username = "root";
@@ -27,5 +28,7 @@
     $row = mysqli_fetch_assoc($result);
     echo $row["name"] . " is the winner";
 ?>
+</div>
+<div id="eventGetter"></div>
 </body>
 </html>

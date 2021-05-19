@@ -64,6 +64,9 @@ input[type=number]:focus{
 #themb:hover{
     background-color: rgb(179, 179, 179);
 }
+#winner{
+    text-align: center;
+}
 @media only screen and (min-width: 768px){
     #themb{
         position: relative;
