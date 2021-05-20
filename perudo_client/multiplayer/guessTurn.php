@@ -111,7 +111,7 @@
         document.getElementById("others").appendChild(tableGenrator(array, arrayc));
         document.getElementById("allcubes").innerHTML = getSum(arrayc);
         
-        function setInputFilter(textbox, inputFilter) {
+        function setInputFilter(textbox, inputFilter) { //only allows numeric input
             ["input", "keydown", "keyup", "mousedown", "mouseup", "select", "contextmenu", "drop"].forEach(function(event) {
                 textbox.addEventListener(event, function() {
                     if (inputFilter(this.value)) {
@@ -137,7 +137,7 @@
     
         inputValidator();
 
-        function inputValidator(){
+        function inputValidator(){ //onyl shows submit button when input is legit (larger than lastguess)
             var times = parseInt(document.getElementById("guess").value);
             var number = parseInt(document.getElementById("guess1").value);
             var rellastguess = '<?php echo $rellastguess; ?>';
