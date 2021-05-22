@@ -68,7 +68,7 @@
         if(a == '2'){
             location.href = 'winpage.php';
         }
-        var id = '<?php echo $_GET["id"] ?>'
+        var id = '<?php echo $_GET["id"] ?>';
         var username = '<?php echo $_GET["username"]; ?>'; //getting info specific to this user
         document.getElementById("username").innerHTML = username + " your id is " + id;
         var nums = '<?php echo $row["numbers"]; ?>';
