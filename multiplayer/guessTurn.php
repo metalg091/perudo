@@ -67,8 +67,6 @@ session_start();
     <p id="urnumbers" class="data">------</p>
     <form action="guessUploader.php" method="post">
         <label for="guess">Your guess:</label>
-        <!--input type="checkbox" value="<?php //echo $_SESSION["id"]; ?>" name="id" checked style="display: none;">
-        <input type="checkbox" value="<?php //echo $_SESSION["username"]; ?>" name="username" checked style="display: none;"-->
         <div id="raddiv" style="margin: 20px; display: inline;">
         <div id="rad1">
             <input id="radio1" type="radio" name="iguess" value="1" onclick="document.getElementById("raddiv").style.display = "inline";">Doubt
@@ -86,9 +84,15 @@ session_start();
         <input id="submit" type="submit" value="Submit" style="display: none">
     </form>
     </div>
+    <h2>Events:</h2>
     <iframe src="eventGetter.php?style=../dark_theme.css" id="eventGetter">
     </iframe>
     <script defer type="text/javascript">
+        var element = document.getElementById('eventGetter');
+        var positionInfo = element.getBoundingClientRect();
+        var height = positionInfo.height;
+        var width = positionInfo.width;
+        document.getElementById("eventGetter").src = "eventGetter.php?style=../dark_theme.css&height=" + height + "&width=" + width;
         var a = '<?php echo $cycle; ?>';
         if(a == '2'){
             location.href = 'winpage.php';

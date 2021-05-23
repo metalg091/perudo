@@ -65,6 +65,7 @@ session_start();
     <h2>Your numbers</h2>
     <p id="urnumbers" class="data">------</p>
     </div>
+    <h2>Events:</h2>
     <iframe src="eventGetter.php?style=../dark_theme.css" id="eventGetter">
     </iframe>
     <script defer type="text/javascript">

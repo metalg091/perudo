@@ -53,7 +53,6 @@
         }
         mysqli_close($conn);
     ?>
-    <h2>Events</h2>
     <div id="event">
 
     </div>
