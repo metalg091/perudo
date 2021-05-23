@@ -1,6 +1,9 @@
+<?php
+session_start();
+?>
 <html>
 <head>
-    <link rel="stylesheet" href="dark_theme.css">
+    <link rel="stylesheet" href="../dark_theme.css">
 </head>
 <body>
 <?php 
@@ -25,14 +28,14 @@
             case 3:
                 $guess = intval($_POST["guess1"] * 10 + $_POST["guess2"]);
                 echo $guess . "<br>";
-                $sql = "INSERT INTO eventtable (orders, ide, guess) VALUES (" . $neworderid . ", " . $_POST["id"] . ", " . $guess . ")";
+                $sql = "INSERT INTO eventtable (orders, ide, guess) VALUES (" . $neworderid . ", " . $_SESSION["id"] . ", " . $guess . ")";
                 break;
             case 1:
-                $sql = "INSERT INTO eventtable (orders, ide, guess) VALUES (" . $neworderid . ", " . $_POST["id"] . ", '''doubt''')";
+                $sql = "INSERT INTO eventtable (orders, ide, guess) VALUES (" . $neworderid . ", " . $_SESSION["id"] . ", '''doubt''')";
                 break;
             case 2:
                 $equal = "equal";
-                $sql = "INSERT INTO eventtable (orders, ide, guess) VALUES (" . $neworderid . ", " . $_POST["id"] . ", '''" . $equal . "''')";
+                $sql = "INSERT INTO eventtable (orders, ide, guess) VALUES (" . $neworderid . ", " . $_SESSION["id"] . ", '''" . $equal . "''')";
                 break;
         }
         if(mysqli_query($conn, $sql)){
@@ -58,10 +61,8 @@
     <script defer type="text/javascript">
         var reload = '<?php echo $succes; ?>'; //php runner, redirecter
         document.getElementById("a").innerHTML = reload;
-        var username = '<?php echo $_POST["username"]; ?>';
-        var id = '<?php echo $_POST["id"]; ?>';
         if(reload){
-            location.href = 'waitingForTurn.php?id=' + id + '&username=' + username;
+            location.href = 'waitingForTurn.php';
         }
         else {
             setTimeout(function(){location.reload()}, 15000);

@@ -1,3 +1,6 @@
+<?php
+session_start();
+?>
 <html>
 <head>
     <link rel="stylesheet" href="../dark_theme.css" id="theme">
@@ -41,7 +44,7 @@
         $row = mysqli_fetch_assoc($result);
         $lastguess = substr($row["guess"], 0, -1);
         $rellastguess = $row["guess"];
-        $sql = "SELECT cubes, numbers FROM game WHERE id = " . $_GET["id"];
+        $sql = "SELECT cubes, numbers FROM game WHERE id = " . $_SESSION["id"];
         $result = mysqli_query($conn, $sql);
         $row = mysqli_fetch_assoc($result);
         mysqli_close($conn);
@@ -64,8 +67,8 @@
     <p id="urnumbers" class="data">------</p>
     <form action="guessUploader.php" method="post">
         <label for="guess">Your guess:</label>
-        <input type="checkbox" value="<?php echo $_GET["id"]; ?>" name="id" checked style="display: none;">
-        <input type="checkbox" value="<?php echo $_GET["username"]; ?>" name="username" checked style="display: none;">
+        <!--input type="checkbox" value="<?php //echo $_SESSION["id"]; ?>" name="id" checked style="display: none;">
+        <input type="checkbox" value="<?php //echo $_SESSION["username"]; ?>" name="username" checked style="display: none;"-->
         <div id="raddiv" style="margin: 20px; display: inline;">
         <div id="rad1">
             <input id="radio1" type="radio" name="iguess" value="1" onclick="document.getElementById("raddiv").style.display = "inline";">Doubt
@@ -90,8 +93,8 @@
         if(a == '2'){
             location.href = 'winpage.php';
         }
-        var id = '<?php echo $_GET["id"] ?>';
-        var username = '<?php echo $_GET["username"]; ?>'; //getting info specific to this user
+        var id = '<?php echo $_SESSION["id"] ?>';
+        var username = '<?php echo $_SESSION["username"]; ?>'; //getting info specific to this user
         document.getElementById("username").innerHTML = username + " your id is " + id;
         var nums = '<?php echo $row["numbers"]; ?>';
         document.getElementById("urnumbers").innerHTML = nums;

@@ -1,3 +1,6 @@
+<?php
+session_start();
+?>
 <html>
 <head>
     <link id="theme" rel="stylesheet" href="../dark_theme.css">
@@ -8,6 +11,7 @@
 </head>
 <body>
     <?php 
+        echo $_SESSION["id"];
         $servername = "localhost";
         $username = "root";
         $password = "";
@@ -36,10 +40,10 @@
         else{
 
         }
-        $sql = "SELECT cubes, numbers FROM game WHERE id = " . $_GET["id"];
+        $sql = "SELECT cubes, numbers FROM game WHERE id = " . $_SESSION["id"];
         $result = mysqli_query($conn, $sql);
         $row = mysqli_fetch_assoc($result);
-        if($cpi == $_GET["id"] && $cycle == 1){
+        if($cpi == $_SESSION["id"] && $cycle == 1){
             $whatnow = true;
         }
         else{
@@ -68,15 +72,15 @@
         if(a == '2'){
             location.href = 'winpage.php';
         }
-        var id = '<?php echo $_GET["id"] ?>';
-        var username = '<?php echo $_GET["username"]; ?>'; //getting info specific to this user
+        var id = '<?php echo $_SESSION["id"] ?>';
+        var username = '<?php echo $_SESSION["username"]; ?>'; //getting info specific to this user
         document.getElementById("username").innerHTML = username + " your id is " + id;
         var nums = '<?php echo $row["numbers"]; ?>';
         document.getElementById("urnumbers").innerHTML = nums;
 
         var reload = '<?php echo $whatnow; ?>'; //php runner, redirecter
         if(reload){
-            location.href = 'guessTurn.php?id=' + id + '&username=' + username;
+            location.href = 'guessTurn.php';
         }
         else {
             setTimeout(function(){location.reload()}, 7500);

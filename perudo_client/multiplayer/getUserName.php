@@ -1,3 +1,8 @@
+<?php
+session_start();
+$_SESSION["height"] = $_GET["height"];
+$_SESSION["username"] = $_GET["username"];
+?>
 <html>
 <head>
     <link rel="stylesheet" href="../dark_theme.css">
@@ -20,6 +25,7 @@
             $row = mysqli_fetch_assoc($result);
             $into = $row["playersInGame"] + 1;
             echo $into;
+            $_SESSION["id"] = $into;
             $sql = "UPDATE game SET name = '" . $_GET["username"] . "' WHERE id = " . $into;
             if (mysqli_query($conn, $sql)) {
                 echo "user registered succesfully";
@@ -55,22 +61,9 @@
     <p id="numbers">------</p>
     <h1>Please wait until your are registered!!!! (user registration in progress...)</h1>
     <script defer type="text/javascript">
-        function listOfOthers(names){
-            var list = document.createElement('ul');
-            for (var i = 0; i < names.length; i++){
-                var item = document.createElement('li');
-                item.appendChild(document.createTextNode(names[i]));
-                list.appendChild(item);
-            }
-            return list;
-        }
-        var username = '<?php echo $_GET["username"]; ?>';
-        document.getElementById("username").innerHTML = username;
-        
         var reload = '<?php echo $whatnow; ?>';
-        var id = '<?php echo $into; ?>';
         if(reload == 0){
-            location.href = 'waitingForTurn.php?id=' + id + '&username=' + username;
+            location.href = 'waitingForTurn.php';
         }
         else {
             setTimeout(function(){location.reload()}, 15000);
