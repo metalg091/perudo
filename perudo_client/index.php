@@ -20,9 +20,14 @@
 </label>
     <h2>Type in your username!</h2>
     
-    <form action="multiplayer/getUserName.php" method="get">
+    <form id="form" action="multiplayer/getUserName.php" method="get">
+        <input type="checkbox" id="height" name="height" checked style="display: none;"> 
         <input type="text" id="username" name="username"><br><br>
         <input type="submit" value="Submit">
     </form>
+<script type="text/javascript">
+    var height = window.innerHeight;
+    document.getElementById("height").value = height;
+</script>
 </body>
 </html>
