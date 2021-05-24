@@ -3,7 +3,7 @@ session_start();
 ?>
 <html>
 <head>
-    <link id="theme" rel="stylesheet" href="../dark_theme.css">
+    <link id="theme" rel="stylesheet" href="<?php echo $_COOKIE["theme"]?>">
     <link rel="stylesheet" href="../button.css">
     <script src="../themeSwitch.js"></script>
     <script src="otherPlayers.js"></script>
