@@ -84,7 +84,7 @@ session_start();
         <input id="submit" type="submit" value="Submit" style="display: none">
     </form>
     </div>
-    <h2>Events:</h2>
+    <h2 id="iframeTitle">Events:</h2>
     <iframe src="eventGetter.php?style=../dark_theme.css" id="eventGetter">
     </iframe>
     <script defer type="text/javascript">

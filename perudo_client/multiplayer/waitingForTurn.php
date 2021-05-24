@@ -10,8 +10,7 @@ session_start();
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 <body>
-    <?php 
-        echo $_SESSION["id"];
+    <?php
         $servername = "localhost";
         $username = "root";
         $password = "";
@@ -65,7 +64,7 @@ session_start();
     <h2>Your numbers</h2>
     <p id="urnumbers" class="data">------</p>
     </div>
-    <h2>Events:</h2>
+    <h2 id="iframeTitle">Events:</h2>
     <iframe src="eventGetter.php?style=../dark_theme.css" id="eventGetter">
     </iframe>
     <script defer type="text/javascript">
