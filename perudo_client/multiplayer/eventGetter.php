@@ -29,27 +29,56 @@
         else{
             echo "Game hasn't started yet!";
         }
-        $sql = "SELECT * FROM eventtable";
-        $result = mysqli_query($conn, $sql);
-        if (mysqli_num_rows($result) > 0){
-            $guess = Array();
-            $eventId = Array();
-            $who = Array();
-            while($row = mysqli_fetch_assoc($result)){
-                $guess[] = $row["guess"];
-                $eventId[] = $row["ide"];
-                $who[]= $row["who"];
+        if($_COOKIE["width"] <= 768){
+            $sql = "SELECT * FROM eventtable ORDER BY orders DESC LIMIT 6";
+            $result = mysqli_query($conn, $sql);
+                if (mysqli_num_rows($result) > 0){
+                    $guess = Array();
+                    $eventId = Array();
+                    $who = Array();
+                while($row = mysqli_fetch_assoc($result)){
+                    $guess[] = $row["guess"];
+                    $eventId[] = $row["ide"];
+                    $who[]= $row["who"];
+                }
+                $guess = array_reverse($guess);
+                $eventId = array_reverse($eventId);
+                $who = array_reverse($who);
+                for ($i = 0; $i < count($guess); $i++){
+                    $guess[$i] = str_replace("'", "",$guess[$i]);
+                }
+                $arrayofremove = Array();
+                $outGuess = json_encode($guess);
+                $outEventId = json_encode($eventId);
+                $outWho = json_encode($who);
             }
-            for ($i = 0; $i < count($guess); $i++){
-                $guess[$i] = str_replace("'", "",$guess[$i]);
+            else{
+                echo "Game hasn't started yet!";
             }
-            $arrayofremove = Array();
-            $outGuess = json_encode($guess);
-            $outEventId = json_encode($eventId);
-            $outWho = json_encode($who);
         }
         else{
-            echo "Game hasn't started yet!";
+            $sql = "SELECT * FROM eventtable";
+            $result = mysqli_query($conn, $sql);
+            if (mysqli_num_rows($result) > 0){
+                $guess = Array();
+                $eventId = Array();
+                $who = Array();
+                while($row = mysqli_fetch_assoc($result)){
+                    $guess[] = $row["guess"];
+                    $eventId[] = $row["ide"];
+                    $who[]= $row["who"];
+                }
+                for ($i = 0; $i < count($guess); $i++){
+                    $guess[$i] = str_replace("'", "",$guess[$i]);
+                }
+                $arrayofremove = Array();
+                $outGuess = json_encode($guess);
+                $outEventId = json_encode($eventId);
+                $outWho = json_encode($who);
+            }
+            else{
+                echo "Game hasn't started yet!";
+            }
         }
         mysqli_close($conn);
     ?>

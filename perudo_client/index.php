@@ -29,8 +29,8 @@ setcookie("theme", "../dark_theme.css", time() + 86400, "/");
         <input type="submit" value="Submit">
     </form>
 <script type="text/javascript">
-    var height = window.innerHeight;
-    document.getElementById("height").value = height;
+    var width = window.innerWidth;
+    document.cookie = "width=" + width + "; expires=86400000; path=/";
 </script>
 </body>
 </html>

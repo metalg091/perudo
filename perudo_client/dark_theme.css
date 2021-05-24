@@ -40,6 +40,9 @@ input[type=number] {
 input[type=number]:focus{
     background-color: lightgray;
 }
+#iframeTitle{
+    position: relative;
+}
 #eventGetter{
     width: 100%;
 }
@@ -75,6 +78,12 @@ input[type=number]:focus{
         position: fixed;
         top: 0em;
         margin: 1em;
+    }
+    #iframeTitle{
+        position: relative;
+        width: 100px;
+        left: 48.5%;
+        top: 0.25em;
     }
     #eventGetter{
         width: 50%;

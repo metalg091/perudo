@@ -88,11 +88,6 @@ session_start();
     <iframe src="eventGetter.php?style=../dark_theme.css" id="eventGetter">
     </iframe>
     <script defer type="text/javascript">
-        var element = document.getElementById('eventGetter');
-        var positionInfo = element.getBoundingClientRect();
-        var height = positionInfo.height;
-        var width = positionInfo.width;
-        document.getElementById("eventGetter").src = "eventGetter.php?style=../dark_theme.css&height=" + height + "&width=" + width;
         var a = '<?php echo $cycle; ?>';
         if(a == '2'){
             location.href = 'winpage.php';
