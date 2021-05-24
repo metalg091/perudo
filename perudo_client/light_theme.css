@@ -24,7 +24,7 @@ input[type=text]:focus{
 input[type=submit]{
     display: inline-block;
     border: none;
-    padding:  10 20 10 20px;
+    padding: 10 20 10 20px;
     border-radius: 100px;
     background-color: lightgray;
 }
@@ -42,6 +42,9 @@ input[type=number] {
 }
 input[type=number]:focus{
     background-color: gray;
+}
+#iframeTitle{
+    position: relative;
 }
 #eventGetter{
     width: 100%;
@@ -71,6 +74,17 @@ input[type=number]:focus{
     #themb{
         position: relative;
         left: 48.75%;
+        top: 0.25em;
+    }
+    #container{
+        position: fixed;
+        top: 0em;
+        margin: 1em;
+    }
+    #iframeTitle{
+        position: relative;
+        width: 100px;
+        left: 48.5%;
         top: 0.25em;
     }
     #eventGetter{
