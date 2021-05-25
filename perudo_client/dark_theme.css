@@ -3,10 +3,8 @@
   --textcolor: white;
   --inputbgcolor: white;
   --inputbgcolorfocus: lightgray;
-  --submitbgcolor: white;
   --submitbgcolorhover: rgb(212, 212, 212);
   --eventbgcolor: #222222;
-  --eventtextcolor: white;
 }
 body{
     background-color: var(--mainbgcolor);
@@ -36,7 +34,7 @@ input[type=submit]{
     border: none;
     padding: 10 20 10 20px;
     border-radius: 100px;
-    background-color: var(--submitbgcolor);
+    background-color: var(--inputbgcolor);
 }
 input[type=submit]:hover{
     background-color: var(--submitbgcolorhover);
@@ -61,7 +59,7 @@ input[type=number]:focus{
 }
 #event{
     background-color: var(--eventbgcolor);
-    color: var(--eventtextcolor);
+    color: var(--textcolor);
 }
 .data{
     margin: 0 0 0 0.75em;
