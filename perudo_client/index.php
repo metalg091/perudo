@@ -1,5 +1,6 @@
 <?php
 setcookie("theme", "../dark_theme.css", time() + 86400, "/");
+setcookie("themetest", "0", time() + 86400, "/");
 ?>
 <html>
 <head>
