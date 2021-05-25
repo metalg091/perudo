@@ -5,7 +5,11 @@ $_SESSION["username"] = $_GET["username"];
 ?>
 <html>
 <head>
-    <link rel="stylesheet" href="<?php echo $_COOKIE["theme"]?>">
+    <link rel="stylesheet" href="../dark_theme.css" id="theme">
+    <script type="text/javascript">
+        var theme = '<?php echo $_COOKIE["theme"]; ?>';
+        themeSetup(theme);
+    </script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!--<meta id="meta" http-equiv="refresh" content="">-->
 </head>

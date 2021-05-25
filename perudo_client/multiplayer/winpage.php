@@ -3,11 +3,15 @@
     <link id="theme" rel="stylesheet" href="<?php echo $_COOKIE["theme"]?>">
     <link rel="stylesheet" href="../button.css">
     <script src="../themeSwitch.js"></script>
+    <script type="text/javascript">
+        var theme = '<?php echo $_COOKIE["theme"]; ?>';
+        themeSetup(theme);
+    </script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 <body>
 <label class="switch">
-    <input class="toggle-state" type="checkbox" name="check" value="check" onchange="themeSwitch()"/><div></div>
+    <input class="toggle-state" type="checkbox" name="check" value="check" onchange="themeSwitch(theme)"/><div></div>
 </label>
 <div id="winner">
 <?php 

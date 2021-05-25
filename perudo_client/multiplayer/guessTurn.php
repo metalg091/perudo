@@ -3,9 +3,13 @@ session_start();
 ?>
 <html>
 <head>
-    <link rel="stylesheet" href="<?php echo $_COOKIE["theme"]?>" id="theme">
+    <link rel="stylesheet" href="../dark_theme" id="theme">
     <link rel="stylesheet" href="../button.css">
     <script src="../themeSwitch.js"></script>
+    <script type="text/javascript">
+        var theme = '<?php echo $_COOKIE["theme"]; ?>';
+        themeSetup(theme);
+    </script>
     <script src="otherPlayers.js"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <?php 
@@ -53,7 +57,7 @@ session_start();
 <body>
     <!--button id="themb" onclick="document.getElementById('eventGetter').src += '';">refresh</button-->
     <label class="switch">
-        <input class="toggle-state" type="checkbox" name="check" value="check" onchange="themeSwitch()" checked/><div></div>
+        <input class="toggle-state" type="checkbox" name="check" value="check" onchange="themeSwitch(theme)" checked/><div></div>
     </label>
     <div id="container">
     <h2>Your name</h2>

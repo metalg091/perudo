@@ -3,9 +3,13 @@ session_start();
 ?>
 <html>
 <head>
-    <link id="theme" rel="stylesheet" href="<?php echo $_COOKIE["theme"]?>">
+    <link id="theme" rel="stylesheet" href="../dark_theme.css">
     <link rel="stylesheet" href="../button.css">
     <script src="../themeSwitch.js"></script>
+    <script type="text/javascript">
+        var theme = '<?php echo $_COOKIE["theme"]; ?>';
+        themeSetup(theme);
+    </script>
     <script src="otherPlayers.js"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
@@ -51,7 +55,7 @@ session_start();
         mysqli_close($conn);
     ?>
     <label class="switch">
-        <input class="toggle-state" type="checkbox" name="check" value="check" onchange="themeSwitch()"/><div></div>
+        <input class="toggle-state" type="checkbox" name="check" value="check" onchange="themeSwitch(theme)"><div></div>
     </label>
     <div id="container">
     <h2>Your name</h2>
@@ -65,7 +69,7 @@ session_start();
     <p id="urnumbers" class="data">------</p>
     </div>
     <h2 id="iframeTitle">Events:</h2>
-    <iframe src="eventGetter.php?style=../dark_theme.css" id="eventGetter">
+    <iframe src="eventGetter.php" id="eventGetter">
     </iframe>
     <script defer type="text/javascript">
         var a = '<?php echo $cycle; ?>';

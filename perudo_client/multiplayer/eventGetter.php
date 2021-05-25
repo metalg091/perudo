@@ -1,7 +1,12 @@
 <html>
     <head>
-        <link rel="stylesheet" href="<?php echo $_COOKIE["theme"]?>">
+        <link rel="stylesheet" href="../dark_theme.css">
         <script src="otherPlayers.js"></script>
+        <script src="../themeSwitch.js"></script>
+        <script type="text/javascript" defer>
+            var theme = '<?php echo $_COOKIE["theme"]; ?>';
+            themeSetup(theme);
+        </script>
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
     </head>
     <body id="event">
@@ -94,7 +99,7 @@
         for(var p = 0; p < arrayOfWho.length; p++){
             arrayOfIWho[p] = arrayOfNames[arrayOfWho[p]-1]; 
         }
-        console.log(arrayOfWho);
+        //console.log(arrayOfWho);
         var arrayOfINames = [];
         var whoid = 0;
         for (var i = 0; i < arrayOfIde.length; i++){

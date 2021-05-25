@@ -3,7 +3,11 @@ session_start();
 ?>
 <html>
 <head>
-    <link rel="stylesheet" href="<?php echo $_COOKIE["theme"]?>">
+    <link rel="stylesheet" href="../dark_theme.css">
+    <script type="text/javascript">
+        var theme = '<?php echo $_COOKIE["theme"]; ?>';
+        themeSetup(theme);
+    </script>
 </head>
 <body>
 <?php 
