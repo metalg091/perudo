@@ -1,6 +1,16 @@
+.root{
+  --mainbgcolor: black;
+  --textcolor: white;
+  --inputbgcolor: white;
+  --inputbgcolorfocus: lightgray;
+  --submitbgcolor: white;
+  --submitbgcolorhover: rgb(212, 212, 212);
+  --eventbgcolor: #222222;
+  --eventtextcolor: white;
+}
 body{
-    background-color: black;
-    color: white;
+    background-color: var(--mainbgcolor);
+    color: var(--textcolor);
 }
 form{
     margin: 1em 0 0 0;
@@ -12,22 +22,24 @@ input[type=text] {
     border-radius: 100px;
     display: inline-block;
     margin: 2.5% 0 0 0;
+    background-color: var(--inputbgcolor);
 }
 #rad1, #rad2, #rad3{
     display: block;
     margin: 0.75em;
 }
 input[type=text]:focus{
-    background-color: lightgray;
+    background-color: var(--inputbgcolorfocus);
 }
 input[type=submit]{
     display: inline-block;
     border: none;
     padding: 10 20 10 20px;
     border-radius: 100px;
+    background-color: var(--submitbgcolor);
 }
 input[type=submit]:hover{
-    background-color: rgb(212, 212, 212);
+    background-color: var(--submitbgcolorhover);
 }
 input[type=number] {
     padding: 10px;
@@ -36,9 +48,10 @@ input[type=number] {
     border-radius: 100px;
     display: inline-block;
     margin: 1em 0 0 0;
+    background-color: var(--inputbgcolor);
 }
 input[type=number]:focus{
-    background-color: lightgray;
+    background-color: var(--inputbgcolorfocus);
 }
 #iframeTitle{
     position: relative;
@@ -47,13 +60,13 @@ input[type=number]:focus{
     width: 100%;
 }
 #event{
-    background-color: #222222;
-    color: #fff;
+    background-color: var(--eventbgcolor);
+    color: var(--eventtextcolor);
 }
 .data{
     margin: 0 0 0 0.75em;
 }
-#themb{
+/*#themb{
     position: relative;
     left: 2%;
     top: 0.95em;
@@ -64,7 +77,7 @@ input[type=number]:focus{
 }
 #themb:hover{
     background-color: rgb(212, 212, 212);
-}
+}*/
 #winner{
     text-align: center;
 }
