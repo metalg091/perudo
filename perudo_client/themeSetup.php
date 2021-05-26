@@ -2,10 +2,13 @@
 <head>
     <link rel="stylesheet" href="dark_theme.css" id="theme">
     <style>
-        .colorpick{
+        #colorpick{
             position: absolute;
             bottom: 10px;
             display: inline-block;
+        }
+        .cpick{
+            margin 10px;
         }
     </style>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -93,8 +96,20 @@
         </body>
         </html>" id="eventGetter">
     </iframe>
-    <label for="" class="colorpick">background color</label>
-    <input style="left: 130px;" type="color" id="backgroundColor" value="#fff" class="colorpick">
+    <div id="colorpick">
+        <label class="cpick" for="bgc">background color</label>
+        <input style="left: 130px;" type="color" value="#fff" id="bgc" class="cpick" onchange="CustomTheme()">
+        <label class="cpick" for="txtc">text color</label>
+        <input style="left: 130px;" type="color" value="#ffffff" id="txtc" class="cpick" onchange="CustomTheme()">
+        <label class="cpick" for="inbgc">Input area and button color</label>
+        <input style="left: 130px;" type="color" value="#ffffff" id="inbgc" class="cpick" onchange="CustomTheme()">
+        <label class="cpick" for="inbgcfocus">Input area color while typing</label>
+        <input style="left: 130px;" type="color" value="#d3d3d3" id="inbgcfocus" class="cpick" onchange="CustomTheme()">
+        <label class="cpick" for="buttonbgchover">Button color with mouse on it</label>
+        <input style="left: 130px;" type="color" value="#d4d4d4" id="buttonbgchover" class="cpick" onchange="CustomTheme()">
+        <label class="cpick" for="eventbgc">Event listener background color</label>
+        <input style="left: 130px;" type="color" value="#222222" id="eventbgc" class="cpick" onchange="CustomTheme()">
+    </div>
     <script defer type="text/javascript">
         function setInputFilter(textbox, inputFilter) { //only allows numeric input
             ["input", "keydown", "keyup", "mousedown", "mouseup", "select", "contextmenu", "drop"].forEach(function(event) {
@@ -119,6 +134,21 @@
         return /^\d*$/.test(value); });
         setInputFilter(document.getElementById("guess1"), function(value) {
         return /^\d*$/.test(value); });
+        
+        function CustomTheme(){
+            var bgc = document.getElementById("bgc").value;
+            var txtc = document.getElementById("txtc").value;
+            var inbgc = document.getElementById("inbgc").value;
+            var inbgcfocus = document.getElementById("inbgcfocus").value;
+            var buttonbgchover = document.getElementById("buttonbgchover").value;
+            var eventbgc = document.getElementById("eventbgc").value;
+            document.documentElement.style.setProperty('--mainbgcolor', bgc);
+            document.documentElement.style.setProperty('--textcolor', txtc);
+            document.documentElement.style.setProperty('--inputbgcolor', inbgc);
+            document.documentElement.style.setProperty('--inputbgcolorfocus', inbgcfocus);
+            document.documentElement.style.setProperty('--submitbghover', buttonbgchover);
+            document.documentElement.style.setProperty('--eventbgcolor', eventbgc);
+        }
     </script>
 </body>
 </html>
