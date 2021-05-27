@@ -152,8 +152,9 @@
             document.documentElement.style.setProperty('--textcolor', txtc);
             document.documentElement.style.setProperty('--inputbgcolor', inbgc);
             document.documentElement.style.setProperty('--inputbgcolorfocus', inbgcfocus);
-            document.documentElement.style.setProperty('--submitbghover', buttonbgchover);
+            document.documentElement.style.setProperty('--submitbgcolorhover', buttonbgchover);
             document.documentElement.style.setProperty('--eventbgcolor', eventbgc);
+            document.getElementById("eventGetter").srcdoc = document.getElementById("eventGetter").srcdoc; 
         }
 
         var cycle = 1
