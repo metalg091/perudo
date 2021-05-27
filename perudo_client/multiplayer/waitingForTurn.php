@@ -6,10 +6,6 @@ session_start();
     <link id="theme" rel="stylesheet" href="../dark_theme.css">
     <link rel="stylesheet" href="../button.css">
     <script src="../themeSwitch.js"></script>
-    <script type="text/javascript">
-        var theme = '<?php echo $_COOKIE["theme"]; ?>';
-        themeSetup(theme);
-    </script>
     <script src="otherPlayers.js"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
@@ -72,6 +68,16 @@ session_start();
     <iframe src="eventGetter.php" id="eventGetter">
     </iframe>
     <script defer type="text/javascript">
+        <?php
+        try{
+            if($_COOKIE["iscustom"]){
+                echo "CustomTheme();";
+            }
+        }
+        catch(Exception $e){
+            echo "themeSetup(" . $_COOKIE["theme"] . ";";
+        }
+        ?>
         var a = '<?php echo $cycle; ?>';
         if(a == '2'){
             location.href = 'winpage.php';

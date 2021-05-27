@@ -3,10 +3,6 @@
         <link rel="stylesheet" href="../dark_theme.css">
         <script src="otherPlayers.js"></script>
         <script src="../themeSwitch.js"></script>
-        <script type="text/javascript" defer>
-            var theme = '<?php echo $_COOKIE["theme"]; ?>';
-            themeSetup(theme);
-        </script>
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
     </head>
     <body id="event">
@@ -208,6 +204,16 @@
             return table;
         }
         //setTimeout(function(){location.reload()}, 5000);
+        <?php
+        try{
+            if($_COOKIE["iscustom"]){
+                echo "CustomTheme();";
+            }
+        }
+        catch(Exception $e){
+            echo "themeSetup(" . $_COOKIE["theme"] . ";";
+        }
+        ?>
     </script>
     </body>
 </html>

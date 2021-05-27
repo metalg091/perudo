@@ -1,18 +1,26 @@
 <html>
 <head>
-    <link id="theme" rel="stylesheet" href="<?php echo $_COOKIE["theme"]?>">
+    <link id="theme" rel="stylesheet" href="../dark_theme.css">
     <link rel="stylesheet" href="../button.css">
     <script src="../themeSwitch.js"></script>
     <script type="text/javascript">
-        var theme = '<?php echo $_COOKIE["theme"]; ?>';
-        themeSetup(theme);
+    <?php
+        try{
+            if($_COOKIE["iscustom"]){
+                echo "CustomTheme();";
+            }
+        }
+        catch(Exception $e){
+            echo "themeSetup(" . $_COOKIE["theme"] . ";";
+        }
+    ?>
     </script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 <body>
-<label class="switch">
+<!--label class="switch">
     <input class="toggle-state" type="checkbox" name="check" value="check" onchange="themeSwitch(theme)"/><div></div>
-</label>
+</label-->
 <div id="winner">
 <?php 
     $servername = "localhost";

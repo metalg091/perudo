@@ -6,11 +6,8 @@ $_SESSION["username"] = $_GET["username"];
 <html>
 <head>
     <link rel="stylesheet" href="../dark_theme.css" id="theme">
-    <script type="text/javascript">
-        var theme = '<?php echo $_COOKIE["theme"]; ?>';
-        themeSetup(theme);
-    </script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="../themeSwitch.js"></script>
     <!--<meta id="meta" http-equiv="refresh" content="">-->
 </head>
 <body>
@@ -65,6 +62,16 @@ $_SESSION["username"] = $_GET["username"];
     <p id="numbers">------</p>
     <h1>Please wait until your are registered!!!! (user registration in progress...)</h1>
     <script defer type="text/javascript">
+        <?php
+        try{
+            if($_COOKIE["iscustom"]){
+                echo "CustomTheme();";
+            }
+        }
+        catch(Exception $e){
+            echo "themeSetup(" . $_COOKIE["theme"] . ";";
+        }
+        ?>
         var reload = '<?php echo $whatnow; ?>';
         if(reload == 0){
             location.href = 'waitingForTurn.php';

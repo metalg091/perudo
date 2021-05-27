@@ -6,10 +6,6 @@ setcookie("theme", "1", time() + 86400, "/");
     <link id="theme" rel="stylesheet" href="../dark_theme.css">
     <link rel="stylesheet" href="button.css">
     <script src="themeSwitch.js"></script>
-    <script type="text/javascript">
-        var theme = '<?php echo $_COOKIE["theme"]; ?>';
-        themeSetup(theme);
-    </script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
         h2{
@@ -22,9 +18,9 @@ setcookie("theme", "1", time() + 86400, "/");
     </style>
 </head>
 <body>
-<label class="switch">
+<!--label class="switch">
     <input class="toggle-state" type="checkbox" name="check" value="check" onchange="themeSwitch(theme)"/><div></div>
-</label>
+</label-->
     <h2>Type in your username!</h2>
     
     <form id="form" action="multiplayer/getUserName.php" method="get">
@@ -33,6 +29,16 @@ setcookie("theme", "1", time() + 86400, "/");
         <input type="submit" value="Submit">
     </form>
 <script type="text/javascript">
+    <?php
+        try{
+            if($_COOKIE["iscustom"]){
+                echo "CustomTheme();";
+            }
+        }
+        catch(Exception $e){
+            echo "themeSetup(" . $_COOKIE["theme"] . ";";
+        }
+    ?>
     var width = window.innerWidth;
     document.cookie = "width=" + width + "; expires=86400000; path=/";
 </script>
