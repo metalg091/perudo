@@ -1,22 +1,18 @@
-<?php
-  $bgc = $_GET["bgc"];
-  $txtc = $_GET["txtc"];
-  $inbgc = $_GET["inbgc"];
-  $inbgcfocus = $_GET["inbgcfocus"];
-  $buttonbgchover = $_GET["$buttonbgchover"];
-  setcookie(bgc, $bgc);
-  setcookie(txtc, $txtc);
-  setcookie(inbgc, $inbgc);
-  setcookie(inbgcfocus, $inbgcfocus);
-  setcookie(buttonbgchover, $buttonbgchover);
-?>
+
 <html>
-  <head>
+    <head>
     
-  </head>
-  <body>
-    <script>
+    </head>
+    <body>
+        <?php
+            setcookie("bgc", $_GET["bgc"], time() + 86400 * 30, "/");
+            setcookie("txtc", $_GET["txtc"], time() + 86400 * 30, "/");
+            setcookie("inbgc", $_GET["inbgc"], time() + 86400 * 30, "/");
+            setcookie("inbgcfocus", $_GET["inbgcfocus"], time() + 86400 * 30, "/");
+            setcookie("buttonbgchover", $_GET["buttonbgchover"], time() + 86400 * 30, "/");
+        ?>
+        <script>
       
-    </script>
-  </body>
+        </script>
+    </body>
 </html>
