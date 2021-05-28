@@ -205,14 +205,7 @@
         }
         //setTimeout(function(){location.reload()}, 5000);
         <?php
-        try{
-            if($_COOKIE["iscustom"]){
-                echo "CustomTheme();";
-            }
-        }
-        catch(Exception $e){
-            echo "themeSetup(" . $_COOKIE["theme"] . ";";
-        }
+            echo "themeSetup(" . $_COOKIE["theme"] . ");";
         ?>
     </script>
     </body>

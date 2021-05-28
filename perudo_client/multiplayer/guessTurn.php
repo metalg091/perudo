@@ -89,14 +89,7 @@ session_start();
     </iframe>
     <script defer type="text/javascript">
         <?php
-        try{
-            if($_COOKIE["iscustom"]){
-                echo "CustomTheme();";
-            }
-        }
-        catch(Exception $e){
-            echo "themeSetup(" . $_COOKIE["theme"] . ";";
-        }
+            echo "themeSetup(" . $_COOKIE["theme"] . ");";
         ?>
         var a = '<?php echo $cycle; ?>';
         if(a == '2'){
@@ -164,7 +157,7 @@ session_start();
         
             var lastguesslastnum = rellastguess - lastguess * 10;
             var relnum = parseInt(times*10+number);
-            console.log(rellastguess + " and " + relnum);
+            //console.log(rellastguess + " and " + relnum);
             if(lastguesslastnum == 1 || number == 1){
                 if(lastguesslastnum == 1 && number == 1){
                     if(relnum > rellastguess){

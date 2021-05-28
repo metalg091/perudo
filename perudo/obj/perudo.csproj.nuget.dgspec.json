@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "f:\\Tibi\\programing\\perudo\\perudo\\perudo\\perudo.csproj": {}
+    "F:\\Tibi\\programing\\perudo\\perudo\\perudo.csproj": {}
   },
   "projects": {
-    "f:\\Tibi\\programing\\perudo\\perudo\\perudo\\perudo.csproj": {
+    "F:\\Tibi\\programing\\perudo\\perudo\\perudo.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "f:\\Tibi\\programing\\perudo\\perudo\\perudo\\perudo.csproj",
+        "projectUniqueName": "F:\\Tibi\\programing\\perudo\\perudo\\perudo.csproj",
         "projectName": "perudo",
-        "projectPath": "f:\\Tibi\\programing\\perudo\\perudo\\perudo\\perudo.csproj",
+        "projectPath": "F:\\Tibi\\programing\\perudo\\perudo\\perudo.csproj",
         "packagesPath": "C:\\Users\\Tibi\\.nuget\\packages\\",
-        "outputPath": "f:\\Tibi\\programing\\perudo\\perudo\\perudo\\obj\\",
+        "outputPath": "F:\\Tibi\\programing\\perudo\\perudo\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"

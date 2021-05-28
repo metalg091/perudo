@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "8GB1qF2OBqGv/1KdvHPSoJJbfmwkBC7K0Dw/NwdO9GSJy0wCKneyzc8gdb3JW2cLcBMEklivcw0Wm829RnScYg==",
+  "dgSpecHash": "PECXwxPsf9wnecSoTZeeQmg+ayEEgC236VSURQmts9xbmFTQU3oKnyTCOst9kewZYL2/j+WLjWR0Sm2wynSGmg==",
   "success": true,
-  "projectFilePath": "f:\\Tibi\\programing\\perudo\\perudo\\perudo\\perudo.csproj",
+  "projectFilePath": "F:\\Tibi\\programing\\perudo\\perudo\\perudo.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Tibi\\.nuget\\packages\\bouncycastle.netcore\\1.8.5\\bouncycastle.netcore.1.8.5.nupkg.sha512",
     "C:\\Users\\Tibi\\.nuget\\packages\\google.protobuf\\3.11.4\\google.protobuf.3.11.4.nupkg.sha512",

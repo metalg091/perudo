@@ -50,9 +50,9 @@ session_start();
         }
         mysqli_close($conn);
     ?>
-    <label class="switch">
+    <!--label class="switch">
         <input class="toggle-state" type="checkbox" name="check" value="check" onchange="themeSwitch(theme)"><div></div>
-    </label>
+    </label-->
     <div id="container">
     <h2>Your name</h2>
     <h3 id="username" class="data"></h3>
@@ -69,14 +69,7 @@ session_start();
     </iframe>
     <script defer type="text/javascript">
         <?php
-        try{
-            if($_COOKIE["iscustom"]){
-                echo "CustomTheme();";
-            }
-        }
-        catch(Exception $e){
-            echo "themeSetup(" . $_COOKIE["theme"] . ";";
-        }
+            echo "themeSetup(" . $_COOKIE["theme"] . ");";
         ?>
         var a = '<?php echo $cycle; ?>';
         if(a == '2'){

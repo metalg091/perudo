@@ -1,5 +1,6 @@
 <?php
 setcookie("theme", "1", time() + 86400, "/");
+setcookie("width", "1", time() + 86400, "/");
 ?>
 <html>
 <head>
@@ -21,6 +22,11 @@ setcookie("theme", "1", time() + 86400, "/");
 <!--label class="switch">
     <input class="toggle-state" type="checkbox" name="check" value="check" onchange="themeSwitch(theme)"/><div></div>
 </label-->
+    <select id="themeSelect" onchange="ThemeSelector()">
+        <option id="dark" value="1" selected="selected">Dark theme</option>
+        <option id="light" value="2">Light theme</option>
+        <option id="custom" value="3">custom theme</option>
+    </select>
     <h2>Type in your username!</h2>
     
     <form id="form" action="multiplayer/getUserName.php" method="get">
@@ -30,17 +36,34 @@ setcookie("theme", "1", time() + 86400, "/");
     </form>
 <script type="text/javascript">
     <?php
-        try{
-            if($_COOKIE["iscustom"]){
-                echo "CustomTheme();";
-            }
-        }
-        catch(Exception $e){
-            echo "themeSetup(" . $_COOKIE["theme"] . ";";
-        }
+        echo "themeSetup(" . $_COOKIE["theme"] . ");";
     ?>
+    
     var width = window.innerWidth;
     document.cookie = "width=" + width + "; expires=86400000; path=/";
+    
+    /*switch(getCookie("theme")){
+        case 1:
+            document.getElementById("dark").selected = "selected";
+            break;
+        case 2:
+            document.getElementById("light").selected = "selected";
+            break;
+        case 3:
+            document.getElementById("custom").selected = "selected";
+            break;
+    }*/
+
+    function ThemeSelector(){
+        var themeId = document.getElementById("themeSelect").value;
+        if(themeId == 3){
+            if(getCookie("bgc") == ""){
+                location.href = 'themeSetup.html';
+            }
+        }
+        document.cookie = "theme=" + themeId + "; expires=86400000; path=/";
+        themeSetup(themeId);
+    }
 </script>
 </body>
 </html>

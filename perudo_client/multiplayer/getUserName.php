@@ -63,14 +63,7 @@ $_SESSION["username"] = $_GET["username"];
     <h1>Please wait until your are registered!!!! (user registration in progress...)</h1>
     <script defer type="text/javascript">
         <?php
-        try{
-            if($_COOKIE["iscustom"]){
-                echo "CustomTheme();";
-            }
-        }
-        catch(Exception $e){
-            echo "themeSetup(" . $_COOKIE["theme"] . ";";
-        }
+            echo "themeSetup(" . $_COOKIE["theme"] . ");";
         ?>
         var reload = '<?php echo $whatnow; ?>';
         if(reload == 0){
