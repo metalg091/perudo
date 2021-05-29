@@ -1,11 +1,10 @@
 <html>
     <head>
-        <link rel="stylesheet" href="../dark_theme.css">
         <script src="otherPlayers.js"></script>
-        <script src="../themeSwitch.js"></script>
+        <!--script src="../themeSwitch.js"></script-->
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
     </head>
-    <body id="event">
+    <body id="event" style="background-color: <?php if(isset($_COOKIE["eventbgc"])){echo $_COOKIE["eventbgc"];} ?>; color: <?php if(isset($_COOKIE["txtc"])){echo $_COOKIE["txtc"];}else{if($_COOKIE["theme"] == 2){echo "black";}else{echo "#fff";}} ?>;">
     <?php
         $servername = "localhost";
         $username = "root";
@@ -83,9 +82,6 @@
         }
         mysqli_close($conn);
     ?>
-    <div id="event">
-
-    </div>
     <script defer type="text/javascript">
         var arrayOfNames = arraymaker('<?php echo $outName; ?>');
         var arrayOfIde = arraymaker('<?php echo $outEventId; ?>');
@@ -204,9 +200,6 @@
             return table;
         }
         //setTimeout(function(){location.reload()}, 5000);
-        <?php
-            echo "themeSetup(" . $_COOKIE["theme"] . ");";
-        ?>
     </script>
     </body>
 </html>

@@ -51,10 +51,10 @@ session_start();
     ?>
 </head>
 <body>
-    <!--button id="themb" onclick="document.getElementById('eventGetter').src += '';">refresh</button-->
+    <!--button id="themb" onclick="document.getElementById('eventGetter').src += '';">refresh</button>
     <label class="switch">
         <input class="toggle-state" type="checkbox" name="check" value="check" onchange="themeSwitch(theme)" checked/><div></div>
-    </label>
+    </label-->
     <div id="container">
     <h2>Your name</h2>
     <h3 id="username" class="data"></h3>

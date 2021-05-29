@@ -66,12 +66,13 @@
     </form>
     </div>
     <h2 id="iframeTitle">Events:</h2>
-    <iframe srcdoc="
+    <!--iframe srcdoc="
     <html>
         <head>
             <link rel='stylesheet' href='dark_theme.css'>
         </head>
-        <body id='event'>
+        <body id='event'-->
+        <div id="eventGetter">
         <table>
             <tr>
                 <td>test user 1</td>
@@ -94,9 +95,10 @@
                 <td>lost a Cube</td>
             </tr>
         </table>
-        </body>
+        </div>
+        <!--/body>
         </html>" id="eventGetter">
-    </iframe>
+    </iframe-->
     <form id="colorpick" action="customThemeSaver.php" method="GET">
         <label class="cpick" for="bgc">background color</label>
         <input style="left: 130px;" type="color" value="#fff" id="bgc" name="bgc" class="cpick" onchange="CustomTheme()">
@@ -154,7 +156,7 @@
             document.documentElement.style.setProperty('--inputbgcolorfocus', inbgcfocus);
             document.documentElement.style.setProperty('--submitbgcolorhover', buttonbgchover);
             document.documentElement.style.setProperty('--eventbgcolor', eventbgc);
-            document.getElementById("eventGetter").srcdoc = document.getElementById("eventGetter").srcdoc; 
+            //document.getElementById("eventGetter").style = "background-color:" + eventbgc + ";";
         }
 
         var cycle = 1

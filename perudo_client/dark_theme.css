@@ -56,6 +56,8 @@ input[type=number]:focus{
 }
 #eventGetter{
     width: 100%;
+    background-color: var(--eventbgcolor);
+    color: var(--textcolor);
 }
 #event{
     background-color: var(--eventbgcolor);
