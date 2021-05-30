@@ -54,9 +54,7 @@ session_start();
             echo "I will try again in 15 seconds!";
             $succes = false;
         }
-        unset($neworderid);
 
-        roll($conn);
         function roll($conn){
             $sql = "SELECT name, cubes FROM game";
             $result = mysqli_query($conn, $sql);
@@ -75,18 +73,20 @@ session_start();
                 unset($cubes[$key]);
                 $key = array_search(0, $cubes);
             }
-            unset($key);
-            gc_collect_cycles();
+            $cubes = array_values(array_filter($cubes));
+            $name = array_values(array_filter($name));
             $num = Array();
             $numstr = "";
-            foreach($name as $player){
-                for ($x = 0; $cubes>$x; $x++){
+            for($y = 0; count($name)> $y; $y++){
+                for ($x = 0; $cubes[$y]>$x; $x++){
                     $num[] = random_int(1, 6);
                     $numstr = $numstr . $num[$x];
                 }
-                $sql = "UPDATE game SET numbers = '" +  $numstr + "' WHERE name = '" + $player + "'";
+                $sql = "UPDATE game SET numbers = '" .  $numstr . "' WHERE name = '" . $name[$y] . "'";
                 if(mysqli_query($conn, $sql)){
                     echo "roll success";
+                    unset($num);
+                    $numstr = null;
                 }
                 else{
                     echo "error";
@@ -95,7 +95,7 @@ session_start();
         }
         mysqli_close($conn);
     ?>
-    <p id="a">aaa</p>
+    <p id="a"></p>
     <script defer type="text/javascript">
         var reload = '<?php echo $succes; ?>'; //php runner, redirecter
         document.getElementById("a").innerHTML = reload;
