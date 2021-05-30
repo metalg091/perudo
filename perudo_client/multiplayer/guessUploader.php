@@ -7,12 +7,8 @@ session_start();
     <script src="../themeSwitch.js"></script>
 </head>
 <body>
-<?php 
-        $servername = "localhost";
-        $username = "root";
-        $password = "";
-        $dbname = "perudo";
-        $conn = mysqli_connect($servername, $username, $password, $dbname);
+<?php
+        $conn = mysqli_connect("localhost", "root", "", "perudo");
         if (!$conn){
             die("Connection failed: " . mysqli_connect_error());
         }
@@ -33,10 +29,12 @@ session_start();
                 break;
             case 1:
                 $sql = "INSERT INTO eventtable (orders, ide, guess) VALUES (" . $neworderid . ", " . $_SESSION["id"] . ", '''doubt''')";
+                roll($conn);
                 break;
             case 2:
                 $equal = "equal";
                 $sql = "INSERT INTO eventtable (orders, ide, guess) VALUES (" . $neworderid . ", " . $_SESSION["id"] . ", '''" . $equal . "''')";
+                roll($conn);
                 break;
         }
         if(mysqli_query($conn, $sql)){
@@ -56,17 +54,56 @@ session_start();
             echo "I will try again in 15 seconds!";
             $succes = false;
         }
+        unset($neworderid);
+
+        roll($conn);
+        function roll($conn){
+            $sql = "SELECT name, cubes FROM game";
+            $result = mysqli_query($conn, $sql);
+            if(mysqli_num_rows($result) > 0){
+                $name = Array();
+                $cubes = Array();
+                while($row = mysqli_fetch_assoc($result)){
+                    $name[] = $row["name"];
+                    $cubes[] = $row["cubes"];
+                }
+            }
+            unset($row);
+            $key = array_search(0, $cubes);
+            while(is_int($key)){
+                unset($name[$key]);
+                unset($cubes[$key]);
+                $key = array_search(0, $cubes);
+            }
+            unset($key);
+            gc_collect_cycles();
+            $num = Array();
+            $numstr = "";
+            foreach($name as $player){
+                for ($x = 0; $cubes>$x; $x++){
+                    $num[] = random_int(1, 6);
+                    $numstr = $numstr . $num[$x];
+                }
+                $sql = "UPDATE game SET numbers = '" +  $numstr + "' WHERE name = '" + $player + "'";
+                if(mysqli_query($conn, $sql)){
+                    echo "roll success";
+                }
+                else{
+                    echo "error";
+                }
+            }
+        }
         mysqli_close($conn);
     ?>
-    <p id="a"></p>
+    <p id="a">aaa</p>
     <script defer type="text/javascript">
         var reload = '<?php echo $succes; ?>'; //php runner, redirecter
         document.getElementById("a").innerHTML = reload;
         if(reload){
-            location.href = 'waitingForTurn.php';
+            //location.href = 'waitingForTurn.php';
         }
         else {
-            setTimeout(function(){location.reload()}, 15000);
+            //setTimeout(function(){location.reload()}, 15000);
         }
     </script>
 </body>
