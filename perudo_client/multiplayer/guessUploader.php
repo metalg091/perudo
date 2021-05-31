@@ -29,6 +29,7 @@ session_start();
                 break;
             case 1:
                 $sql = "INSERT INTO eventtable (orders, ide, guess) VALUES (" . $neworderid . ", " . $_SESSION["id"] . ", '''doubt''')";
+                doubt($conn);
                 roll($conn);
                 break;
             case 2:
@@ -56,33 +57,35 @@ session_start();
         }
 
         function roll($conn){
-            $sql = "SELECT name, cubes FROM game";
+            
+            $sql = "SELECT id, cubes FROM game";
             $result = mysqli_query($conn, $sql);
             if(mysqli_num_rows($result) > 0){
-                $name = Array();
+                $id = Array();
                 $cubes = Array();
                 while($row = mysqli_fetch_assoc($result)){
-                    $name[] = $row["name"];
+                    $id[] = $row["id"];
                     $cubes[] = $row["cubes"];
                 }
             }
             unset($row);
             $key = array_search(0, $cubes);
             while(is_int($key)){
-                unset($name[$key]);
+                unset($id[$key]);
                 unset($cubes[$key]);
                 $key = array_search(0, $cubes);
             }
             $cubes = array_values(array_filter($cubes));
-            $name = array_values(array_filter($name));
+            $id = array_values(array_filter($id));
+
             $num = Array();
             $numstr = "";
-            for($y = 0; count($name)> $y; $y++){
+            for($y = 0; count($id)> $y; $y++){
                 for ($x = 0; $cubes[$y]>$x; $x++){
                     $num[] = random_int(1, 6);
                     $numstr = $numstr . $num[$x];
                 }
-                $sql = "UPDATE game SET numbers = '" .  $numstr . "' WHERE name = '" . $name[$y] . "'";
+                $sql = "UPDATE game SET numbers = '" .  $numstr . "' WHERE id = '" . $id[$y] . "'";
                 if(mysqli_query($conn, $sql)){
                     echo "roll success";
                     unset($num);
@@ -92,6 +95,109 @@ session_start();
                     echo "error";
                 }
             }
+        }
+        function doubt($conn){
+            $sql = "SELECT guess FROM eventtable ORDER BY orders DESC LIMIT 2";
+            $result = mysqli_query($conn, $sql);
+            if(mysqli_num_rows($result) > 0){
+                $guess = Array();
+                while($row = mysqli_fetch_assoc($result)){
+                    $guess[] = $row["guess"];
+                }
+            }
+            else{
+                echo "error";
+            }
+            $guesstr = $guess[0];
+            unset($guess);
+
+            $sql = "SELECT id, cubes, numbers FROM game";
+            $result = mysqli_query($conn, $sql);
+            if(mysqli_num_rows($result) > 0){
+                $id = Array();
+                $cubes = Array();
+                $numbers = Array();
+                while($row = mysqli_fetch_assoc($result)){
+                    $id[] = $row["id"];
+                    $cubes[] = $row["cubes"];
+                    $numbers[] = $row["numbers"];
+                }
+            }
+            unset($row);
+            $key = array_search(0, $cubes);
+            while(is_int($key)){
+                unset($id[$key]);
+                unset($cubes[$key]);
+                unset($numbers[$key]);
+                $key = array_search(0, $cubes);
+            }
+            $cubes = array_values(array_filter($cubes));
+            $numbers = array_values(array_filter($numbers));
+            $id = array_values(array_filter($id));
+
+            switch (substr($guesstr, -1))
+            {
+                case 1:
+                    if (n1 * 10 + 1 >= lastguess)
+                    {
+                        cplayer.cubes--;
+                    }
+                    else
+                    {
+                        lplayer.cubes--;
+                    }
+                    break;
+                case 2:
+                    if (n2 * 10 + 2 + n1 * 10 >= lastguess)
+                    {
+                        cplayer.cubes = cplayer.cubes - 1;
+                    }
+                    else
+                    {
+                        lplayer.cubes = lplayer.cubes - 1;
+                    }
+                    break;
+                case 3:
+                    if (n3 * 10 + 3 + n1 * 10 >= lastguess)
+                    {
+                        cplayer.cubes = cplayer.cubes - 1;
+                    }
+                    else
+                    {
+                        lplayer.cubes = lplayer.cubes - 1;
+                    }
+                    break;
+                case 4:
+                    if (n4 * 10 + 4 + n1 * 10 >= lastguess)
+                    {
+                        cplayer.cubes = cplayer.cubes - 1;
+                    }
+                    else
+                    {
+                        lplayer.cubes = lplayer.cubes - 1;
+                    }
+                    break;
+                case 5:
+                    if (n5 * 10 + 5 + n1 * 10 >= lastguess)
+                    {
+                        cplayer.cubes = cplayer.cubes - 1;
+                    }
+                    else
+                    {
+                        lplayer.cubes = lplayer.cubes - 1;
+                    }
+                    break;
+                case 6:
+                    if (n6 * 10 + 6 + n1 * 10 >= lastguess)
+                    {
+                        cplayer.cubes = cplayer.cubes - 1;
+                    }
+                    else
+                    {
+                        lplayer.cubes = lplayer.cubes - 1;
+                    }
+                    break;
+            }*/
         }
         mysqli_close($conn);
     ?>
