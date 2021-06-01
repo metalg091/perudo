@@ -96,6 +96,12 @@ session_start();
                 }
             }
         }
+        function geteach($numbers){
+            $eachnum = str_split($your_string);
+            foreach ($eachnum as $anum) {
+                if($anum == 1){}
+            }
+        }
         function doubt($conn){
             $sql = "SELECT guess FROM eventtable ORDER BY orders DESC LIMIT 2";
             $result = mysqli_query($conn, $sql);
@@ -133,6 +139,9 @@ session_start();
             }
             $cubes = array_values(array_filter($cubes));
             $numbers = array_values(array_filter($numbers));
+            foreach($numbers as $var){
+                geteach($var);
+            }
             $id = array_values(array_filter($id));
 
             switch (substr($guesstr, -1))
