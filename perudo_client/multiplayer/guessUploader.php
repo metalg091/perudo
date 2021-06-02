@@ -35,6 +35,7 @@ session_start();
             case 2:
                 $equal = "equal";
                 $sql = "INSERT INTO eventtable (orders, ide, guess) VALUES (" . $neworderid . ", " . $_SESSION["id"] . ", '''" . $equal . "''')";
+                equal($conn, $_SESSION["id"]);
                 roll($conn);
                 break;
         }
@@ -172,7 +173,7 @@ session_start();
                 case 1:
                     if ($counts[0] * 10 + 1 >= $guesstr)
                     {
-                        $sql = "UPDATE game SET cubes = " . $cubes[$val] - 1 . " WHERE id = " . $_SESSION["id"];
+                        $sql = "UPDATE game SET cubes = " . $newcube . " WHERE id = " . $_SESSION["id"];
                     }
                     else
                     {
@@ -188,7 +189,7 @@ session_start();
                 case 2:
                     if ($counts[1] * 10 + 2 + $counts[0] * 10 >= $guesstr)
                     {
-                        $sql = "UPDATE game SET cubes = " . $cubes[$val] - 1 . " WHERE id = " . $_SESSION["id"];
+                        $sql = "UPDATE game SET cubes = " . $newcube . " WHERE id = " . $_SESSION["id"];
                     }
                     else
                     {
@@ -204,7 +205,7 @@ session_start();
                 case 3:
                     if ($counts[2] * 10 + 3 + $counts[0] * 10 >= $guesstr)
                     {
-                        $sql = "UPDATE game SET cubes = " . $cubes[$val] - 1 . " WHERE id = " . $_SESSION["id"];
+                        $sql = "UPDATE game SET cubes = " . $newcube . " WHERE id = " . $_SESSION["id"];
                     }
                     else
                     {
@@ -220,7 +221,7 @@ session_start();
                 case 4:
                     if ($counts[3] * 10 + 4 + $counts[0] * 10 >= $guesstr)
                     {
-                        $sql = "UPDATE game SET cubes = " . $cubes[$val] - 1 . " WHERE id = " . $_SESSION["id"];
+                        $sql = "UPDATE game SET cubes = " . $newcube . " WHERE id = " . $_SESSION["id"];
                     }
                     else
                     {
@@ -236,7 +237,7 @@ session_start();
                 case 5:
                     if ($counts[4] * 10 + 5 + $counts[0] * 10 >= $guesstr)
                     {
-                        $sql = "UPDATE game SET cubes = " . $cubes[$val] - 1 . " WHERE id = " . $_SESSION["id"];
+                        $sql = "UPDATE game SET cubes = " . $newcube . " WHERE id = " . $_SESSION["id"];
                     }
                     else
                     {
@@ -252,7 +253,7 @@ session_start();
                 case 6:
                     if ($counts[5] * 10 + 6 + $counts[0] * 10 >= $guesstr)
                     {
-                        $sql = "UPDATE game SET cubes = " . $cubes[$val] - 1 . " WHERE id = " . $_SESSION["id"];
+                        $sql = "UPDATE game SET cubes = " . $newcube . " WHERE id = " . $_SESSION["id"];
                     }
                     else
                     {
@@ -263,6 +264,133 @@ session_start();
                         $newcube = $cubes[$val] - 1;
                         echo "expected cube val= " . $newcube;
                         $sql = "UPDATE game SET cubes = " . $newcube . " WHERE id = " . $id[$val];
+                    }
+                    break;
+            }
+            if(mysqli_query($conn, $sql)){
+                echo "doubt is done";
+            }
+            else{
+                echo "Error doubting:" . mysqli_error($conn);
+            }
+        }
+        function equal($conn, $sesid){
+            $sql = "SELECT guess FROM eventtable ORDER BY orders DESC LIMIT 2";
+            $result = mysqli_query($conn, $sql);
+            if(mysqli_num_rows($result) > 0){
+                $guess = Array();
+                while($row = mysqli_fetch_assoc($result)){
+                    $guess[] = $row["guess"];
+                }
+            }
+            else{
+                echo "error";
+            }
+            $guesstr = $guess[0];
+            unset($guess);
+
+            $sql = "SELECT id, cubes, numbers FROM game";
+            $result = mysqli_query($conn, $sql);
+            if(mysqli_num_rows($result) > 0){
+                $id = Array();
+                $cubes = Array();
+                $numbers = Array();
+                while($row = mysqli_fetch_assoc($result)){
+                    $id[] = $row["id"];
+                    $cubes[] = $row["cubes"];
+                    $numbers[] = $row["numbers"];
+                }
+            }
+            unset($row);
+            $key = array_search(0, $cubes);
+            while(is_int($key)){
+                unset($id[$key]);
+                unset($cubes[$key]);
+                unset($numbers[$key]);
+                $key = array_search(0, $cubes);
+            }
+            $cubes = array_values(array_filter($cubes));
+            $numbers = array_values(array_filter($numbers));
+            $counts = Array(0, 0, 0, 0, 0, 0);
+            foreach($numbers as $var){
+                $counts = geteach($var, $counts);
+            }
+            //echo json_encode($counts);
+            $id = array_values(array_filter($id));
+            $val= array_search($sesid, $id);
+            $cube = $cubes[$val];
+            switch (substr($guesstr, -1))
+            {
+                case 1:
+                    if ($counts[0] * 10 + 1 == $guesstr)
+                    {
+                        $cube++;
+                        $sql = "UPDATE game SET cubes = " . $cube . " WHERE id = " . $_SESSION["id"];
+                    }
+                    else
+                    {
+                        $cube--;
+                        $sql = "UPDATE game SET cubes = " . $cube . " WHERE id = " . $_SESSION["id"];
+                    }
+                    break;
+                case 2:
+                    if ($counts[1] * 10 + 2 + $counts[0] * 10 == $guesstr)
+                    {
+                        $cube++;
+                        $sql = "UPDATE game SET cubes = " . $cube . " WHERE id = " . $_SESSION["id"];
+                    }
+                    else
+                    {
+                        $cube--;
+                        $sql = "UPDATE game SET cubes = " . $cube . " WHERE id = " . $_SESSION["id"];
+                    }
+                    break;
+                case 3:
+                    if ($counts[2] * 10 + 3 + $counts[0] * 10 == $guesstr)
+                    {
+                        $cube++;
+                        $sql = "UPDATE game SET cubes = " . $cube . " WHERE id = " . $_SESSION["id"];
+                    }
+                    else
+                    {
+                        $cube--;
+                        $sql = "UPDATE game SET cubes = " . $cube . " WHERE id = " . $_SESSION["id"];
+                    }
+                    break;
+                case 4:
+                    if ($counts[3] * 10 + 4 + $counts[0] * 10 == $guesstr)
+                    {
+                        $cube++;
+                        $sql = "UPDATE game SET cubes = " . $cube . " WHERE id = " . $_SESSION["id"];
+                    }
+                    else
+                    {
+                        $cube--;
+                        $sql = "UPDATE game SET cubes = " . $cube . " WHERE id = " . $_SESSION["id"];
+                    }
+                    break;
+                case 5:
+                    if ($counts[4] * 10 + 5 + $counts[0] * 10 == $guesstr)
+                    {
+                        $cube++;
+                        $sql = "UPDATE game SET cubes = " . $cube . " WHERE id = " . $_SESSION["id"];
+                    }
+                    else
+                    {
+                        $cube--;
+                        $sql = "UPDATE game SET cubes = " . $cube . " WHERE id = " . $_SESSION["id"];
+                    }
+                    break;
+                case 6:
+                    if ($counts[5] * 10 + 6 + $counts[0] * 10 == $guesstr)
+                    {
+                        $cube++;
+                        $sql = "UPDATE game SET cubes = " . $cube . " WHERE id = " . $_SESSION["id"];
+                    }
+                    else
+                    {
+                        $cube--;
+                        $sql = "UPDATE game SET cubes = " . $cube . " WHERE id = " . $_SESSION["id"];
                     }
                     break;
             }
