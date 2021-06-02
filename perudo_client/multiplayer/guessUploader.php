@@ -165,75 +165,107 @@ session_start();
             }
             //echo json_encode($counts);
             $id = array_values(array_filter($id));
-
+            $val= array_search($sesid, $id);
+            $newcube = $cubes[$val] - 1;
             switch (substr($guesstr, -1))
             {
                 case 1:
                     if ($counts[0] * 10 + 1 >= $guesstr)
                     {
-                        $sql = "UPDATE game SET cubes = " . $cubes[array_search($_SESSION["id"], $id)] - 1 . " WHERE id = " . $_SESSION["id"];
+                        $sql = "UPDATE game SET cubes = " . $cubes[$val] - 1 . " WHERE id = " . $_SESSION["id"];
                     }
                     else
                     {
-                        echo "<br>as expected<br>";
-                        $newcube1 = array_search($sesid, $id);
-                        echo "expected cube val= " . array_search($sesid, $id);
-                        echo "expected id val= ";
-                        //$sql = "UPDATE game SET cubes = " . $cubes[array_search($_SESSION["id"], $id) - 1] - 1 . " WHERE id = " . $id[array_search($_SESSION["id"], $id) - 1];
+                        echo "sesid " . $sesid;
+                        echo "id " . json_encode($id);
+                        $val--;
+                        echo "expected id val= " . $id[$val];
+                        $newcube = $cubes[$val] - 1;
+                        echo "expected cube val= " . $newcube;
+                        $sql = "UPDATE game SET cubes = " . $newcube . " WHERE id = " . $id[$val];
                     }
                     break;
                 case 2:
                     if ($counts[1] * 10 + 2 + $counts[0] * 10 >= $guesstr)
                     {
-                        $sql = "UPDATE game SET cubes = " . $cubes[array_search($_SESSION["id"], $id) - 1] - 1 . " WHERE id = " . $_SESSION["id"];
+                        $sql = "UPDATE game SET cubes = " . $cubes[$val] - 1 . " WHERE id = " . $_SESSION["id"];
                     }
                     else
                     {
-                        $sql = "UPDATE game SET cubes = " . $cubes[array_search($_SESSION["id"], $id) - 1] - 1 . " WHERE id = " . $id[array_search($_SESSION["id"], $id) - 1];
+                        echo "sesid " . $sesid;
+                        echo "id " . json_encode($id);
+                        $val--;
+                        echo "expected id val= " . $id[$val];
+                        $newcube = $cubes[$val] - 1;
+                        echo "expected cube val= " . $newcube;
+                        $sql = "UPDATE game SET cubes = " . $newcube . " WHERE id = " . $id[$val];
                     }
                     break;
                 case 3:
                     if ($counts[2] * 10 + 3 + $counts[0] * 10 >= $guesstr)
                     {
-                        $sql = "UPDATE game SET cubes = " . $cubes[array_search($_SESSION["id"], $id) - 1] - 1 . " WHERE id = " . $_SESSION["id"];
+                        $sql = "UPDATE game SET cubes = " . $cubes[$val] - 1 . " WHERE id = " . $_SESSION["id"];
                     }
                     else
                     {
-                        $sql = "UPDATE game SET cubes = " . $cubes[array_search($_SESSION["id"], $id) - 1] - 1 . " WHERE id = " . $id[array_search($_SESSION["id"], $id) - 1];
+                        echo "sesid " . $sesid;
+                        echo "id " . json_encode($id);
+                        $val--;
+                        echo "expected id val= " . $id[$val];
+                        $newcube = $cubes[$val] - 1;
+                        echo "expected cube val= " . $newcube;
+                        $sql = "UPDATE game SET cubes = " . $newcube . " WHERE id = " . $id[$val];
                     }
                     break;
                 case 4:
                     if ($counts[3] * 10 + 4 + $counts[0] * 10 >= $guesstr)
                     {
-                        $sql = "UPDATE game SET cubes = " . $cubes[array_search($_SESSION["id"], $id) - 1] - 1 . " WHERE id = " . $_SESSION["id"];
+                        $sql = "UPDATE game SET cubes = " . $cubes[$val] - 1 . " WHERE id = " . $_SESSION["id"];
                     }
                     else
                     {
-                        $sql = "UPDATE game SET cubes = " . $cubes[array_search($_SESSION["id"], $id) - 1] - 1 . " WHERE id = " . $id[array_search($_SESSION["id"], $id) - 1];
+                        echo "sesid " . $sesid;
+                        echo "id " . json_encode($id);
+                        $val--;
+                        echo "expected id val= " . $id[$val];
+                        $newcube = $cubes[$val] - 1;
+                        echo "expected cube val= " . $newcube;
+                        $sql = "UPDATE game SET cubes = " . $newcube . " WHERE id = " . $id[$val];
                     }
                     break;
                 case 5:
                     if ($counts[4] * 10 + 5 + $counts[0] * 10 >= $guesstr)
                     {
-                        $sql = "UPDATE game SET cubes = " . $cubes[array_search($_SESSION["id"], $id) - 1] - 1 . " WHERE id = " . $_SESSION["id"];
+                        $sql = "UPDATE game SET cubes = " . $cubes[$val] - 1 . " WHERE id = " . $_SESSION["id"];
                     }
                     else
                     {
-                        $sql = "UPDATE game SET cubes = " . $cubes[array_search($_SESSION["id"], $id) - 1] - 1 . " WHERE id = " . $id[array_search($_SESSION["id"], $id) - 1];
+                        echo "sesid " . $sesid;
+                        echo "id " . json_encode($id);
+                        $val--;
+                        echo "expected id val= " . $id[$val];
+                        $newcube = $cubes[$val] - 1;
+                        echo "expected cube val= " . $newcube;
+                        $sql = "UPDATE game SET cubes = " . $newcube . " WHERE id = " . $id[$val];
                     }
                     break;
                 case 6:
                     if ($counts[5] * 10 + 6 + $counts[0] * 10 >= $guesstr)
                     {
-                        $sql = "UPDATE game SET cubes = " . $cubes[array_search($_SESSION["id"], $id) - 1] - 1 . " WHERE id = " . $_SESSION["id"];
+                        $sql = "UPDATE game SET cubes = " . $cubes[$val] - 1 . " WHERE id = " . $_SESSION["id"];
                     }
                     else
                     {
-                        $sql = "UPDATE game SET cubes = " . $cubes[array_search($_SESSION["id"], $id) - 1] - 1 . " WHERE id = " . $id[array_search($_SESSION["id"], $id) - 1];
+                        echo "sesid " . $sesid;
+                        echo "id " . json_encode($id);
+                        $val--;
+                        echo "expected id val= " . $id[$val];
+                        $newcube = $cubes[$val] - 1;
+                        echo "expected cube val= " . $newcube;
+                        $sql = "UPDATE game SET cubes = " . $newcube . " WHERE id = " . $id[$val];
                     }
                     break;
             }
-            echo "<br> aaa" . $sql . "<br>";
             if(mysqli_query($conn, $sql)){
                 echo "doubt is done";
             }
