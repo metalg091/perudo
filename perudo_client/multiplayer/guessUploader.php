@@ -322,17 +322,21 @@ session_start();
             switch (substr($guesstr, -1))
             {
                 case 1:
-                    if ($counts[0] * 10 + 1 == $guesstr && cube < 5)
+                    if ($counts[0] * 10 + 1 == $guesstr && $cube < 5)
                     {
                         $cube++;
+                        echo "increased";
                         $sql = "UPDATE game SET cubes = " . $cube . " WHERE id = " . $_SESSION["id"];
                     }
-                    elseif ($counts[0] * 10 + 1 == $guesstr && cubes == 5){
+                    elseif ($counts[0] * 10 + 1 == $guesstr && !$cubes < 5){
+                        echo "max cubes";
+                        $sql = "";
                         break;
                     }
                     else
                     {
                         $cube--;
+                        echo "decreased";
                         $sql = "UPDATE game SET cubes = " . $cube . " WHERE id = " . $_SESSION["id"];
                     }
                     break;
@@ -398,10 +402,10 @@ session_start();
                     break;
             }
             if(mysqli_query($conn, $sql)){
-                echo "doubt is done";
+                echo "equal is done";
             }
             else{
-                echo "Error doubting:" . mysqli_error($conn);
+                echo "Error in equal:" . mysqli_error($conn);
             }
         }
         mysqli_close($conn);
