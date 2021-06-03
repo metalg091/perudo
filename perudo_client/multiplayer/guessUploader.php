@@ -322,10 +322,13 @@ session_start();
             switch (substr($guesstr, -1))
             {
                 case 1:
-                    if ($counts[0] * 10 + 1 == $guesstr)
+                    if ($counts[0] * 10 + 1 == $guesstr && cube < 5)
                     {
                         $cube++;
                         $sql = "UPDATE game SET cubes = " . $cube . " WHERE id = " . $_SESSION["id"];
+                    }
+                    elseif ($counts[0] * 10 + 1 == $guesstr && cubes == 5){
+                        break;
                     }
                     else
                     {
