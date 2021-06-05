@@ -112,17 +112,14 @@
                         case "-1":
                             var CubeEvent = "lost a Cube";
                             var who = arrayOfIWho[i];
-                            //whoid++;
                             break;
                         case "-2":
                             var CubeEvent = "lost all of their cubes";
                             var who = arrayOfIWho[i];
-                            //whoid++;
                             break;
                         case "1":
                             var CubeEvent = "Got an extra cube";
                             var who = arrayOfIWho[i];
-                            //whoid++;
                             break;
                     }
                     var row = document.createElement("tr");
