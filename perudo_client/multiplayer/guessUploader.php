@@ -492,7 +492,7 @@ session_start();
     ?>
     <p id="a"></p>
     <script defer type="text/javascript">
-        /*var reload = '<?php //echo $succes; ?>'; //php runner, redirecter
+        var reload = '<?php echo $succes; ?>'; //php runner, redirecter
         document.getElementById("a").innerHTML = reload;
         switch(reload){
             case 1:
@@ -501,7 +501,7 @@ session_start();
             case 2:
                 location.href = 'guessTurn.php';
                 break;
-        }*/
+        }
     </script>
 </body>
 </html>
