@@ -50,9 +50,6 @@ session_start();
         }
         mysqli_close($conn);
     ?>
-    <!--label class="switch">
-        <input class="toggle-state" type="checkbox" name="check" value="check" onchange="themeSwitch(theme)"><div></div>
-    </label-->
     <div id="container">
     <h2>Your name</h2>
     <h3 id="username" class="data"></h3>
@@ -102,7 +99,7 @@ session_start();
             }
         }
         document.getElementById("others").appendChild(tableGenrator(array, arrayc));
-        document.getElementById("allcubes").innerHTML = getSum(arrayc);   
+        document.getElementById("allcubes").innerHTML = getSum(arrayc);
     </script>
 </body>
 </html>

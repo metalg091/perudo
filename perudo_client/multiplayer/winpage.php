@@ -11,9 +11,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 <body>
-<!--label class="switch">
-    <input class="toggle-state" type="checkbox" name="check" value="check" onchange="themeSwitch(theme)"/><div></div>
-</label-->
 <div id="winner">
 <?php 
     $servername = "localhost";
