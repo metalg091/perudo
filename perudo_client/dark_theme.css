@@ -66,18 +66,6 @@ input[type=number]:focus{
 .data{
     margin: 0 0 0 0.75em;
 }
-/*#themb{
-    position: relative;
-    left: 2%;
-    top: 0.95em;
-    border: none;
-    border-radius: 20px;
-    padding: 10px;
-    display: inline-block;
-}
-#themb:hover{
-    background-color: rgb(212, 212, 212);
-}*/
 #winner{
     text-align: center;
 }
