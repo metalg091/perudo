@@ -19,9 +19,6 @@ setcookie("width", "1", time() + 86400, "/");
     </style>
 </head>
 <body>
-<!--label class="switch">
-    <input class="toggle-state" type="checkbox" name="check" value="check" onchange="themeSwitch(theme)"/><div></div>
-</label-->
     <select id="themeSelect" onchange="ThemeSelector()">
         <option id="dark" value="1" selected="selected">Dark theme</option>
         <option id="light" value="2">Light theme</option>
@@ -42,7 +39,7 @@ setcookie("width", "1", time() + 86400, "/");
     var width = window.innerWidth;
     document.cookie = "width=" + width + "; expires=86400000; path=/";
     
-    /*switch(getCookie("theme")){
+    switch(getCookie("theme")){
         case 1:
             document.getElementById("dark").selected = "selected";
             break;
@@ -52,7 +49,7 @@ setcookie("width", "1", time() + 86400, "/");
         case 3:
             document.getElementById("custom").selected = "selected";
             break;
-    }*/
+    }
 
     function ThemeSelector(){
         var themeId = document.getElementById("themeSelect").value;
