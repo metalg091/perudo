@@ -5,7 +5,7 @@ $_SESSION["username"] = $_GET["username"];
 ?>
 <html>
 <head>
-    <link rel="stylesheet" href="../dark_theme.css" id="theme">
+    <link rel="stylesheet" href="../main_theme.css" id="theme">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="../themeSwitch.js"></script>
     <!--<meta id="meta" http-equiv="refresh" content="">-->

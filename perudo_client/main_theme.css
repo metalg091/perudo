@@ -1,0 +1,122 @@
+:root{
+  --mainbgcolor: black;
+  --textcolor: white;
+  --inputbgcolor: white;
+  --inputbgcolorfocus: lightgray;
+  --submitbgcolorhover: rgb(212, 212, 212);
+  --eventbgcolor: #222222;
+}
+body{
+    background-color: var(--mainbgcolor);
+    color: var(--textcolor);
+}
+form{
+    margin: 1em 0 0 0;
+}
+input[type=text] {
+    padding: 10px;
+    width: 12em;
+    border: none;
+    border-radius: 100px;
+    display: inline-block;
+    margin: 2.5% 0 0 0;
+    background-color: var(--inputbgcolor);
+}
+#rad1, #rad2, #rad3{
+    display: block;
+    margin: 0.75em;
+}
+input[type=text]:focus{
+    background-color: var(--inputbgcolorfocus);
+}
+input[type=submit]{
+    display: inline-block;
+    border: none;
+    padding: 10 20 10 20px;
+    border-radius: 100px;
+    background-color: var(--inputbgcolor);
+}
+input[type=submit]:hover{
+    background-color: var(--submitbgcolorhover);
+}
+input[type=number] {
+    padding: 10px;
+    width: 12em;
+    border: none;
+    border-radius: 100px;
+    display: inline-block;
+    margin: 1em 0 0 0;
+    background-color: var(--inputbgcolor);
+}
+input[type=number]:focus{
+    background-color: var(--inputbgcolorfocus);
+}
+#iframeTitle{
+    position: relative;
+}
+#eventGetter{
+    width: 100%;
+    background-color: var(--eventbgcolor);
+    color: var(--textcolor);
+}
+#event{
+    background-color: var(--eventbgcolor);
+    color: var(--textcolor);
+}
+.data{
+    margin: 0 0 0 0.75em;
+}
+#winner{
+    text-align: center;
+}
+#themeSelect{
+    position: fixed;
+    margin: 10px;
+    padding: 10px;
+    border-radius: 100px;
+}
+@media only screen and (min-width: 768px){
+    #themb{
+        position: relative;
+        left: 48.75%;
+        top: 0.25em;
+    }
+    #container{
+        position: fixed;
+        top: 0em;
+        margin: 1em;
+    }
+    #iframeTitle{
+        position: relative;
+        width: 100px;
+        left: 48.5%;
+        top: 0.25em;
+    }
+    #eventGetter{
+        width: 50%;
+        height: 80%;
+        position: absolute;
+        display: block;
+        right: 0;
+        top: 0;
+        margin: 3.5em 1.5em 1.5em 0;
+    }
+    input[type=number] {
+        padding: 10px;
+        width: 10em;
+        border: none;
+        border-radius: 100px;
+        margin: 0 0 0 1em;
+    }
+    input[type=text] {
+        padding: 10px;
+        width: 10em;
+        border: none;
+        border-radius: 100px;
+        margin: 0;
+    }
+    #rad1, #rad2, #rad3{
+        display: block;
+        margin: 0.75em;
+    }
+}

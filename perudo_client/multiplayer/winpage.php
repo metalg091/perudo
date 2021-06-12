@@ -1,6 +1,6 @@
 <html>
 <head>
-    <link id="theme" rel="stylesheet" href="../dark_theme.css">
+    <link id="theme" rel="stylesheet" href="../main_theme.css">
     <link rel="stylesheet" href="../button.css">
     <script src="../themeSwitch.js"></script>
     <script type="text/javascript">

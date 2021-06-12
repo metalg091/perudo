@@ -3,7 +3,7 @@ session_start();
 ?>
 <html>
 <head>
-    <link rel="stylesheet" href="../dark_theme" id="theme">
+    <link rel="stylesheet" href="../main_theme" id="theme">
     <link rel="stylesheet" href="../button.css">
     <script src="../themeSwitch.js"></script>
     <script src="otherPlayers.js"></script>
@@ -81,7 +81,7 @@ session_start();
     </form>
     </div>
     <h2 id="iframeTitle">Events:</h2>
-    <iframe src="eventGetter.php?style=../dark_theme.css" id="eventGetter">
+    <iframe src="eventGetter.php?style=../main_theme.css" id="eventGetter">
     </iframe>
     <script defer type="text/javascript">
         <?php
