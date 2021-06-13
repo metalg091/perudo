@@ -25,13 +25,6 @@ $_SESSION["username"] = $_GET["username"];
         $db->exec('BEGIN');
         $db->query('INSERT OR IGNORE INTO "game" ("id", "name", "cubes", "numbers", "cPlayerId", "playersInGame", "cycle") VALUES ("0", "system", "null", "null", "0", "0", "6")');
         $db->exec('COMMIT');
-
-        $db->query('CREATE TABLE IF NOT EXISTS "eventtable" (
-            "orders" INTEGER UNIQUE PRIMARY KEY AUTOINCREMENT NOT NULL,
-            "ide" INTEGER,
-            "guess" TEXT,
-            "who" INTEGER DEFAULT "0"
-            )');
         
         $db->exec('BEGIN');
         $db->query('INSERT INTO "game" ("name") VALUES ("' . $_GET["username"] . '")');
