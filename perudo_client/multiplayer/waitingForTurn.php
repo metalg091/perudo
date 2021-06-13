@@ -36,10 +36,10 @@ session_start();
         $outCubesOfOthers = json_encode($cubes);
         $db->close();
         if($cPlayerId == $_SESSION["id"]){
-            $whatnow = 1;
+            $whatnow = TRUE;
         }
         else{
-            $whatnow = 0;
+            $whatnow = FALSE;
         }
     ?>
     <div id="container">
