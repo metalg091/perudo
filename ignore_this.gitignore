@@ -1,3 +1,2 @@
 .vscode
-perudo_client/databases/*
-!perudo_client/databases/.gitkeep
+*.sqlite
