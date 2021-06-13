@@ -4,62 +4,54 @@ session_start();
 <html>
 <head>
     <link id="theme" rel="stylesheet" href="../main_theme.css">
-    <link rel="stylesheet" href="../button.css">
     <script src="../themeSwitch.js"></script>
     <script src="otherPlayers.js"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 <body>
     <?php
-        $servername = "localhost";
-        $username = "root";
-        $password = "";
-        $dbname = "perudo";
-        $conn = mysqli_connect($servername, $username, $password, $dbname);
-        if (!$conn){
-            die("Connection failed: " . mysqli_connect_error());
+        $db = new SQLite3('../databases/perudo.sqlite', SQLITE3_OPEN_CREATE | SQLITE3_OPEN_READWRITE);
+        $db->query('CREATE TABLE IF NOT EXISTS "game" (
+            "id" INTEGER UNIQUE PRIMARY KEY AUTOINCREMENT NOT NULL,
+            "name" TEXT,
+            "cubes" INTEGER,
+            "numbers" INTEGER,
+            "cPlayerId" INTEGER DEFAULT null,
+            "playersInGame" INTEGER DEFAULT null,
+            "cycle" INTEGER DEFAULT null)');
+        
+        $cycle = $db->querySingle('SELECT "cycle" FROM "game" WHERE id = 0');
+        $urnumbers = $db->querySingle('SELECT "numbers" FROM "game" WHERE id = ' . $_SESSION["id"] . '');
+        $urcubes = $db->querySingle('SELECT "cubes" FROM "game" WHERE id = ' . $_SESSION["id"] . '');
+        $playersInGame = $db->querySingle('SELECT "playersInGame" FROM "game" WHERE id = 0');
+        $cPlayerId = $db->querySingle('SELECT "cPlayerId" FROM "game" WHERE id = 0');
+        $results = $db->query('SELECT name, cubes FROM "game" WHERE id BETWEEN 1 AND ' . $playersInGame);
+        while($row = $results->fetchArray()){
+            $names[] = $row["name"];
+            $cubes[] = $row["cubes"];
         }
-        $sql = "SELECT playersInGame, cPlayerId, cycle FROM game WHERE id = 0";
-        $result = mysqli_query($conn, $sql);
-        $row = mysqli_fetch_assoc($result);
-        $cpi = $row["cPlayerId"];
-        $cycle = $row["cycle"];
-        $sql = "SELECT name, cubes FROM game WHERE id BETWEEN 1 AND " . $row['playersInGame'];
-        $result = mysqli_query($conn, $sql);
-        if (mysqli_num_rows($result) > 0){
-            $others = Array();
-            $cubesOfOthers = Array();
-            while($row = mysqli_fetch_assoc($result)){
-                $cubesOfOthers[] = $row["cubes"];
-                $others[] = $row["name"];
-            }
-            $outOthers = json_encode($others);
-            $outCubesOfOthers = json_encode($cubesOfOthers);
-        }
-        else{
-
-        }
-        $sql = "SELECT cubes, numbers FROM game WHERE id = " . $_SESSION["id"];
-        $result = mysqli_query($conn, $sql);
-        $row = mysqli_fetch_assoc($result);
-        if($cpi == $_SESSION["id"] && $cycle == 1){
-            $whatnow = true;
+        $results->finalize();
+        $row = null;
+        $outOthers = json_encode($names);
+        $outCubesOfOthers = json_encode($cubes);
+        $db->close();
+        if($cPlayerId == $_SESSION["id"]){
+            $whatnow = 1;
         }
         else{
-            $whatnow = false;
+            $whatnow = 0;
         }
-        mysqli_close($conn);
     ?>
     <div id="container">
-    <h2>Your name</h2>
-    <h3 id="username" class="data"></h3>
-    <h2>Other players</h2>
-    <div id="others" class="data">
-    </div>
-    <h2>Cubes in game</h2>
-    <p id="allcubes" class="data"></p>
-    <h2>Your numbers</h2>
-    <p id="urnumbers" class="data">------</p>
+        <h2>Your name</h2>
+        <h3 id="username" class="data"></h3>
+        <h2>Other players</h2>
+            <div id="others" class="data">
+            </div>
+        <h2>Cubes in game</h2>
+        <p id="allcubes" class="data"></p>
+        <h2>Your numbers</h2>
+        <p id="urnumbers" class="data">you have lost all your cubes...</p>
     </div>
     <h2 id="iframeTitle">Events:</h2>
     <iframe src="eventGetter.php" id="eventGetter">
@@ -72,10 +64,10 @@ session_start();
         if(a == '2'){
             location.href = 'winpage.php';
         }
-        var id = '<?php echo $_SESSION["id"] ?>';
+        var id = '<?php echo $_SESSION["id"]; ?>';
         var username = '<?php echo $_SESSION["username"]; ?>'; //getting info specific to this user
         document.getElementById("username").innerHTML = username + " your id is " + id;
-        var nums = '<?php echo $row["numbers"]; ?>';
+        var nums = '<?php echo $urnumbers; ?>';
         document.getElementById("urnumbers").innerHTML = nums;
 
         var reload = '<?php echo $whatnow; ?>'; //php runner, redirecter

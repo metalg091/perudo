@@ -23,7 +23,7 @@ $_SESSION["username"] = $_GET["username"];
             "cycle" INTEGER DEFAULT null)');
 
         $db->exec('BEGIN');
-        $db->query('INSERT OR IGNORE INTO "game" ("id", "name", "cubes", "numbers", "cPlayerId", "playersInGame", "cycle") VALUES ("0", "system", "null", "null", "0", "0", "0")');
+        $db->query('INSERT OR IGNORE INTO "game" ("id", "name", "cubes", "numbers", "cPlayerId", "playersInGame", "cycle") VALUES ("0", "system", "null", "null", "0", "0", "6")');
         $db->exec('COMMIT');
 
         $db->query('CREATE TABLE IF NOT EXISTS "eventtable" (
@@ -57,13 +57,7 @@ $_SESSION["username"] = $_GET["username"];
         <?php
             echo "themeSetup(" . $_COOKIE["theme"] . ");";
         ?>
-        //var reload = '<?php //echo $whatnow; ?>';
-        //if(reload == 0){
-            //location.href = 'waitingForTurn.php';
-        /*}
-        else {
-            setTimeout(function(){location.reload()}, 15000);
-        }*/
+        location.href = 'lobby.php';
     </script>
 </body>
 </html>
