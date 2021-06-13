@@ -9,45 +9,49 @@ session_start();
     <script src="otherPlayers.js"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <?php 
-        $servername = "localhost";
-        $username = "root";
-        $password = "";
-        $dbname = "perudo";
-        $conn = mysqli_connect($servername, $username, $password, $dbname);
-        if (!$conn){
-            die("Connection failed: " . mysqli_connect_error());
+        $db = new SQLite3('../databases/perudo.sqlite', SQLITE3_OPEN_CREATE | SQLITE3_OPEN_READWRITE);
+        $db->query('CREATE TABLE IF NOT EXISTS "game" (
+            "id" INTEGER UNIQUE PRIMARY KEY AUTOINCREMENT NOT NULL,
+            "name" TEXT,
+            "cubes" INTEGER,
+            "numbers" INTEGER,
+            "cPlayerId" INTEGER DEFAULT null,
+            "playersInGame" INTEGER DEFAULT null,
+            "cycle" INTEGER DEFAULT null)');
+        
+        $cycle = $db->querySingle('SELECT "cycle" FROM "game" WHERE id = 0');
+        $urnumbers = $db->querySingle('SELECT "numbers" FROM "game" WHERE id = ' . $_SESSION["id"] . '');
+        $urcubes = $db->querySingle('SELECT "cubes" FROM "game" WHERE id = ' . $_SESSION["id"] . '');
+        $playersInGame = $db->querySingle('SELECT "playersInGame" FROM "game" WHERE id = 0');
+        //$cPlayerId = $db->querySingle('SELECT "cPlayerId" FROM "game" WHERE id = 0');
+        $results = $db->query('SELECT name, cubes FROM "game" WHERE id BETWEEN 1 AND ' . $playersInGame);
+        while($row = $results->fetchArray()){
+            $names[] = $row["name"];
+            $cubes[] = $row["cubes"];
         }
-        $sql = "SELECT cycle FROM game WHERE id = 0";
-        $result = mysqli_query($conn, $sql);
-        $row = mysqli_fetch_assoc($result);
-        $cycle = $row["cycle"];
-        $sql = "SELECT playersInGame, cPlayerId FROM game WHERE id = 0";
-        $result = mysqli_query($conn, $sql);
-        $row = mysqli_fetch_assoc($result);
-        $sql = "SELECT name, cubes FROM game WHERE id BETWEEN 1 AND " . $row['playersInGame'];
-        $result = mysqli_query($conn, $sql);
-        if (mysqli_num_rows($result) > 0){
-            $others = Array();
-            $cubesOfOthers = Array();
-            while($row = mysqli_fetch_assoc($result)){
-                $cubesOfOthers[] = $row["cubes"];
-                $others[] = $row["name"];
-            }
-            $outOthers = json_encode($others);
-            $outCubesOfOthers = json_encode($cubesOfOthers);
-        }
-        else{
+        $results->finalize();
+        $row = null;
+        $outOthers = json_encode($names);
+        $outCubesOfOthers = json_encode($cubes);
+        
+        $db->query('CREATE TABLE IF NOT EXISTS "eventtable" (
+            "orders" INTEGER UNIQUE PRIMARY KEY AUTOINCREMENT NOT NULL,
+            "ide" INTEGER,
+            "guess" TEXT,
+            "who" INTEGER DEFAULT "0"
+            )');
 
+        $rellastguess = $db->querySingle('SELECT "guess" FROM "eventtable" ORDER BY "orders" DESC LIMIT 1');
+        $db->close();
+        if(!is_int($rellastguess)){
+            $rellastguess = 10;
         }
-        $sql = "SELECT guess FROM eventtable ORDER BY orders DESC LIMIT 1";
+        /*$sql = "SELECT guess FROM eventtable ORDER BY orders DESC LIMIT 1";
         $result = mysqli_query($conn, $sql);
         $row = mysqli_fetch_assoc($result);
         $lastguess = substr($row["guess"], 0, -1);
         $rellastguess = $row["guess"];
-        $sql = "SELECT cubes, numbers FROM game WHERE id = " . $_SESSION["id"];
-        $result = mysqli_query($conn, $sql);
-        $row = mysqli_fetch_assoc($result);
-        mysqli_close($conn);
+        mysqli_close($conn);*/
     ?>
 </head>
 <body>
@@ -75,7 +79,7 @@ session_start();
         </div>
         </div>
         <!--<input type="text" id="guess" name="guess"><br><br>-->
-        <input type="text" value="<?php echo $lastguess; ?>" id="guess" name="guess1" onkeyup="inputValidator()">
+        <input type="text" value="" id="guess" name="guess1" onkeyup="inputValidator()">
         <input type="number" value="1" id="guess1" name="guess2" min="1" max="6" onkeyup="inputValidator()"><br><br>
         <input id="submit" type="submit" value="Submit" style="display: none">
     </form>
@@ -94,7 +98,7 @@ session_start();
         var id = '<?php echo $_SESSION["id"] ?>';
         var username = '<?php echo $_SESSION["username"]; ?>'; //getting info specific to this user
         document.getElementById("username").innerHTML = username + " your id is " + id;
-        var nums = '<?php echo $row["numbers"]; ?>';
+        var nums = '<?php echo $urnumbers; ?>';
         document.getElementById("urnumbers").innerHTML = nums;
 
         arrayc = arraymaker('<?php echo $outCubesOfOthers; ?>'); //get info from other players
@@ -136,24 +140,31 @@ session_start();
         setInputFilter(document.getElementById("guess1"), function(value) {
         return /^\d*$/.test(value); });
     
-        inputValidator();
+        var rellastguess = '<?php echo $rellastguess; ?>';
+        console.log(rellastguess.length);
+        var lastguess = rellastguess.substr(0, rellastguess.length - 1);
+        console.log(lastguess);
+        document.getElementById("guess").value = lastguess;
 
+        inputValidator();
         function inputValidator(){ //onyl shows submit button when input is legit (larger than lastguess)
             var times = parseInt(document.getElementById("guess").value);
             var number = parseInt(document.getElementById("guess1").value);
             var rellastguess = '<?php echo $rellastguess; ?>';
-            var lastguess = '<?php echo $lastguess; ?>';
+            console.log(rellastguess);
+            var lastguess = rellastguess.substr(0, rellastguess.length - 1);
+            console.log(lastguess);
+            
             if(rellastguess > 10){
             
             }else{
                 rellastguess = 10;
-                lastguess = 0;
+                //lastguess = 0;
                 document.getElementById("raddiv").style.display = "none";
             }
         
             var lastguesslastnum = rellastguess - lastguess * 10;
             var relnum = parseInt(times*10+number);
-            //console.log(rellastguess + " and " + relnum);
             if(lastguesslastnum == 1 || number == 1){
                 if(lastguesslastnum == 1 && number == 1){
                     if(relnum > rellastguess){
