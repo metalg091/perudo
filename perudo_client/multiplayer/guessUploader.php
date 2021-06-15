@@ -369,20 +369,23 @@ session_start();
             $db->exec('BEGIN');
             $db->query($sql);
             $db->exec('COMMIT');
-            if(sql == ""){
-                if(mysqli_query($conn, $sql)){
-                    if($cube < $cubes[$val]){
-                        if($cube == 0){
-                            $sql = "INSERT (eventtable orders, ide, guess, who) VALUES (" . $neworderid . ", 0, -2, " . $id[$val] . ")";
-                        }
-                        else{
-                            $sql = "INSERT (eventtable orders, ide, guess, who) VALUES (" . $neworderid . ", 0, -1, " . $id[$val] . ")";
-                        }
-                    }
-                    else{
-                        $sql = "INSERT (eventtable orders, ide, guess, who) VALUES (" . $neworderid . ", 0, 1, " . $id[$val] . ")";
-                    }
+            /*if(sql == ""){
+                if(mysqli_query($conn, $sql)){*/
+            if($cube < $cubes[$val]){
+                if($cube == 0){
+                    $sql = "INSERT (eventtable orders, ide, guess, who) VALUES (" . $neworderid . ", 0, -2, " . $id[$val] . ")";
                 }
+                else{
+                    $sql = "INSERT (eventtable orders, ide, guess, who) VALUES (" . $neworderid . ", 0, -1, " . $id[$val] . ")";
+                }
+            }
+            else{
+                $sql = "INSERT (eventtable orders, ide, guess, who) VALUES (" . $neworderid . ", 0, 1, " . $id[$val] . ")";
+            }
+            $db->exec('BEGIN');
+            $db->query($sql);
+            $db->exec('COMMIT');
+            /*}
                 else{
                     echo "Error in equal:" . mysqli_error($conn);
                 }
@@ -392,7 +395,7 @@ session_start();
                 else{
                     echo "Error in equal:" . mysqli_error($conn);
                 }
-            }
+            }*/
         }
         function guess($db, $newguess){
             $sql = "SELECT guess FROM eventtable ORDER BY orders DESC LIMIT 1";
