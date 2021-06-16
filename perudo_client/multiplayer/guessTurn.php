@@ -43,15 +43,9 @@ session_start();
 
         $rellastguess = $db->querySingle('SELECT "guess" FROM "eventtable" ORDER BY "orders" DESC LIMIT 1');
         $db->close();
-        if(!is_int($rellastguess)){
+        if(is_nan($rellastguess)){
             $rellastguess = 10;
         }
-        /*$sql = "SELECT guess FROM eventtable ORDER BY orders DESC LIMIT 1";
-        $result = mysqli_query($conn, $sql);
-        $row = mysqli_fetch_assoc($result);
-        $lastguess = substr($row["guess"], 0, -1);
-        $rellastguess = $row["guess"];
-        mysqli_close($conn);*/
     ?>
 </head>
 <body>
