@@ -8,13 +8,13 @@ session_start();
 </head>
 <body>
     <?php
-        $db = new SQLite3('../databases/perudo.sqlite', SQLITE_OPEN:CREATE | SQLITE_OPEN_READWRITE);
+        $db = new SQLite3('../databases/perudo.sqlite', SQLITE3_OPEN_CREATE | SQLITE3_OPEN_READWRITE);
         switch($_POST["iguess"]){
             case 3:
                 $guess = intval($_POST["guess1"] * 10 + $_POST["guess2"]);
                 echo $guess . "<br>";
                 guess($db, $guess);
-                $sql = 'INSERT INTO eventtable (ide, guess) VALUES (' . $_SESSION["id"] . ', ' . $guess')';
+                $sql = 'INSERT INTO eventtable (ide, guess) VALUES (' . $_SESSION["id"] . ', ' . $guess . ')';
                 break;
             case 1:
                 $sql = 'INSERT INTO eventtable (ide, guess) VALUES (' . $_SESSION["id"] . ', "doubt")';
@@ -22,38 +22,29 @@ session_start();
                 roll($db);
                 break;
             case 2:
-                $equal = "equal";
                 $sql = 'INSERT INTO eventtable (ide, guess) VALUES (' . $_SESSION["id"] . ', "equal")';
                 equal($db, $_SESSION["id"]);
                 roll($db);
                 break;
         }
-        if(mysqli_query($conn, $sql)){
-            echo "succes <br>";
-            $sql = 'UPDATE `game` SET `cycle`= 0 WHERE id = 0';
-            if(mysqli_query($conn, $sql)){
-                echo "succes again <br>";
-                header('Location: waitingForTurn.php');
-            }
-            else{
-                echo "Error updating record: " . mysqli_error($conn);
-            }
-        }
-        else{
-            echo "Error: " . $sql . "<br>" . mysqli_error($conn);
-            echo "I will try again in 15 seconds!";
-        }
+        $db->exec('BEGIN');
+        $db->query($sql);
+        $db->exec('COMMIT');
+            //$sql = 'UPDATE `game` SET `cycle`= 0 WHERE id = 0';
+        header('Location: waitingForTurn.php');
 
         function roll($db){
             $result = $db->query('SELECT id, cubes FROM game');
             $id = Array();
             $cubes = Array();
-            while($row = $result->fetchArray){
+            while($row = $result->fetchArray()){
                 $id[] = $row["id"];
                 $cubes[] = $row["cubes"];
             }
             $result->finalize();
             unset($row);
+            unset($id[0]);
+            $id = array_values(array_filter($id));
             $key = array_search(0, $cubes);
             while(is_int($key)){
                 unset($id[$key]);
@@ -72,7 +63,7 @@ session_start();
                 }
                 $db->exec('BEGIN');
                 $db->query('UPDATE game SET numbers = ' .  $numstr . ' WHERE id = ' . $id[$y]);
-                $db->exec('COMMIT')
+                $db->exec('COMMIT');
             }
         }
         function geteach($numbers, $counts){
@@ -102,7 +93,7 @@ session_start();
             return $counts;
         }
         function doubt($db, $sesid){
-            $guessrt = $db->querySingle'SELECT guess FROM eventtable ORDER BY orders DESC LIMIT 1';
+            $guesstr = $db->querySingle('SELECT guess FROM eventtable ORDER BY orders DESC LIMIT 1');
             $result = $db->query('SELECT id, cubes, numbers FROM game');
             $id = Array();
             $cubes = Array();
@@ -114,6 +105,8 @@ session_start();
             }
             $result->finalize();
             unset($row);
+            unset($id[0]);
+            $id = array_values(array_filter($id));
             $key = array_search(0, $cubes);
             while(is_int($key)){
                 unset($id[$key]);
@@ -128,7 +121,8 @@ session_start();
                 $counts = geteach($var, $counts);
             }
             $id = array_values(array_filter($id));
-            $val= array_search($sesid, $id);
+            $val = array_search($sesid, $id);
+            echo $val;
             $newcube = $cubes[$val] - 1;
             switch (substr($guesstr, -1))
             {
@@ -215,12 +209,15 @@ session_start();
             else{
                 $sql = 'INSERT INTO "eventtable" ("ide", "guess", "who") VALUES (0, -1, ' . $id[$val] . ')';
             }
+            echo $sql;
+            echo $val;
+            echo $id[$val];
             $db->exec('BEGIN');
             $db->query($sql);
             $db->exec('COMMIT');
         }
         function equal($db, $sesid){
-            $guessrt = $db->querySingle'SELECT guess FROM eventtable ORDER BY orders DESC LIMIT 1';
+            $guessrt = $db->querySingle('SELECT guess FROM eventtable ORDER BY orders DESC LIMIT 1');
             $result = $db->query('SELECT id, cubes, numbers FROM game');
             $id = Array();
             $cubes = Array();
@@ -369,47 +366,26 @@ session_start();
             $db->exec('BEGIN');
             $db->query($sql);
             $db->exec('COMMIT');
-            /*if(sql == ""){
-                if(mysqli_query($conn, $sql)){*/
             if($cube < $cubes[$val]){
                 if($cube == 0){
-                    $sql = "INSERT (eventtable orders, ide, guess, who) VALUES (" . $neworderid . ", 0, -2, " . $id[$val] . ")";
+                    $sql = 'INSERT INTO "eventtable" (ide, guess, who) VALUES (0, -2, ' . $id[$val] . ')';
                 }
                 else{
-                    $sql = "INSERT (eventtable orders, ide, guess, who) VALUES (" . $neworderid . ", 0, -1, " . $id[$val] . ")";
+                    $sql = 'INSERT "eventtable" (ide, guess, who) VALUES (0, -1, ' . $id[$val] . ')';
                 }
             }
+            elseif($cube > $cubes[$val]){
+                $sql = 'INSERT "eventtable" (ide, guess, who) VALUES (0, 1, ' . $id[$val] . ')';
+            }
             else{
-                $sql = "INSERT (eventtable orders, ide, guess, who) VALUES (" . $neworderid . ", 0, 1, " . $id[$val] . ")";
+                $sql= '';
             }
             $db->exec('BEGIN');
             $db->query($sql);
             $db->exec('COMMIT');
-            /*}
-                else{
-                    echo "Error in equal:" . mysqli_error($conn);
-                }
-                if(mysqli_query($conn, $sql)){
-                    echo "equal is done";
-                }
-                else{
-                    echo "Error in equal:" . mysqli_error($conn);
-                }
-            }*/
         }
         function guess($db, $newguess){
-            $sql = "SELECT guess FROM eventtable ORDER BY orders DESC LIMIT 1";
-            $result = mysqli_query($conn, $sql);
-            if(mysqli_num_rows($result) > 0){
-                $guess = Array();
-                while($row = mysqli_fetch_assoc($result)){
-                    $guess[] = $row["guess"];
-                }
-            }
-            else{
-                echo "error";
-            }
-            $guess = $guess[0];
+            $guess = $db->querySingle('SELECT guess FROM eventtable ORDER BY orders DESC LIMIT 1');
             if(substr(strval($newguess), -1) == 0 || substr(strval($newguess), -1) == 7 || substr(strval($newguess), -1) == 8 || substr(strval($newguess), -1) == 9){
                 header('Location: guessTurn.php');
                 die("invalid input");
@@ -436,7 +412,6 @@ session_start();
                 die("too small input");
             }
         }
-        mysqli_close($conn);
     ?>
     <p id="a"></p>
     <script defer type="text/javascript">
