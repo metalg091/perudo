@@ -4,7 +4,6 @@ session_start();
 <html>
 <head>
     <link rel="stylesheet" href="../main_theme" id="theme">
-    <link rel="stylesheet" href="../button.css">
     <script src="../themeSwitch.js"></script>
     <script src="otherPlayers.js"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -43,7 +42,7 @@ session_start();
 
         $rellastguess = $db->querySingle('SELECT "guess" FROM "eventtable" ORDER BY "orders" DESC LIMIT 1');
         $db->close();
-        if(is_nan($rellastguess)){
+        if(is_string(intval($rellastguess))){
             $rellastguess = 10;
         }
     ?>
