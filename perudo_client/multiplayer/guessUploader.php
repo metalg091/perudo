@@ -402,6 +402,9 @@ session_start();
             else{
                 $b = 1;
             }
+            if(is_string($guess)){
+                $guess = 10;
+            }
             $ng = $newguess/$b;
             $lg = $guess/$a;
             if($ng > $lg){
