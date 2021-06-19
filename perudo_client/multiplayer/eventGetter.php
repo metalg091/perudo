@@ -6,25 +6,35 @@
     </head>
     <body id="event" style="background-color: <?php if(isset($_COOKIE["eventbgc"])){echo $_COOKIE["eventbgc"];} ?>; color: <?php if(isset($_COOKIE["txtc"])){echo $_COOKIE["txtc"];}else{if($_COOKIE["theme"] == 2){echo "black";}else{echo "#fff";}} ?>;">
     <?php
-        $servername = "localhost";
+        /*$servername = "localhost";
         $username = "root";
         $password = "";
         $dbname = "perudo";
         $conn = mysqli_connect($servername, $username, $password, $dbname);
         if (!$conn){
             die("Connection failed: " . mysqli_connect_error());
-        }
-        $sql = "SELECT playersInGame, cPlayerId FROM game WHERE id = 0";
-        $result = mysqli_query($conn, $sql);
-        $row = mysqli_fetch_assoc($result);
-        $sql = "SELECT name FROM game WHERE id BETWEEN 1 AND " . $row["playersInGame"];
+        }*/
+        $db = new SQLite3('../databases/perudo.sqlite', SQLITE3_OPEN_CREATE | SQLITE3_OPEN_READWRITE);
+        $db->query('CREATE TABLE IF NOT EXISTS "game" (
+
+            "id" INTEGER UNIQUE PRIMARY KEY AUTOINCREMENT NOT NULL,
+
+            "name" TEXT,
+            "cubes" INTEGER DEFAULT "5",
+            "numbers" INTEGER DEFAULT "12345",
+            "cPlayerId" INTEGER DEFAULT null,
+            "playersInGame" INTEGER DEFAULT null,
+            "cycle" INTEGER DEFAULT null)');
+        $pig = $db->querySingle('SELECT "playersInGame" cPlayerId FROM "game" WHERE id = 0');
+        $cpi = $db->querySingle('SELECT "cPlayerId" FROM "game" WHERE id = 0');//change $row["cPlayerId"] to cpi there isn't even a reference to it 😒
+        $sql = "SELECT name FROM game WHERE id BETWEEN 1 AND " . $pig; //insert multiline selectiin here
         $result = mysqli_query($conn, $sql);
         if (mysqli_num_rows($result) > 0){
             $names = Array();
             while($row = mysqli_fetch_assoc($result)){
                 $names[] = $row["name"];
             }
-            $outName = json_encode($names);
+            $outName = json_encode($names);//variables are the same through the code!
         }
         else{
             echo "Game hasn't started yet!";
