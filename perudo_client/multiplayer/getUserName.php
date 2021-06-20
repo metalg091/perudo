@@ -1,6 +1,5 @@
 <?php
 session_start();
-$_SESSION["height"] = $_GET["height"];
 $_SESSION["username"] = $_GET["username"];
 ?>
 <html>
