@@ -47,7 +47,7 @@ session_start();
         }
     ?>
 </head>
-<body>
+<body onresize="render()">
     <div id="container">
     <h2>Your name</h2>
     <h3 id="username" class="data"></h3>
@@ -78,12 +78,16 @@ session_start();
     </form>
     </div>
     <h2 id="iframeTitle">Events:</h2>
-    <iframe src="eventGetter.php?style=../main_theme.css" id="eventGetter">
+    <iframe src="eventGetter.php?height=741" id="eventGetter">
     </iframe>
     <script defer type="text/javascript">
         <?php
             echo "themeSetup(" . $_COOKIE["theme"] . ");";
         ?>
+        render();
+        function render(){
+            document.getElementById("eventGetter").src = "eventGetter.php?height=" + document.getElementById("eventGetter").clientHeight;
+        }
         var a = '<?php echo $cycle; ?>';
         if(a == '2'){
             location.href = 'winpage.php';
@@ -134,9 +138,9 @@ session_start();
         return /^\d*$/.test(value); });
     
         var rellastguess = '<?php echo $rellastguess; ?>';
-        console.log(rellastguess.length);
+        //console.log(rellastguess.length);
         var lastguess = rellastguess.substr(0, rellastguess.length - 1);
-        console.log(lastguess);
+        //console.log(lastguess);
         document.getElementById("guess").value = lastguess;
 
         inputValidator();
@@ -144,9 +148,9 @@ session_start();
             var times = parseInt(document.getElementById("guess").value);
             var number = parseInt(document.getElementById("guess1").value);
             var rellastguess = '<?php echo $rellastguess; ?>';
-            console.log(rellastguess);
+            //console.log(rellastguess);
             var lastguess = rellastguess.substr(0, rellastguess.length - 1);
-            console.log(lastguess);
+            //console.log(lastguess);
             
             if(rellastguess > 10){
             

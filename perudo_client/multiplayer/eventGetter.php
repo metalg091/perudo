@@ -16,9 +16,7 @@
         }*/
         $db = new SQLite3('../databases/perudo.sqlite', SQLITE3_OPEN_CREATE | SQLITE3_OPEN_READWRITE);
         $db->query('CREATE TABLE IF NOT EXISTS "game" (
-
             "id" INTEGER UNIQUE PRIMARY KEY AUTOINCREMENT NOT NULL,
-
             "name" TEXT,
             "cubes" INTEGER DEFAULT "5",
             "numbers" INTEGER DEFAULT "12345",
@@ -26,71 +24,42 @@
             "playersInGame" INTEGER DEFAULT null,
             "cycle" INTEGER DEFAULT null)');
         $pig = $db->querySingle('SELECT "playersInGame" cPlayerId FROM "game" WHERE id = 0');
-        $cpi = $db->querySingle('SELECT "cPlayerId" FROM "game" WHERE id = 0');//change $row["cPlayerId"] to cpi there isn't even a reference to it 😒
-        $sql = "SELECT name FROM game WHERE id BETWEEN 1 AND " . $pig; //insert multiline selectiin here
-        $result = mysqli_query($conn, $sql);
-        if (mysqli_num_rows($result) > 0){
-            $names = Array();
-            while($row = mysqli_fetch_assoc($result)){
-                $names[] = $row["name"];
-            }
-            $outName = json_encode($names);//variables are the same through the code!
+        //$cpi = $db->querySingle('SELECT "cPlayerId" FROM "game" WHERE id = 0');//change $row["cPlayerId"] to cpi; there isn't even a reference to it bruh 😒
+        $results = $db->query('SELECT name FROM "game" WHERE id BETWEEN 1 AND ' . $pig);
+        $names = Array();
+        while($row = $results->fetchArray()){
+            $names[] = $row["name"];
         }
-        else{
+        $results->finalize();
+        $outName = json_encode($names);
+        $names = null;
+        $lines = round(($_GET["height"] - 40)/20);
+        $results = $db->query('SELECT * FROM "eventtable" ORDER BY orders DESC LIMIT ' . $lines);
+        $guess = Array();
+        $eventId = Array();
+        $who = Array();
+        while($row = $results->fetchArray()){
+            $guess[] = $row["guess"];
+            $eventId[] = $row["ide"];
+            $who[]= $row["who"];
+        }
+        $results->finalize();
+        $guess = array_reverse($guess);
+        $eventId = array_reverse($eventId);
+        $who = array_reverse($who);
+        /*for ($i = 0; $i < count($guess); $i++){
+            $guess[$i] = str_replace("'", "", $guess[$i]); //It was necessairy for mysql
+        }*/
+        $arrayofremove = Array();
+        $outGuess = json_encode($guess);
+        $guess = null;
+        $outEventId = json_encode($eventId);
+        $eventId = null;
+        $outWho = json_encode($who);
+        $who = null;
+        if(empty($outGuess)){
             echo "Game hasn't started yet!";
         }
-        if($_COOKIE["width"] <= 768){
-            $sql = "SELECT * FROM eventtable ORDER BY orders DESC LIMIT 6";
-            $result = mysqli_query($conn, $sql);
-                if (mysqli_num_rows($result) > 0){
-                    $guess = Array();
-                    $eventId = Array();
-                    $who = Array();
-                while($row = mysqli_fetch_assoc($result)){
-                    $guess[] = $row["guess"];
-                    $eventId[] = $row["ide"];
-                    $who[]= $row["who"];
-                }
-                $guess = array_reverse($guess);
-                $eventId = array_reverse($eventId);
-                $who = array_reverse($who);
-                for ($i = 0; $i < count($guess); $i++){
-                    $guess[$i] = str_replace("'", "",$guess[$i]);
-                }
-                $arrayofremove = Array();
-                $outGuess = json_encode($guess);
-                $outEventId = json_encode($eventId);
-                $outWho = json_encode($who);
-            }
-            else{
-                echo "Game hasn't started yet!";
-            }
-        }
-        else{
-            $sql = "SELECT * FROM eventtable";
-            $result = mysqli_query($conn, $sql);
-            if (mysqli_num_rows($result) > 0){
-                $guess = Array();
-                $eventId = Array();
-                $who = Array();
-                while($row = mysqli_fetch_assoc($result)){
-                    $guess[] = $row["guess"];
-                    $eventId[] = $row["ide"];
-                    $who[]= $row["who"];
-                }
-                for ($i = 0; $i < count($guess); $i++){
-                    $guess[$i] = str_replace("'", "",$guess[$i]);
-                }
-                $arrayofremove = Array();
-                $outGuess = json_encode($guess);
-                $outEventId = json_encode($eventId);
-                $outWho = json_encode($who);
-            }
-            else{
-                echo "Game hasn't started yet!";
-            }
-        }
-        mysqli_close($conn);
     ?>
     <script defer type="text/javascript">
         var arrayOfNames = arraymaker('<?php echo $outName; ?>');

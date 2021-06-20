@@ -8,7 +8,7 @@ session_start();
     <script src="otherPlayers.js"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
-<body>
+<body onresize="render()">
     <?php
         $db = new SQLite3('../databases/perudo.sqlite', SQLITE3_OPEN_CREATE | SQLITE3_OPEN_READWRITE);
         $db->query('CREATE TABLE IF NOT EXISTS "game" (
@@ -54,7 +54,7 @@ session_start();
         <p id="urnumbers" class="data">you have lost all your cubes...</p>
     </div>
     <h2 id="iframeTitle">Events:</h2>
-    <iframe src="eventGetter.php" id="eventGetter">
+    <iframe src="eventGetter.php?height=741" id="eventGetter">
     </iframe>
     <script defer type="text/javascript">
         <?php
@@ -63,6 +63,10 @@ session_start();
         var a = '<?php echo $cycle; ?>';
         if(a == '2'){
             location.href = 'winpage.php';
+        }
+        render();
+        function render(){
+            document.getElementById("eventGetter").src = "eventGetter.php?height=" + document.getElementById("eventGetter").clientHeight;
         }
         var id = '<?php echo $_SESSION["id"]; ?>';
         var username = '<?php echo $_SESSION["username"]; ?>'; //getting info specific to this user
