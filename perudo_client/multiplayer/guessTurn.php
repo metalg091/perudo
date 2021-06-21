@@ -22,7 +22,10 @@ session_start();
         $urnumbers = $db->querySingle('SELECT "numbers" FROM "game" WHERE id = ' . $_SESSION["id"] . '');
         $urcubes = $db->querySingle('SELECT "cubes" FROM "game" WHERE id = ' . $_SESSION["id"] . '');
         $playersInGame = $db->querySingle('SELECT "playersInGame" FROM "game" WHERE id = 0');
-        //$cPlayerId = $db->querySingle('SELECT "cPlayerId" FROM "game" WHERE id = 0');
+        $cPlayerId = $db->querySingle('SELECT "cPlayerId" FROM "game" WHERE id = 0');
+        if($_SESSION["id"] != $cpi){
+            header('Location: waitingForTurn.php');
+        }
         $results = $db->query('SELECT name, cubes FROM "game" WHERE id BETWEEN 1 AND ' . $playersInGame);
         while($row = $results->fetchArray()){
             $names[] = $row["name"];
