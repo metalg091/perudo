@@ -13,24 +13,11 @@
 <body>
 <div id="winner">
 <?php 
-    $servername = "localhost";
-    $username = "root";
-    $password = "";
-    $dbname = "perudo";
-    $conn = mysqli_connect($servername, $username, $password, $dbname);
-    if (!$conn){
-        die("Connection failed: " . mysqli_connect_error());
-    }
-    $sql = "SELECT cPlayerId FROM game WHERE id = 0";
-    $result = mysqli_query($conn, $sql);
-    $row = mysqli_fetch_assoc($result);
-    $who = $row["cPlayerId"];
-    $sql = "SELECT name FROM game WHERE id =" . $who;
-    $result = mysqli_query($conn, $sql);
-    $row = mysqli_fetch_assoc($result);
-    echo $row["name"] . " is the winner";
+    $db = new SQLite3('../databases/perudo.sqlite', SQLITE3_OPEN_CREATE | SQLITE3_OPEN_READWRITE);
+    $cpi = $db->querySingle('SELECT cPlayerId FROM "game" WHERE id = 0');
+    $winner = $db->querySingle('SELECT name FROM "game" WHERE id = ' . $cpi);
+    echo $winner . " is the winner";
 ?>
 </div>
-<div id="eventGetter"></div>
 </body>
 </html>
