@@ -8,7 +8,7 @@ session_start();
     <script src="otherPlayers.js"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
-<body>
+<body onresize="render()">
     <?php 
         $db = new SQLite3('../databases/perudo.sqlite', SQLITE3_OPEN_CREATE | SQLITE3_OPEN_READWRITE);
         $db->query('CREATE TABLE IF NOT EXISTS "game" (
@@ -44,11 +44,11 @@ session_start();
         <h2>Your numbers</h2>
         <p id="urnumbers" class="data">you have lost all your cubes...</p>
         <?php if($_SESSION["id"] == 1){
-            echo '<a href="guessUploader.php?myvalue=value1">START GAME</a>';
+            echo '<a href="guessUploader.php">START GAME</a>';
         } ?>
     </div>
     <h2 id="iframeTitle">Events:</h2>
-    <iframe src="eventGetter.php" id="eventGetter">
+    <iframe src="eventGetter.php?height=741" id="eventGetter">
     </iframe>
     <script type="text/javascript" defer>
         var cycle = '<?php echo $cycle; ?>';
@@ -57,6 +57,10 @@ session_start();
         }
         else {
             setTimeout(function(){location.reload()}, 7500);
+        }
+        render();
+        function render(){
+            document.getElementById("eventGetter").src = "eventGetter.php?height=" + document.getElementById("eventGetter").clientHeight;
         }
         <?php
             echo "themeSetup(" . $_COOKIE["theme"] . ");";
