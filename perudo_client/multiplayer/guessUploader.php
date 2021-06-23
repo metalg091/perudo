@@ -9,6 +9,7 @@ session_start();
 <body>
     <?php
         $db = new SQLite3('../databases/perudo.sqlite', SQLITE3_OPEN_CREATE | SQLITE3_OPEN_READWRITE);
+        isover($db);
         switch($_POST["iguess"]){
             case 3:
                 $guess = intval($_POST["guess1"] * 10 + $_POST["guess2"]);
@@ -413,6 +414,33 @@ session_start();
             else{
                 header('Location: guessTurn.php');
                 die("too small input");
+            }
+        }
+        function isover($db){
+            $result = $db->query('SELECT id, cubes FROM game');
+            $id = Array();
+            $cubes = Array();
+            while($row = $result->fetchArray()){
+                $id[] = $row["id"];
+                $cubes[] = $row["cubes"];
+            }
+            $result->finalize();
+            unset($row);
+            $key = array_search(0, $cubes);
+            while(is_int($key)){
+                unset($id[$key]);
+                unset($cubes[$key]);
+                $key = array_search(0, $cubes);
+            }
+            $cubes = array_values(array_filter($cubes));
+            $id = array_values(array_filter($id));
+            if(count($id) < 2){
+                //gameover
+                $db->exec('BEGIN');
+                $db->query('UPDATE "game" SET cycle = 2 WHERE id = 0');
+                $db->exec('COMMIT');
+                header('Location: winpage.php');
+                die("game is over");
             }
         }
     ?>
