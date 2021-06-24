@@ -15,22 +15,25 @@ session_start();
                 $guess = intval($_POST["guess1"] * 10 + $_POST["guess2"]);
                 echo $guess . "<br>";
                 guess($db, $guess);
-                $sql = 'INSERT INTO eventtable (ide, guess) VALUES (' . $_SESSION["id"] . ', ' . $guess . ')';
+                $db->exec('BEGIN');
+                $db->query('INSERT INTO eventtable (ide, guess) VALUES (' . $_SESSION["id"] . ', ' . $guess . ')');
+                $db->exec('COMMIT');
                 break;
             case 1:
-                $sql = 'INSERT INTO eventtable (ide, guess) VALUES (' . $_SESSION["id"] . ', "doubt")';
+                $db->exec('BEGIN');
+                $db->query('INSERT INTO eventtable (ide, guess) VALUES (' . $_SESSION["id"] . ', "doubt")');
+                $db->exec('COMMIT');
                 doubt($db, $_SESSION["id"]);
                 roll($db);
                 break;
             case 2:
-                $sql = 'INSERT INTO eventtable (ide, guess) VALUES (' . $_SESSION["id"] . ', "equal")';
+                $db->exec('BEGIN');
+                $db->query('INSERT INTO eventtable (ide, guess) VALUES (' . $_SESSION["id"] . ', "equal")');
+                $db->exec('COMMIT');
                 equal($db, $_SESSION["id"]);
                 roll($db);
                 break;
         }
-        $db->exec('BEGIN');
-        $db->query($sql);
-        $db->exec('COMMIT');
             //$sql = 'UPDATE `game` SET `cycle`= 0 WHERE id = 0';
         header('Location: waitingForTurn.php');
 
@@ -44,8 +47,6 @@ session_start();
             }
             $result->finalize();
             unset($row);
-            unset($id[0]);
-            $id = array_values(array_filter($id));
             $key = array_search(0, $cubes);
             while(is_int($key)){
                 unset($id[$key]);
