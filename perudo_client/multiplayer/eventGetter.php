@@ -6,14 +6,6 @@
     </head>
     <body id="event" style="background-color: <?php if(isset($_COOKIE["eventbgc"])){echo $_COOKIE["eventbgc"];} ?>; color: <?php if(isset($_COOKIE["txtc"])){echo $_COOKIE["txtc"];}else{if($_COOKIE["theme"] == 2){echo "black";}else{echo "#fff";}} ?>;">
     <?php
-        /*$servername = "localhost";
-        $username = "root";
-        $password = "";
-        $dbname = "perudo";
-        $conn = mysqli_connect($servername, $username, $password, $dbname);
-        if (!$conn){
-            die("Connection failed: " . mysqli_connect_error());
-        }*/
         $db = new SQLite3('../databases/perudo.sqlite', SQLITE3_OPEN_CREATE | SQLITE3_OPEN_READWRITE);
         $db->query('CREATE TABLE IF NOT EXISTS "game" (
             "id" INTEGER UNIQUE PRIMARY KEY AUTOINCREMENT NOT NULL,
