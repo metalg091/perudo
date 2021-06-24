@@ -23,6 +23,12 @@
             "cPlayerId" INTEGER DEFAULT null,
             "playersInGame" INTEGER DEFAULT null,
             "cycle" INTEGER DEFAULT null)');
+        $db->query('CREATE TABLE IF NOT EXISTS "eventtable" (
+            "orders" INTEGER UNIQUE PRIMARY KEY AUTOINCREMENT NOT NULL,
+            "ide" INTEGER,
+            "guess" TEXT,
+            "who" INTEGER DEFAULT "0"
+            )');
         $pig = $db->querySingle('SELECT "playersInGame" cPlayerId FROM "game" WHERE id = 0');
         //$cpi = $db->querySingle('SELECT "cPlayerId" FROM "game" WHERE id = 0');//change $row["cPlayerId"] to cpi; there isn't even a reference to it bruh 😒
         $results = $db->query('SELECT name FROM "game" WHERE id BETWEEN 1 AND ' . $pig);
