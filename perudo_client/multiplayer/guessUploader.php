@@ -66,6 +66,7 @@ session_start();
                 $db->exec('BEGIN');
                 $db->query('UPDATE game SET numbers = ' .  $numstr . ' WHERE id = ' . $id[$y]);
                 $db->exec('COMMIT');
+                $numstr = null;
             }
         }
         function geteach($numbers, $counts){
