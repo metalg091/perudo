@@ -410,7 +410,28 @@ session_start();
             $ng = $newguess/$b;
             $lg = $guess/$a;
             if($ng > $lg){
-                echo "nothing";
+                $result = $db->query('SELECT id, cubes FROM game');
+                $id = Array();
+                $cubes = Array();
+                while($row = $result->fetchArray()){
+                    $id[] = $row["id"];
+                    $cubes[] = $row["cubes"];
+                }
+                $result->finalize();
+                unset($row);
+                $key = array_search(0, $cubes);
+                while(is_int($key)){
+                    unset($id[$key]);
+                    unset($cubes[$key]);
+                    $key = array_search(0, $cubes);
+                }
+                $cubes = array_values(array_filter($cubes));
+                $id = array_values(array_filter($id));
+                $cpkey = array_search($_SESSION["id"], $id);
+                $cpkey++;
+                $db->exec('BEGIN');
+                $db->query('UPDATE "game" SET cPlayerId = ' . $id[$cpkey] . ' WHERE id = 0');
+                $db->exec('COMMIT');
             }
             else{
                 header('Location: guessTurn.php');
