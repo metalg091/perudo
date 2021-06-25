@@ -98,6 +98,10 @@
                             var CubeEvent = "Got an extra cube";
                             var who = arrayOfIWho[i];
                             break;
+                        case "2":
+                            var CubeEvent = "cannot gain an other cube";
+                            var who = arrayOfIWho[i];
+                            break;
                     }
                     var row = document.createElement("tr");
                     var tdname = document.createElement("td");
