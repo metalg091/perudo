@@ -13,7 +13,6 @@ session_start();
         switch($_POST["iguess"]){
             case 3:
                 $guess = intval($_POST["guess1"] * 10 + $_POST["guess2"]);
-                echo $guess . "<br>";
                 guess($db, $guess);
                 $db->exec('BEGIN');
                 $db->query('INSERT INTO eventtable (ide, guess) VALUES (' . $_SESSION["id"] . ', ' . $guess . ')');
@@ -23,18 +22,17 @@ session_start();
                 $db->exec('BEGIN');
                 $db->query('INSERT INTO eventtable (ide, guess) VALUES (' . $_SESSION["id"] . ', "doubt")');
                 $db->exec('COMMIT');
-                doubt($db, $_SESSION["id"]);
+                doubt($db);
                 roll($db);
                 break;
             case 2:
                 $db->exec('BEGIN');
                 $db->query('INSERT INTO eventtable (ide, guess) VALUES (' . $_SESSION["id"] . ', "equal")');
                 $db->exec('COMMIT');
-                equal($db, $_SESSION["id"]);
+                equal($db);
                 roll($db);
                 break;
         }
-            //$sql = 'UPDATE `game` SET `cycle`= 0 WHERE id = 0';
         header('Location: waitingForTurn.php');
 
         function roll($db){
@@ -55,7 +53,6 @@ session_start();
             }
             $cubes = array_values(array_filter($cubes));
             $id = array_values(array_filter($id));
-
             $num = Array();
             $numstr = "";
             for($y = 0; count($id)> $y; $y++){
@@ -67,6 +64,7 @@ session_start();
                 $db->query('UPDATE game SET numbers = ' .  $numstr . ' WHERE id = ' . $id[$y]);
                 $db->exec('COMMIT');
                 $numstr = null;
+                $num = null;
             }
         }
         function geteach($numbers, $counts){
@@ -95,7 +93,7 @@ session_start();
             }
             return $counts;
         }
-        function doubt($db, $sesid){
+        function doubt($db){
             $guesstr = $db->querySingle('SELECT guess FROM eventtable ORDER BY orders DESC LIMIT 1, 1');
             $result = $db->query('SELECT id, cubes, numbers FROM game');
             $id = Array();
@@ -123,7 +121,7 @@ session_start();
                 $counts = geteach($var, $counts);
             }
             $id = array_values(array_filter($id));
-            $val = array_search($sesid, $id);
+            $val = array_search($_SESSION["id"], $id);
             switch (substr($guesstr, -1))
             {
                 case 1:
@@ -171,7 +169,7 @@ session_start();
                     }
                     break;
                 case 5:
-                    if ($counts[4] * 10 + 5 + $counts[0] * 10 >= $guesstr)
+                    if (!($counts[4] * 10 + 5 + $counts[0] * 10 >= $guesstr))
                     {
                         if($val == 0){
                             $val = count($id) - 1;
@@ -200,11 +198,10 @@ session_start();
             else{
                 $sql = 'INSERT INTO "eventtable" ("ide", "guess", "who") VALUES (0, -1, ' . $id[$val] . ')';
             }
-            echo $sql;
-            echo $val;
-            echo $id[$val];
             $db->exec('BEGIN');
             $db->query($sql);
+            $db->query('UPDATE game SET cubes = ' . $newcube . ' WHERE id = ' . $id[$val]);
+            $db->query('UPDATE "game" SET cPlayerId = ' . $id[$val] . ' WHERE id = 0');
             $db->exec('COMMIT');
         }
         function equal($db){
@@ -425,8 +422,7 @@ session_start();
             }
             $cubes = array_values(array_filter($cubes));
             $id = array_values(array_filter($id));
-            if(count($id) < 2){
-                //gameover
+            if(count($id) < 2){     //gameover
                 $db->exec('BEGIN');
                 $db->query('UPDATE "game" SET cycle = 2 WHERE id = 0');
                 $db->exec('COMMIT');
@@ -435,18 +431,5 @@ session_start();
             }
         }
     ?>
-    <p id="a"></p>
-    <script defer type="text/javascript">
-        var reload = '<?php echo $succes; ?>'; //php runner, redirecter
-        document.getElementById("a").innerHTML = reload;
-        switch(reload){
-            case 1:
-                location.href = 'waitingForTurn.php';
-                break;
-            case 2:
-                location.href = 'guessTurn.php';
-                break;
-        }
-    </script>
 </body>
 </html>
