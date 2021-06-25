@@ -22,7 +22,7 @@ $_SESSION["username"] = $_GET["username"];
             "cycle" INTEGER DEFAULT null)');
 
         $db->exec('BEGIN');
-        $db->query('INSERT OR IGNORE INTO "game" ("id", "name", "cubes", "numbers", "cPlayerId", "playersInGame", "cycle") VALUES ("0", "system", "null", "null", "0", "0", "6")');
+        $db->query('INSERT OR IGNORE INTO "game" ("id", "name", "cubes", "numbers", "cPlayerId", "playersInGame", "cycle") VALUES ("0", "system", "null", "null", "1", "0", "6")');
         $db->exec('COMMIT');
         
         $db->exec('BEGIN');
