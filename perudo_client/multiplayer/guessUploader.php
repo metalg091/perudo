@@ -207,8 +207,8 @@ session_start();
             $db->query($sql);
             $db->exec('COMMIT');
         }
-        function equal($db, $sesid){
-            $guessrt = $db->querySingle('SELECT guess FROM eventtable ORDER BY orders DESC LIMIT 1');
+        function equal($db){
+            $guesstr = $db->querySingle('SELECT guess FROM eventtable ORDER BY orders DESC LIMIT 1, 1');
             $result = $db->query('SELECT id, cubes, numbers FROM game');
             $id = Array();
             $cubes = Array();
@@ -233,9 +233,9 @@ session_start();
             foreach($numbers as $var){
                 $counts = geteach($var, $counts);
             }
-            //echo json_encode($counts);
+            echo json_encode($counts) . "<br>";
             $id = array_values(array_filter($id));
-            $val= array_search($sesid, $id);
+            $val= array_search($_SESSION["id"], $id);
             $cube = $cubes[$val];
             switch (substr($guesstr, -1))
             {
@@ -243,137 +243,113 @@ session_start();
                     if ($counts[0] * 10 + 1 == $guesstr && $cube < 5)
                     {
                         $cube++;
-                        echo "increased";
-                        $sql = 'UPDATE game SET cubes = ' . $cube . ' WHERE id = ' . $_SESSION["id"];
                     }
                     elseif ($counts[0] * 10 + 1 == $guesstr && !$cubes < 5){
                         echo "max cubes";
-                        $sql = "";
                         break;
                     }
                     else
                     {
                         $cube--;
-                        echo "decreased";
-                        $sql = 'UPDATE game SET cubes = ' . $cube . ' WHERE id = ' . $_SESSION["id"];
                     }
                     break;
                 case 2:
                     if ($counts[1] * 10 + 2 + $counts[0] * 10 == $guesstr && $cube < 5)
                     {
                         $cube++;
-                        echo "increased";
-                        $sql = 'UPDATE game SET cubes = ' . $cube . ' WHERE id = ' . $_SESSION["id"];
                     }
                     elseif ($counts[1] * 10 + 1 + $counts[0] * 10 == $guesstr && !$cubes < 5){
                         echo "max cubes";
-                        $sql = "";
                         break;
                     }
                     else
                     {
                         $cube--;
-                        echo "decreased";
-                        $sql = 'UPDATE game SET cubes = ' . $cube . ' WHERE id = ' . $_SESSION["id"];
                     }
                     break;
                 case 3:
                     if ($counts[2] * 10 + 3 + $counts[0] * 10 == $guesstr && $cube < 5)
                     {
                         $cube++;
-                        echo "increased";
-                        $sql = 'UPDATE game SET cubes = ' . $cube . ' WHERE id = ' . $_SESSION["id"];
                     }
                     elseif ($counts[2] * 10 + 1 + $counts[0] * 10 == $guesstr && !$cubes < 5){
                         echo "max cubes";
-                        $sql = "";
                         break;
                     }
                     else
                     {
                         $cube--;
-                        echo "decreased";
-                        $sql = 'UPDATE game SET cubes = ' . $cube . ' WHERE id = ' . $_SESSION["id"];
                     }
                     break;
                 case 4:
                     if ($counts[3] * 10 + 4 + $counts[0] * 10 == $guesstr && $cube < 5)
                     {
                         $cube++;
-                        echo "increased";
-                        $sql = 'UPDATE game SET cubes = ' . $cube . ' WHERE id = ' . $_SESSION["id"];
                     }
                     elseif ($counts[3] * 10 + 1 + $counts[0] * 10 == $guesstr && !$cubes < 5){
                         echo "max cubes";
-                        $sql = '';
                         break;
                     }
                     else
                     {
                         $cube--;
-                        echo "decreased";
-                        $sql = 'UPDATE game SET cubes = ' . $cube . ' WHERE id = ' . $_SESSION["id"];
                     }
                     break;
                 case 5:
                     if ($counts[4] * 10 + 5 + $counts[0] * 10 == $guesstr && $cube < 5)
                     {
                         $cube++;
-                        echo "increased";
-                        $sql = 'UPDATE game SET cubes = ' . $cube . ' WHERE id = ' . $_SESSION["id"];
                     }
                     elseif ($counts[4] * 10 + 1 + $counts[0] * 10 == $guesstr && !$cubes < 5){
                         echo "max cubes";
-                        $sql = "";
                         break;
                     }
                     else
                     {
                         $cube--;
-                        echo "decreased";
-                        $sql = 'UPDATE game SET cubes = ' . $cube . ' WHERE id = ' . $_SESSION["id"];
                     }
                     break;
                 case 6:
                     if ($counts[5] * 10 + 6 + $counts[0] * 10 == $guesstr && $cube < 5)
                     {
                         $cube++;
-                        echo "increased";
-                        $sql = 'UPDATE game SET cubes = ' . $cube . ' WHERE id = ' . $_SESSION["id"];
                     }
                     elseif ($counts[5] * 10 + 1 + $counts[0] * 10 == $guesstr && !$cubes < 5){
                         echo "max cubes";
-                        $sql = '';
                         break;
                     }
                     else
                     {
                         $cube--;
-                        echo "decreased";
-                        $sql = 'UPDATE game SET cubes = ' . $cube . ' WHERE id = ' . $_SESSION["id"];
                     }
                     break;
             }
-            $db->exec('BEGIN');
-            $db->query($sql);
-            $db->exec('COMMIT');
+            echo $cube . " and " . $cubes[$val];
             if($cube < $cubes[$val]){
                 if($cube == 0){
-                    $sql = 'INSERT INTO "eventtable" (ide, guess, who) VALUES (0, -2, ' . $id[$val] . ')';
+                    $sql = 'INSERT INTO "eventtable" (ide, guess, who) VALUES (0, -2, ' . $_SESSION["id"] . ')';
                 }
                 else{
-                    $sql = 'INSERT "eventtable" (ide, guess, who) VALUES (0, -1, ' . $id[$val] . ')';
+                    $sql = 'INSERT INTO "eventtable" (ide, guess, who) VALUES (0, -1, ' . $_SESSION["id"] . ')';
                 }
+                $db->exec('BEGIN');
+                $db->query($sql);
+                $db->query('UPDATE game SET cubes = ' . $cube . ' WHERE id = ' . $_SESSION["id"]);
+                $db->exec('COMMIT');
             }
             elseif($cube > $cubes[$val]){
-                $sql = 'INSERT "eventtable" (ide, guess, who) VALUES (0, 1, ' . $id[$val] . ')';
+                $sql = 'INSERT INTO "eventtable" (ide, guess, who) VALUES (0, 1, ' . $_SESSION["id"] . ')';
+                $db->exec('BEGIN');
+                $db->query($sql);
+                $db->query('UPDATE game SET cubes = ' . $cube . ' WHERE id = ' . $_SESSION["id"]);
+                $db->exec('COMMIT');
             }
             else{
-                $sql= '';
+                $db->exec('BEGIN');
+                $db->query('INSERT INTO "eventtable" (ide, guess, who) VALUES (0, 2, ' . $_SESSION["id"] . ')');
+                $db->query('UPDATE game SET cubes = ' . $cube . ' WHERE id = ' . $_SESSION["id"]);
+                $db->exec('COMMIT');
             }
-            $db->exec('BEGIN');
-            $db->query($sql);
-            $db->exec('COMMIT');
         }
         function guess($db, $newguess){
             $guess = $db->querySingle('SELECT guess FROM eventtable ORDER BY orders DESC LIMIT 1');
