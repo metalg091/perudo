@@ -390,6 +390,7 @@ session_start();
         function guess($db, $newguess){
             $guess = $db->querySingle('SELECT guess FROM eventtable ORDER BY orders DESC LIMIT 1');
             if(substr(strval($newguess), -1) == 0 || substr(strval($newguess), -1) == 7 || substr(strval($newguess), -1) == 8 || substr(strval($newguess), -1) == 9){
+                echo "invalid input";
                 header('Location: guessTurn.php');
                 die("invalid input");
             }
@@ -430,6 +431,9 @@ session_start();
                 $id = array_values(array_filter($id));
                 $cpkey = array_search($_SESSION["id"], $id);
                 $cpkey++;
+                if(empty($id[$cpkey])){
+                    $cpkey = 0;
+                }
                 $db->exec('BEGIN');
                 $db->query('UPDATE "game" SET cPlayerId = ' . $id[$cpkey] . ' WHERE id = 0');
                 $db->exec('COMMIT');
