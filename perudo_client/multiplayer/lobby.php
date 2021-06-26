@@ -65,10 +65,6 @@ session_start();
         <?php
             echo "themeSetup(" . $_COOKIE["theme"] . ");";
         ?>
-        var a = '<?php echo $cycle; ?>';
-        if(a == '2'){
-            location.href = 'winpage.php';
-        }
         var id = '<?php echo $_SESSION["id"] ?>';
         var username = '<?php echo $_SESSION["username"]; ?>'; //getting info specific to this user
         document.getElementById("username").innerHTML = username + " your id is " + id;
