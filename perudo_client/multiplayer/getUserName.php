@@ -7,7 +7,6 @@ $_SESSION["username"] = $_GET["username"];
     <link rel="stylesheet" href="../main_theme.css" id="theme">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="../themeSwitch.js"></script>
-    <!--<meta id="meta" http-equiv="refresh" content="">-->
 </head>
 <body>
     <?php 
@@ -26,7 +25,7 @@ $_SESSION["username"] = $_GET["username"];
         $db->exec('COMMIT');
         
         $db->exec('BEGIN');
-        $db->query('INSERT INTO "game" ("name") VALUES ("' . $_GET["username"] . '")');
+        $db->query('INSERT INTO "game" ("name", "cubes") VALUES ("' . $_GET["username"] . '", 5)');
         $db->query('UPDATE "game" SET playersInGame = playersInGame + 1 WHERE id = 0');
         $db->exec('COMMIT');
         
