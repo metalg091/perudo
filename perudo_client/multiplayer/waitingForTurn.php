@@ -74,7 +74,7 @@ session_start();
         var nums = '<?php echo $urnumbers; ?>';
         document.getElementById("urnumbers").innerHTML = nums;
 
-        var reload = '<?php echo $whatnow; ?>'; //php runner, redirecter
+        var reload = '<?php echo $whatnow; ?>';
         if(reload){
             location.href = 'guessTurn.php';
         }
