@@ -423,8 +423,13 @@ session_start();
             $cubes = array_values(array_filter($cubes));
             $id = array_values(array_filter($id));
             if(count($id) < 2){     //gameover
+                $winner = $db->querySingle('SELECT name FROM "game" WHERE id = ' . $id[0]);
+                $db->query('CREATE TABLE IF NOT EXISTS "winners" (
+                    "id" INTEGER UNIQUE PRIMARY KEY AUTOINCREMENT NOT NULL,
+                    "name" TEXT,)');
                 $db->exec('BEGIN');
                 $db->query('UPDATE "game" SET cycle = 2 WHERE id = 0');
+                $db->query('INSERT INTO "winners" ("name") VALUES (' . $winner . ')');
                 $db->exec('COMMIT');
                 header('Location: winpage.php');
                 die("game is over");

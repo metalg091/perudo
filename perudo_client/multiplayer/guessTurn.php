@@ -17,7 +17,7 @@ session_start();
             "cPlayerId" INTEGER DEFAULT null,
             "playersInGame" INTEGER DEFAULT null,
             "cycle" INTEGER DEFAULT null)');
-        
+        isover($db);
         $cycle = $db->querySingle('SELECT "cycle" FROM "game" WHERE id = 0');
         $urnumbers = $db->querySingle('SELECT "numbers" FROM "game" WHERE id = ' . $_SESSION["id"] . '');
         $urcubes = $db->querySingle('SELECT "cubes" FROM "game" WHERE id = ' . $_SESSION["id"] . '');
@@ -47,6 +47,37 @@ session_start();
         $db->close();
         if(is_string(intval($rellastguess))){
             $rellastguess = 10;
+        }
+        function isover($db){
+            $result = $db->query('SELECT id, cubes FROM game');
+            $id = Array();
+            $cubes = Array();
+            while($row = $result->fetchArray()){
+                $id[] = $row["id"];
+                $cubes[] = $row["cubes"];
+            }
+            $result->finalize();
+            unset($row);
+            $key = array_search(0, $cubes);
+            while(is_int($key)){
+                unset($id[$key]);
+                unset($cubes[$key]);
+                $key = array_search(0, $cubes);
+            }
+            $cubes = array_values(array_filter($cubes));
+            $id = array_values(array_filter($id));
+            if(count($id) == 1){     //gameover
+                $winner = $db->querySingle('SELECT "name" FROM "game" WHERE id = ' . $id[0]);
+                $db->query('CREATE TABLE IF NOT EXISTS "winners" (
+                    "id" INTEGER UNIQUE PRIMARY KEY AUTOINCREMENT NOT NULL,
+                    "name" TEXT,)');
+                $db->exec('BEGIN');
+                $db->query('UPDATE "game" SET cycle = 2 WHERE id = 0');
+                $db->query('INSERT INTO "winners" ("name") VALUES (' . $winner . ')');
+                $db->exec('COMMIT');
+                header('Location: winpage.php');
+                die("game is over");
+            }
         }
     ?>
 </head>
