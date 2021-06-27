@@ -44,7 +44,7 @@ session_start();
         <h2>Your numbers</h2>
         <p id="urnumbers" class="data">you have lost all your cubes...</p>
         <?php if($_SESSION["id"] == 1){
-            echo '<a href="guessUploader.php">START GAME</a>';
+            echo '<a href="startgame.php">START GAME</a>';
         } ?>
     </div>
     <h2 id="iframeTitle">Events:</h2>
