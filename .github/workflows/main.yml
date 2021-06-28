@@ -14,3 +14,4 @@ jobs:
         server:  ftpupload.net
         username: epiz_29001520
         password: ${{ secrets.ftp_password }}
+        local-dir: ./perudo_client/
