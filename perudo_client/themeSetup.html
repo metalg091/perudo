@@ -91,7 +91,7 @@
                 <td>from test user 2</td>
             </tr>
             <tr>
-                <td>tset user 2</td>
+                <td>test user 2</td>
                 <td>lost a Cube</td>
             </tr>
         </table>
@@ -113,9 +113,10 @@
         <label class="cpick" for="eventbgc">Event listener background color</label>
         <input style="left: 130px;" type="color" value="#222222" id="eventbgc" name="eventbgc" class="cpick" onchange="CustomTheme()">
         <label for="sql">Upload custom theme to server?</label>
-        <input type="checkbox" id="sql" name="upload" onclick="UpnameHider">
-        <label for="name" class="upname" style="display: none;" name="themename">Style Name</label>
-        <input type="text" id="name" class="upname" style="display: none;">
+        <input type="checkbox" id="sql" name="upload" onclick="UpnameHider()">
+        <br>
+        <label id="namelabel" for="name" class="upname" style="display: none;">Style Name</label>
+        <input type="text" id="name" class="upname" style="display: none;" name="themename">
         <input type="submit" value="Submit">
     </form>
     <script defer type="text/javascript">
@@ -162,11 +163,13 @@
         var cycle = 1
         function UpnameHider(){
             if (cycle == 1){
-                document.getElementsByClassName("upname").style = "display: inline-block;";
+                document.getElementById("name").style = "display: inline-block;";
+                document.getElementById("namelabel").style = "display: inline-block;";
                 cycle++;
             }
             else{
-                document.getElementsByClassName("upname").style = "display: none;";
+                document.getElementById("name").style = "display: none;";
+                document.getElementById("namelabel").style = "display: none;";
                 cycle--;
             }
         }
