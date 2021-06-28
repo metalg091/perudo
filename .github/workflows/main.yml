@@ -15,3 +15,4 @@ jobs:
         username: epiz_28993281
         password: ${{ secrets.ftp_password }}
         local-dir: ./perudo_client/
+        server-dir: htdocs/
