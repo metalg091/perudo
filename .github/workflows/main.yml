@@ -12,5 +12,7 @@ jobs:
       uses: SamKirkland/FTP-Deploy-Action@4.1.0
       with:
         server:  ftpupload.net
-        username: epiz_29001520
+        username: epiz_28993281
         password: ${{ secrets.ftp_password }}
+        local-dir: ./perudo_client/
+        server-dir: htdocs/
