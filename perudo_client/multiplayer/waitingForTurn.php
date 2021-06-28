@@ -10,39 +10,37 @@ session_start();
 </head>
 <body onresize="render()">
     <?php
-        $db = new SQLite3('../databases/perudo.sqlite', SQLITE3_OPEN_CREATE | SQLITE3_OPEN_READWRITE);
-        $db->query('CREATE TABLE IF NOT EXISTS "game" (
-            "id" INTEGER UNIQUE PRIMARY KEY AUTOINCREMENT NOT NULL,
-            "name" TEXT,
-            "cubes" INTEGER,
-            "numbers" INTEGER,
-            "cPlayerId" INTEGER DEFAULT null,
-            "playersInGame" INTEGER DEFAULT null,
-            "cycle" INTEGER DEFAULT null)');
-        
-        $cycle = $db->querySingle('SELECT "cycle" FROM "game" WHERE id = 0');
-        if(!$cycle){
+        $db = new SQLite3('../databases/perudo.sqlite', SQLITE3_OPEN_READONLY);
+        try{
+            $db->enableExceptions(true);
+            $cycle = $db->querySingle('SELECT "cycle" FROM "game" WHERE id = 0');
+            if(!$cycle && $cycle != 0){
+                header('Location: winpage.php');
+            }
+            $urnumbers = $db->querySingle('SELECT "numbers" FROM "game" WHERE id = ' . $_SESSION["id"] . '');
+            $urcubes = $db->querySingle('SELECT "cubes" FROM "game" WHERE id = ' . $_SESSION["id"] . '');
+            $playersInGame = $db->querySingle('SELECT "playersInGame" FROM "game" WHERE id = 0');
+            $cPlayerId = $db->querySingle('SELECT "cPlayerId" FROM "game" WHERE id = 0');
+            $results = $db->query('SELECT name, cubes FROM "game" WHERE id BETWEEN 1 AND ' . $playersInGame);
+            while($row = $results->fetchArray()){
+                $names[] = $row["name"];
+                $cubes[] = $row["cubes"];
+            }
+            $results->finalize();
+            $db->close();
+            $row = null;
+            $outOthers = json_encode($names);
+            $outCubesOfOthers = json_encode($cubes);
+            $db->close();
+            if($cPlayerId == $_SESSION["id"]){
+                $whatnow = TRUE;
+            }
+            else{
+                $whatnow = FALSE;
+            }
+        }
+        catch(Exception $e){
             header('Location: winpage.php');
-        }
-        $urnumbers = $db->querySingle('SELECT "numbers" FROM "game" WHERE id = ' . $_SESSION["id"] . '');
-        $urcubes = $db->querySingle('SELECT "cubes" FROM "game" WHERE id = ' . $_SESSION["id"] . '');
-        $playersInGame = $db->querySingle('SELECT "playersInGame" FROM "game" WHERE id = 0');
-        $cPlayerId = $db->querySingle('SELECT "cPlayerId" FROM "game" WHERE id = 0');
-        $results = $db->query('SELECT name, cubes FROM "game" WHERE id BETWEEN 1 AND ' . $playersInGame);
-        while($row = $results->fetchArray()){
-            $names[] = $row["name"];
-            $cubes[] = $row["cubes"];
-        }
-        $results->finalize();
-        $row = null;
-        $outOthers = json_encode($names);
-        $outCubesOfOthers = json_encode($cubes);
-        $db->close();
-        if($cPlayerId == $_SESSION["id"]){
-            $whatnow = TRUE;
-        }
-        else{
-            $whatnow = FALSE;
         }
     ?>
     <div id="container">

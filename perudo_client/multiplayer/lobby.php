@@ -10,16 +10,7 @@ session_start();
 </head>
 <body onresize="render()">
     <?php 
-        $db = new SQLite3('../databases/perudo.sqlite', SQLITE3_OPEN_CREATE | SQLITE3_OPEN_READWRITE);
-        $db->query('CREATE TABLE IF NOT EXISTS "game" (
-            "id" INTEGER UNIQUE PRIMARY KEY AUTOINCREMENT NOT NULL,
-            "name" TEXT,
-            "cubes" INTEGER,
-            "numbers" INTEGER,
-            "cPlayerId" INTEGER DEFAULT null,
-            "playersInGame" INTEGER DEFAULT null,
-            "cycle" INTEGER DEFAULT null)');
-
+        $db = new SQLite3('../databases/perudo.sqlite', SQLITE3_OPEN_READONLY);
         $cycle = $db->querySingle('SELECT "cycle" FROM "game" WHERE id = 0');
         $urnumbers = $db->querySingle('SELECT "numbers" FROM "game" WHERE id = ' . $_SESSION["id"]);
         $urcubes = $db->querySingle('SELECT "cubes" FROM "game" WHERE id = ' . $_SESSION["id"]);
@@ -29,9 +20,10 @@ session_start();
             $names[] = $row["name"];
             $cubes[] = $row["cubes"];
         }
+        $results->finalize();
+        $db->close();
         $outOthers = json_encode($names);
         $outCubesOfOthers = json_encode($cubes);
-        $db->close();
     ?>
     <div id="container">
         <h2>Your name</h2>

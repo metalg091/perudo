@@ -5,21 +5,7 @@
     </head>
     <body id="event" style="background-color: <?php if(isset($_COOKIE["eventbgc"])){echo $_COOKIE["eventbgc"];} ?>; color: <?php if(isset($_COOKIE["txtc"])){echo $_COOKIE["txtc"];}else{if($_COOKIE["theme"] == 2){echo "black";}else{echo "#fff";}} ?>;">
     <?php
-        $db = new SQLite3('../databases/perudo.sqlite', SQLITE3_OPEN_CREATE | SQLITE3_OPEN_READWRITE);
-        $db->query('CREATE TABLE IF NOT EXISTS "game" (
-            "id" INTEGER UNIQUE PRIMARY KEY AUTOINCREMENT NOT NULL,
-            "name" TEXT,
-            "cubes" INTEGER DEFAULT "5",
-            "numbers" INTEGER DEFAULT "12345",
-            "cPlayerId" INTEGER DEFAULT null,
-            "playersInGame" INTEGER DEFAULT null,
-            "cycle" INTEGER DEFAULT null)');
-        $db->query('CREATE TABLE IF NOT EXISTS "eventtable" (
-            "orders" INTEGER UNIQUE PRIMARY KEY AUTOINCREMENT NOT NULL,
-            "ide" INTEGER,
-            "guess" TEXT,
-            "who" INTEGER DEFAULT "0"
-            )');
+        $db = new SQLite3('../databases/perudo.sqlite', SQLITE3_OPEN_READONLY);
         $pig = $db->querySingle('SELECT "playersInGame" cPlayerId FROM "game" WHERE id = 0');
         //$cpi = $db->querySingle('SELECT "cPlayerId" FROM "game" WHERE id = 0');//change $row["cPlayerId"] to cpi; there isn't even a reference to it bruh 😒
         $results = $db->query('SELECT name FROM "game" WHERE id BETWEEN 1 AND ' . $pig);
@@ -41,6 +27,7 @@
             $who[]= $row["who"];
         }
         $results->finalize();
+        $db->close();
         $guess = array_reverse($guess);
         $eventId = array_reverse($eventId);
         $who = array_reverse($who);
@@ -54,9 +41,9 @@
         $eventId = null;
         $outWho = json_encode($who);
         $who = null;
-        if(empty($outGuess)){
-            echo "Game hasn't started yet!";
-        }
+        /*if(empty($outGuess) || isset($outGuess)){
+            echo "Game hasn't started yet!"; //always runs :(
+        }*/
     ?>
     <script defer type="text/javascript">
         var arrayOfNames = arraymaker('<?php echo $outName; ?>');
