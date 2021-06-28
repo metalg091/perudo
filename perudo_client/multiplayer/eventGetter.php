@@ -1,7 +1,6 @@
 <html>
     <head>
         <script src="otherPlayers.js"></script>
-        <!--script src="../themeSwitch.js"></script-->
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
     </head>
     <body id="event" style="background-color: <?php if(isset($_COOKIE["eventbgc"])){echo $_COOKIE["eventbgc"];} ?>; color: <?php if(isset($_COOKIE["txtc"])){echo $_COOKIE["txtc"];}else{if($_COOKIE["theme"] == 2){echo "black";}else{echo "#fff";}} ?>;">

@@ -17,13 +17,13 @@ session_start();
             "cPlayerId" INTEGER DEFAULT null,
             "playersInGame" INTEGER DEFAULT null,
             "cycle" INTEGER DEFAULT null)');
-        isover($db);
         $cycle = $db->querySingle('SELECT "cycle" FROM "game" WHERE id = 0');
+        isover($db, $cycle);
         $urnumbers = $db->querySingle('SELECT "numbers" FROM "game" WHERE id = ' . $_SESSION["id"] . '');
         $urcubes = $db->querySingle('SELECT "cubes" FROM "game" WHERE id = ' . $_SESSION["id"] . '');
         $playersInGame = $db->querySingle('SELECT "playersInGame" FROM "game" WHERE id = 0');
         $cpi = $db->querySingle('SELECT "cPlayerId" FROM "game" WHERE id = 0');
-        if($_SESSION["id"] != $cpi){
+        if($_SESSION["id"] != $cpi && $cycle != 2){
             header('Location: waitingForTurn.php');
         }
         $results = $db->query('SELECT name, cubes FROM "game" WHERE id BETWEEN 1 AND ' . $playersInGame);
@@ -48,7 +48,7 @@ session_start();
         if(is_string(intval($rellastguess))){
             $rellastguess = 10;
         }
-        function isover($db){
+        function isover($db, $cycle){
             $result = $db->query('SELECT id, cubes FROM game');
             $id = Array();
             $cubes = Array();
@@ -66,16 +66,17 @@ session_start();
             }
             $cubes = array_values(array_filter($cubes));
             $id = array_values(array_filter($id));
-            if(count($id) == 1){     //gameover
+            if(count($id) == 1 || $cycle == 2){     //gameover
                 $winner = $db->querySingle('SELECT "name" FROM "game" WHERE id = ' . $id[0]);
                 $db->query('CREATE TABLE IF NOT EXISTS "winners" (
                     "id" INTEGER UNIQUE PRIMARY KEY AUTOINCREMENT NOT NULL,
-                    "name" TEXT,)');
+                    "name" TEXT)');
                 $db->exec('BEGIN');
                 $db->query('UPDATE "game" SET cycle = 2 WHERE id = 0');
-                $db->query('INSERT INTO "winners" ("name") VALUES (' . $winner . ')');
+                $db->query('INSERT OR IGNORE INTO "winners" ("name") VALUES ("' . $winner . '")');
                 $db->exec('COMMIT');
                 header('Location: winpage.php');
+                $db->close();
                 die("game is over");
             }
         }

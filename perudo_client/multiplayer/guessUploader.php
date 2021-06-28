@@ -355,6 +355,9 @@ session_start();
                 header('Location: guessTurn.php');
                 die("invalid input");
             }
+            if($guess[0] == "-"){
+                $guess = 10;
+            }
             if(substr(strval($newguess), -1) == 1){
                 $a = 2;
             }
@@ -429,7 +432,7 @@ session_start();
                     "name" TEXT,)');
                 $db->exec('BEGIN');
                 $db->query('UPDATE "game" SET cycle = 2 WHERE id = 0');
-                $db->query('INSERT INTO "winners" ("name") VALUES (' . $winner . ')');
+                $db->query('INSERT OR IGNORE INTO "winners" ("name") VALUES (' . $winner . ')');
                 $db->exec('COMMIT');
                 header('Location: winpage.php');
                 die("game is over");

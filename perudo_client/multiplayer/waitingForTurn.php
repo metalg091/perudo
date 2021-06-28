@@ -21,6 +21,9 @@ session_start();
             "cycle" INTEGER DEFAULT null)');
         
         $cycle = $db->querySingle('SELECT "cycle" FROM "game" WHERE id = 0');
+        if(!$cycle){
+            header('Location: winpage.php');
+        }
         $urnumbers = $db->querySingle('SELECT "numbers" FROM "game" WHERE id = ' . $_SESSION["id"] . '');
         $urcubes = $db->querySingle('SELECT "cubes" FROM "game" WHERE id = ' . $_SESSION["id"] . '');
         $playersInGame = $db->querySingle('SELECT "playersInGame" FROM "game" WHERE id = 0');
@@ -62,7 +65,7 @@ session_start();
         ?>
         var a = '<?php echo $cycle; ?>';
         if(a == '2'){
-            location.href = 'winpage.php';
+            location.href = 'guessTurn.php';
         }
         render();
         function render(){

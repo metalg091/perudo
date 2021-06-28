@@ -23,10 +23,15 @@ $_SESSION["username"] = $_GET["username"];
         $db->exec('BEGIN');
         $db->query('INSERT OR IGNORE INTO "game" ("id", "name", "cubes", "numbers", "cPlayerId", "playersInGame", "cycle") VALUES ("0", "system", "null", "null", "1", "0", "6")');
         $db->exec('COMMIT');
-        
+        $cycle = $db->querySingle('SELECT cycle FROM "game" WHERE id = 0');
+        if($cycle == 2){
+            header('Location: winpage.php');
+            die("game end");
+        }
         $db->exec('BEGIN');
         $db->query('INSERT INTO "game" ("name", "cubes") VALUES ("' . $_GET["username"] . '", 5)');
         $db->query('UPDATE "game" SET playersInGame = playersInGame + 1 WHERE id = 0');
+        $db->query('DROP TABLE "winners"');
         $db->exec('COMMIT');
         
         $_SESSION["id"] = $db->querySingle('SELECT playersInGame FROM "game" WHERE id = 0');
