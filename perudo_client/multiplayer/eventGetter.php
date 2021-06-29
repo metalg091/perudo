@@ -31,9 +31,6 @@
         $guess = array_reverse($guess);
         $eventId = array_reverse($eventId);
         $who = array_reverse($who);
-        /*for ($i = 0; $i < count($guess); $i++){
-            $guess[$i] = str_replace("'", "", $guess[$i]); //It was necessairy for mysql
-        }*/
         $arrayofremove = Array();
         $outGuess = json_encode($guess);
         $guess = null;
