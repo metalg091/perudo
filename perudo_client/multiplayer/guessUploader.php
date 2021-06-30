@@ -3,8 +3,6 @@ session_start();
 ?>
 <html>
 <head>
-    <link rel="stylesheet" href="../main_theme.css">
-    <script src="../themeSwitch.js"></script>
 </head>
 <body>
     <?php

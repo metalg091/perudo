@@ -4,9 +4,7 @@ $_SESSION["username"] = $_GET["username"];
 ?>
 <html>
 <head>
-    <link rel="stylesheet" href="../main_theme.css" id="theme">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script src="../themeSwitch.js"></script>
 </head>
 <body>
     <?php 
@@ -55,9 +53,6 @@ $_SESSION["username"] = $_GET["username"];
     <p id="numbers">------</p>
     <h1>Please wait until your are registered!!!! (user registration in progress...)</h1>
     <script defer type="text/javascript">
-        <?php
-            echo "themeSetup(" . $_COOKIE["theme"] . ");";
-        ?>
         location.href = 'lobby.php';
     </script>
 </body>
