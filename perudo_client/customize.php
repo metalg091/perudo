@@ -57,8 +57,8 @@
             echo json_encode($eventbgc);*/
         ?>
         var name = arraymaker('<?php echo json_encode($name); ?>');
-        var name1 = ["asddf", "fda", "grsfd"];
-        document.getElementById("themes").appendChild(divgen(name1));
+        //var name1 = ["asddf", "fda", "grsfd"];
+        document.getElementById("themes").appendChild(divgen(name));
         function arraymaker(newarray){ //makes array from php string output
             newarray = newarray.replace("[", "");
             newarray = newarray.replace("]", "");
@@ -78,12 +78,22 @@
             for(let i = 0; i < name.length; i++){
                 var div = document.createElement("div");
                 div.setAttribute("class", "row");
-                div.setAttribute("id", "row" + i);
+                div.setAttribute("onclick", "Select(this.id)");
+                div.setAttribute("id", i);
                 var textname = document.createTextNode(name[i]);
                 div.appendChild(textname);
                 maindiv.appendChild(div);
             }
             return maindiv;
+        }
+        function Select(id){
+            const bgc = arraymaker('<?php echo json_encode($bgc); ?>');
+            const txtc = arraymaker('<?php echo json_encode($txtc); ?>');
+            const inbgc = arraymaker('<?php echo json_encode($inbgc); ?>');
+            const inbgcfocus = arraymaker('<?php echo json_encode($inbgcfocus); ?>');
+            const buttonbghover = arraymaker('<?php echo json_encode($buttonbghover); ?>');
+            const eventbgc = arraymaker('<?php echo json_encode($eventbgc); ?>');
+            location.href = 'customThemeSaver.php?bgc=' + encodeURIComponent(bgc[id]) + '&txtc='+ encodeURIComponent(txtc[id]) + '&inbgc=' + encodeURIComponent(inbgc[id]) + '&inbgcfocus=' + encodeURIComponent(inbgcfocus[id]) + '&buttonbgchover=' + encodeURIComponent(buttonbghover[id]) + '&eventbgc=' + encodeURIComponent(eventbgc[id]);
         }
         </script>
     </body>
