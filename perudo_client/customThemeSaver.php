@@ -33,8 +33,10 @@
                 catch(Exception $e){
                     echo "theme name is already occupied!!!";
                     echo '<br><a href="themeSetup.html">Retry</a>';
+                    die();
                 }
             }
+            header('Location: index.php')
         ?>
     </body>
 </html>
