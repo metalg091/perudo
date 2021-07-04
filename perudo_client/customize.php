@@ -36,14 +36,21 @@
                 "buttonbghover" TEXT,
                 "eventbgc" TEXT)');*/
             $results = $db->query('SELECT * FROM "theme"');
+           /* $name = Array();
+            $bgc = Array();
+            $txtc = Array();
+            $inbgc = Array();
+            $inbgcfocus = Array();
+            $buttonbghover = Array();
+            $eventbgc = Array();*/
             while($row = $results->fetchArray()){
-                $name = $row["name"];
-                $bgc = $row["bgc"];
-                $txtc = $row["txtc"];
-                $inbgc = $row["inbgc"];
-                $inbgcfocus = $row["inbgcfocus"];
-                $buttonbghover = $row["buttonbghover"];
-                $eventbgc = $row["eventbgc"];
+                $name[] = $row["name"];
+                $bgc[] = $row["bgc"];
+                $txtc[] = $row["txtc"];
+                $inbgc[] = $row["inbgc"];
+                $inbgcfocus[] = $row["inbgcfocus"];
+                $buttonbghover[] = $row["buttonbghover"];
+                $eventbgc[] = $row["eventbgc"];
             }
             $results->finalize();
             $row = null;
@@ -56,9 +63,8 @@
             echo json_encode($buttonbghover);
             echo json_encode($eventbgc);*/
         ?>
-        var name = arraymaker('<?php echo json_encode($name); ?>');
-        //var name1 = ["asddf", "fda", "grsfd"];
-        document.getElementById("themes").appendChild(divgen(name));
+        let name = <?php echo json_encode($name); ?>;
+        document.getElementById("themes").appendChild(divgen());
         function arraymaker(newarray){ //makes array from php string output
             newarray = newarray.replace("[", "");
             newarray = newarray.replace("]", "");
@@ -66,12 +72,13 @@
             newarray = newarray.split(",");
             return newarray;
         }
-        function divgen(name){
+        function divgen(){
             if(!Array.isArray(name)){
                 nametemp = name;
                 name = null;
                 name = Array(nametemp);
                 nametemp = null;
+                console.log("only one element");
             }
             var maindiv = document.createElement("div");
             maindiv.setAttribute("id", "mdiv");
