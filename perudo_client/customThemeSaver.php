@@ -24,11 +24,11 @@
                     "buttonbghover" TEXT,
                     "eventbgc" TEXT)');
                 try{
+                    $_GET["themename"] = str_replace('"', '\"', $_GET["themename"]);
                     $db->enableExceptions(true);
                     $db->exec('BEGIN');
                     $db->query('INSERT INTO theme ("name", "bgc", "txtc", "inbgc", "inbgcfocus", "buttonbghover", "eventbgc") VALUES ("' . $_GET["themename"] . '", "' . $_GET["bgc"] . '", "' . $_GET["txtc"] . '", "' . $_GET["inbgc"] . '", "' . $_GET["inbgcfocus"] . '", "' . $_GET["buttonbgchover"] . '", "' . $_GET["eventbgc"] . '")');
                     $db->exec('COMMIT');
-                    header('Location: index.php');
                 }
                 catch(Exception $e){
                     echo "theme name is already occupied!!!";
