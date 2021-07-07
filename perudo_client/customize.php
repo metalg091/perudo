@@ -1,5 +1,6 @@
 <html>
     <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
         body{
             background-color: #0073e6;
@@ -8,14 +9,15 @@
             border: 2px solid black;
             border-radius: 100px;
             border-collapse: collapse;
-            padding: 10px;
-            margin-top: 0.5%;
+            padding: 0.75em;
+            margin-top: 10px;
             background-color: rgb(255, 255, 255, 0.3);
             color: black;
             text-align: center;
         }
         .row:hover{
             background-color: rgb(255, 255, 255, 0.5);
+            cursor: pointer;
         }
     </style>
     </head>
