@@ -44,11 +44,30 @@
             $id = array_values(array_filter($id)); //removes id where value (and index?) is 0
             $display = null;
             //$display = array_values(array_filter($display));
+            function NewRoomNumber($id, $start = 0, $end = "a"){
+                //echo "end: " . $end . " start: " . $start . "<br>"; //debug
+                if($end == "a"){
+                    $end = count($id) - 1;
+                    //echo "end: " . $end . " start: " . $start . "<br>"; //debug
+                }
+                if($end - $start == 1){
+                    return $end + 1;
+                }
+                else{
+                    $i = round(($end + $start) / 2);
+                    if($id[$i] == $i + 1){
+                        $start = $i;
+                        return NewRoomNumber($id, $start, $end);
+                    }
+                    else{
+                        $end = $i;
+                        return NewRoomNumber($id, $start, $end);
+                    }
+                }
+            }
         ?>
         let id = <?php echo json_encode($id); ?>;
-        console.log(id);
         id.unshift("Create new game!");
-        console.log(id);
         document.getElementById("main").appendChild(divgen());
         function divgen(){
             /*if(!Array.isArray(id)){
