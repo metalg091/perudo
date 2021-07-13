@@ -27,7 +27,7 @@
     <script type="text/javascript">
         <?php
             $db = new SQLite3('../databases/hub.sqlite', SQLITE3_OPEN_READONLY);
-            $results = $db->query('SELECT id, isdisplay FROM "hub"');
+            $results = $db->query('SELECT id, isdisplay FROM "hub" ORDER BY id DESC');
             while($row = $results->fetchArray()){
                 $id[] = $row["id"];
                 $display[] = $row["isdisplay"];
@@ -45,13 +45,18 @@
             $display = null;
             //$display = array_values(array_filter($display));
             function NewRoomNumber($id, $start = 0, $end = "a"){
-                //echo "end: " . $end . " start: " . $start . "<br>"; //debug
-                if($end == "a"){
+                echo "start: " . $start . " end: " . $end . "<br>";
+                /*if($end == "a"){
                     $end = count($id) - 1;
-                    //echo "end: " . $end . " start: " . $start . "<br>"; //debug
-                }
+                    echo "start: " . $start . " end: " . $end . "<br>";
+                }*/
                 if($end - $start == 1){
-                    return $end + 1;
+                    if($id[0] == 1){
+                        return $end + 1;
+                    }
+                    else{
+                        return 1;
+                    }
                 }
                 else{
                     $i = round(($end + $start) / 2);
@@ -97,6 +102,9 @@
             else{
                 //set sessin room id
             }
+        }
+        function NewRoomNumber(id, start, end){
+            console.log("start: " + start + " end: " + end);
         }
     </script>
 </body>
