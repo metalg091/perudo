@@ -24,7 +24,7 @@
 <body>
     <div id="main">
     </div>
-    <script type="text/javascript">
+    <script>
         <?php
             $db = new SQLite3('../databases/hub.sqlite', SQLITE3_OPEN_READONLY);
             $results = $db->query('SELECT id, isdisplay FROM "hub" ORDER BY id DESC');
@@ -34,6 +34,7 @@
             }
             $results->finalize();
             $row = null;
+            $idsave = $id;
             $key = array_search(0, $display);
             while(is_int($key)){
                 unset($id[$key]);
@@ -44,12 +45,12 @@
             $id = array_values(array_filter($id)); //removes id where value (and index?) is 0
             $display = null;
             //$display = array_values(array_filter($display));
-            function NewRoomNumber($id, $start = 0, $end = "a"){
+            /*function NewRoomNumber($id, $start = 0, $end = "a"){
                 echo "start: " . $start . " end: " . $end . "<br>";
-                /*if($end == "a"){
+                if($end == "a"){
                     $end = count($id) - 1;
                     echo "start: " . $start . " end: " . $end . "<br>";
-                }*/
+                }
                 if($end - $start == 1){
                     if($id[0] == 1){
                         return $end + 1;
@@ -69,7 +70,7 @@
                         return NewRoomNumber($id, $start, $end);
                     }
                 }
-            }
+            }*/
         ?>
         let id = <?php echo json_encode($id); ?>;
         id.unshift("Create new game!");
@@ -97,14 +98,47 @@
         }
         function Select(id){
             if(id == 0){
-                //create new room here
+                var array = <?php echo json_encode($idsave); ?>;
+                if (array[0] > array[array.length - 1]){
+                    array.reverse();
+                }
+                var roomid = check(array, NewRoomNumber(array, 0, array.length - 1));
+                //console.log("final " + roomid);
+                location.href = 'getUserName.php?username=' + '<?php echo $_GET["username"]; ?>' + '&serverid=' + roomid;
             }
             else{
-                //set sessin room id
+                location.href = 'getUserName.php?username=' + '<?php echo $_GET["username"]; ?>' + '&serverid=' + id;
             }
         }
-        function NewRoomNumber(id, start, end){
-            console.log("start: " + start + " end: " + end);
+        function check(array, result){
+            if(array[result - 1] == result){
+                return array.length + 1;
+            }
+            else{
+                return result;
+            }
+        }
+        function NewRoomNumber(id, start = 0, end){
+            //console.log("start: " + start + " end: " + end);
+            if(end - start == 1){
+                if(id[0] == 1){
+                    return end + 1;
+                }
+                else{
+                    return 1;
+                }
+            }
+            else{
+                mid = Math.round((end + start) / 2);
+                if(id[mid] == mid + 1){
+                    start = mid;
+                    return NewRoomNumber(id, start, end);
+                }
+                else{
+                    end = mid;
+                    return NewRoomNumber(id, start, end);
+                }
+            }
         }
     </script>
 </body>
