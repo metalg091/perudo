@@ -1,3 +1,6 @@
+<?php
+session_start();
+?>
 <html>
     <head>
         <script src="otherPlayers.js"></script>
@@ -5,7 +8,7 @@
     </head>
     <body id="event" style="background-color: <?php if(isset($_COOKIE["eventbgc"])){echo $_COOKIE["eventbgc"];} ?>; color: <?php if(isset($_COOKIE["txtc"])){echo $_COOKIE["txtc"];}else{if($_COOKIE["theme"] == 2){echo "black";}else{echo "#fff";}} ?>;">
     <?php
-        $db = new SQLite3('../databases/perudo.sqlite', SQLITE3_OPEN_READONLY);
+        $db = new SQLite3('../databases/perudo' . $_SESSION["sid"] . '.sqlite', SQLITE3_OPEN_READONLY);
         $pig = $db->querySingle('SELECT "playersInGame" cPlayerId FROM "game" WHERE id = 0');
         //$cpi = $db->querySingle('SELECT "cPlayerId" FROM "game" WHERE id = 0');//change $row["cPlayerId"] to cpi; there isn't even a reference to it bruh 😒
         $results = $db->query('SELECT name FROM "game" WHERE id BETWEEN 1 AND ' . $pig);

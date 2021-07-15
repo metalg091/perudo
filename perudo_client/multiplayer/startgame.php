@@ -1,10 +1,18 @@
+<?php
+session_start();
+?>
 <html>
     <head>
 
     </head>
     <body>
         <?php
-            $db = new SQLite3('../databases/perudo.sqlite', SQLITE3_OPEN_CREATE | SQLITE3_OPEN_READWRITE);
+            $db = new SQLite3('../databases/hub.sqlite', SQLITE3_OPEN_CREATE | SQLITE3_OPEN_READWRITE);
+            $db->exec('BEGIN');
+            $db->query('UPDATE hub SET "isdisplay" = 0 WHERE id = ' . $_SESSION["sid"]);
+            $db->exec('COMMIT');
+            $db->close();
+            $db = new SQLite3('../databases/perudo' . $_SESSION["sid"] . '.sqlite', SQLITE3_OPEN_CREATE | SQLITE3_OPEN_READWRITE);
             $result = $db->query('SELECT id, cubes FROM game');
             $id = Array();
             $cubes = Array();

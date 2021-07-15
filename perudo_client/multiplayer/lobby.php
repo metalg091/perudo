@@ -10,7 +10,7 @@ session_start();
 </head>
 <body onresize="render()">
     <?php 
-        $db = new SQLite3('../databases/perudo.sqlite', SQLITE3_OPEN_READONLY);
+        $db = new SQLite3('../databases/perudo' . $_SESSION["sid"] . '.sqlite', SQLITE3_OPEN_READONLY);
         $cycle = $db->querySingle('SELECT "cycle" FROM "game" WHERE id = 0');
         $urnumbers = $db->querySingle('SELECT "numbers" FROM "game" WHERE id = ' . $_SESSION["id"]);
         $urcubes = $db->querySingle('SELECT "cubes" FROM "game" WHERE id = ' . $_SESSION["id"]);

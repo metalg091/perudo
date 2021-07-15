@@ -34,16 +34,18 @@
             }
             $results->finalize();
             $row = null;
-            $idsave = $id;
-            $key = array_search(0, $display);
-            while(is_int($key)){
-                unset($id[$key]);
-                unset($display[$key]);
+            if (isset($id)){
+                $idsave = $id;
                 $key = array_search(0, $display);
+                while(is_int($key)){
+                    unset($id[$key]);
+                    unset($display[$key]);
+                    $key = array_search(0, $display);
+                }
+                $key = null;
+                $id = array_values(array_filter($id)); //removes id where value (and index?) is 0
+                $display = null;
             }
-            $key = null;
-            $id = array_values(array_filter($id)); //removes id where value (and index?) is 0
-            $display = null;
             //$display = array_values(array_filter($display));
             /*function NewRoomNumber($id, $start = 0, $end = "a"){
                 echo "start: " . $start . " end: " . $end . "<br>";
@@ -72,8 +74,13 @@
                 }
             }*/
         ?>
-        let id = <?php echo json_encode($id); ?>;
-        id.unshift("Create new game!");
+        <?php if(isset($id)){echo 'let id = ' . json_encode($id) . ';' ;} else{} ?>
+        if (typeof id !== 'undefined'){
+            id.unshift("Create new game!");
+        }
+        else{
+            id = ["Create new game!"];
+        }
         document.getElementById("main").appendChild(divgen());
         function divgen(){
             /*if(!Array.isArray(id)){
@@ -97,8 +104,11 @@
             return maindiv;
         }
         function Select(id){
+            var array = <?php if(isset($idsave)){echo json_encode($idsave);} else{echo "null";} ?>;
+            if(array == null){
+                location.href = 'getUserName.php?username=' + '<?php echo $_GET["username"]; ?>' + '&serverid=1';
+            }
             if(id == 0){
-                var array = <?php echo json_encode($idsave); ?>;
                 if (array[0] > array[array.length - 1]){
                     array.reverse();
                 }

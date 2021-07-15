@@ -28,7 +28,7 @@ setcookie("width", "1", time() + 86400, "/");
     </div>
     <h2>Type in your username!</h2>
     
-    <form id="form" action="multiplayer/getUserName.php" method="get">
+    <form id="form" action="multiplayer/hub.php" method="get">
         <input type="text" id="username" name="username"><br><br>
         <input type="submit" value="Submit">
     </form>

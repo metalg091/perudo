@@ -6,7 +6,7 @@ session_start();
 </head>
 <body>
     <?php
-        $db = new SQLite3('../databases/perudo.sqlite', SQLITE3_OPEN_CREATE | SQLITE3_OPEN_READWRITE);
+        $db = new SQLite3('../databases/perudo' . $_SESSION["sid"] . '.sqlite', SQLITE3_OPEN_CREATE | SQLITE3_OPEN_READWRITE);
         isover($db);
         switch($_POST["iguess"]){
             case 3:

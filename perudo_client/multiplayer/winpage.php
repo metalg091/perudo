@@ -1,3 +1,6 @@
+<?php
+session_start();
+?>
 <html>
 <head>
     <link id="theme" rel="stylesheet" href="../main_theme.css">
@@ -12,7 +15,7 @@
 <body>
 <div id="winner">
 <?php 
-    $db = new SQLite3('../databases/perudo.sqlite', SQLITE3_OPEN_CREATE | SQLITE3_OPEN_READWRITE);
+    $db = new SQLite3('../databases/perudo' . $_SESSION["sid"] . '.sqlite', SQLITE3_OPEN_CREATE | SQLITE3_OPEN_READWRITE);
     //$cycle = $db->querySingle('SELECT cycle FROM "game" WHERE id = 0');
     /*if($cycle != 2 || $cycle != null){
         header('Location: waitingForTurn.php');

@@ -8,7 +8,7 @@ session_start();
     <script src="otherPlayers.js"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <?php 
-        $db = new SQLite3('../databases/perudo.sqlite', SQLITE3_OPEN_CREATE | SQLITE3_OPEN_READWRITE);
+        $db = new SQLite3('../databases/perudo' . $_SESSION["sid"] . '.sqlite', SQLITE3_OPEN_CREATE | SQLITE3_OPEN_READWRITE);
         $db->query('CREATE TABLE IF NOT EXISTS "game" (
             "id" INTEGER UNIQUE PRIMARY KEY AUTOINCREMENT NOT NULL,
             "name" TEXT,
