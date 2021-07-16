@@ -54,9 +54,7 @@ session_start();
         function render(){
             document.getElementById("eventGetter").src = "eventGetter.php?height=" + document.getElementById("eventGetter").clientHeight;
         }
-        <?php
-            echo "themeSetup(" . $_COOKIE["theme"] . ");";
-        ?>
+        themeSetup(getCookie("theme"));
         var id = '<?php echo $_SESSION["id"] ?>';
         var username = '<?php echo $_SESSION["username"]; ?>'; //getting info specific to this user
         document.getElementById("username").innerHTML = username + " your id is " + id;

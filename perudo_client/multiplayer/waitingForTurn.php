@@ -58,9 +58,7 @@ session_start();
     <iframe src="eventGetter.php?height=741" id="eventGetter">
     </iframe>
     <script defer type="text/javascript">
-        <?php
-            echo "themeSetup(" . $_COOKIE["theme"] . ");";
-        ?>
+        themeSetup(getCookie("theme"));
         var a = '<?php echo $cycle; ?>';
         if(a == '2'){
             location.href = 'guessTurn.php';

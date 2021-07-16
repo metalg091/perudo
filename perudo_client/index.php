@@ -33,9 +33,7 @@ setcookie("width", "1", time() + 86400, "/");
         <input type="submit" value="Submit">
     </form>
 <script type="text/javascript">
-    <?php
-        echo "themeSetup(" . $_COOKIE["theme"] . ");";
-    ?>
+    themeSetup(getCookie("theme"));
     switch(getCookie("theme")){
         case 1:
             document.getElementById("dark").selected = "selected";

@@ -97,7 +97,7 @@ session_start();
         <label for="guess">Your guess:</label>
         <div id="raddiv" style="margin: 20px; display: inline;">
         <div id="rad1">
-            <input id="radio1" type="radio" name="iguess" value="1" onclick="document.getElementById("raddiv").style.display = "inline";">Doubt
+            <input id="radio1" type="radio" name="iguess" value="1" onclick='document.getElementById("raddiv").style.display = "inline";'>Doubt
         </div>
         <div id="rad2">
             <input id="radio2" type="radio" name="iguess" value="2">Equal
@@ -116,9 +116,7 @@ session_start();
     <iframe src="eventGetter.php?height=741" id="eventGetter">
     </iframe>
     <script defer type="text/javascript">
-        <?php
-            echo "themeSetup(" . $_COOKIE["theme"] . ");";
-        ?>
+        themeSetup(getCookie("theme"));
         render();
         function render(){
             document.getElementById("eventGetter").src = "eventGetter.php?height=" + document.getElementById("eventGetter").clientHeight;
