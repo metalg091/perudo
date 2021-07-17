@@ -15,6 +15,23 @@ setcookie("width", "1", time() + 86400, "/");
         form {
             text-align: center;
         }
+        #multi{
+            cursor: pointer;
+        }
+        #single{
+            padding: 10px;
+            border-radius: 100px;
+            background-color: var(--inputbgcolor);
+            color: black;
+            border: none;
+            margin: 0 0 0 5px;
+            display: inline;
+            cursor: pointer;
+            transition: background-color 0.4s;
+        }
+        #single:hover{
+            background-color: var(--submitbgcolorhover);
+        }
     </style>
 </head>
 <body>
@@ -29,11 +46,22 @@ setcookie("width", "1", time() + 86400, "/");
     <h2>Type in your username!</h2>
     
     <form id="form" action="multiplayer/hub.php" method="get">
-        <input type="text" id="username" name="username"><br><br>
-        <input type="submit" value="Submit">
+        <div style="width: auto;">
+            <input type="text" id="username" name="username" style="width: 220px;"><br><br>
+            <div>
+                <input id="multi" type="submit" value="Multi Player">
+                <div id="single" onclick="document.location='singleplayer/perudo.html'">Single player</div>
+            </div>
+        </div>
     </form>
 <script type="text/javascript">
     themeSetup(getCookie("theme"));
+    /*console.log(document.getElementById("multi").offsetWidth);
+    console.log(document.getElementById("single").offsetWidth);
+    console.log(document.getElementById("single").style.marginLeft);*/
+    var a = document.getElementById("multi").offsetWidth + document.getElementById("single").offsetWidth + 9;
+    //console.log(a);
+    document.getElementById("username").style = "width: " + a + "px;";
     switch(getCookie("theme")){
         case 1:
             document.getElementById("dark").selected = "selected";
