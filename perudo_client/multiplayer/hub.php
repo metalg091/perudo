@@ -112,7 +112,17 @@
                 if (array[0] > array[array.length - 1]){
                     array.reverse();
                 }
-                var roomid = check(array, NewRoomNumber(array, 0, array.length - 1));
+                if (array.length == 1){
+                    if(array[0] == 1){
+                        var roomid = 2;
+                    }
+                    else{
+                        var roomid = 1;
+                    }
+                }
+                else{
+                    var roomid = check(array, NewRoomNumber(array, 0, array.length - 1));
+                }
                 //console.log("final " + roomid);
                 location.href = 'getUserName.php?username=' + '<?php echo $_GET["username"]; ?>' + '&serverid=' + roomid;
             }
