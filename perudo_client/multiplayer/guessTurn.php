@@ -95,17 +95,13 @@ session_start();
     <p id="urnumbers" class="data">------</p>
     <form action="guessUploader.php" method="post">
         <label for="guess">Your guess:</label>
-        <div id="raddiv" style="margin: 20px; display: inline;">
-        <div id="rad1">
-            <input id="radio1" type="radio" name="iguess" value="1" onclick='document.getElementById("raddiv").style.display = "inline";'>Doubt
-        </div>
-        <div id="rad2">
-            <input id="radio2" type="radio" name="iguess" value="2">Equal
-        </div>
-        <div id="rad3">
-            <input id="radio3" type="radio" name="iguess" value="3" checked>Number:
-        </div>
-        </div>
+        <select name="iguess" id="raddiv"class="dropdown" onchange="dropdown(this.value)">
+            <option value="3" selected="selected">Guess</option>
+            <option value="1">Doubt</option>
+            <option value="2">Equal</option>
+        </select>
+        <br>
+        <br>
         <!--<input type="text" id="guess" name="guess"><br><br>-->
         <input type="text" value="" id="guess" name="guess1" onkeyup="inputValidator()">
         <input type="number" value="1" id="guess1" name="guess2" min="1" max="6" onkeyup="inputValidator()"><br><br>
@@ -187,7 +183,8 @@ session_start();
             
             if(rellastguess > 10){
             
-            }else{
+            }
+            else{
                 rellastguess = 10;
                 //lastguess = 0;
                 document.getElementById("raddiv").style.display = "none";
@@ -230,6 +227,18 @@ session_start();
                 else{
                     document.getElementById("submit").style.display ="none";
                 }
+            }
+        }
+        function dropdown(i){
+            if(i == 1 || i == 2){
+                document.getElementById("submit").style.display = "block";
+                document.getElementById("guess").style.display = "none";
+                document.getElementById("guess1").style.display = "none";
+            }
+            else{
+                inputValidator();
+                document.getElementById("guess").style.display = "inline-block";
+                document.getElementById("guess1").style.display = "inline-block";
             }
         }
     </script>
