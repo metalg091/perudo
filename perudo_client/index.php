@@ -35,7 +35,7 @@ setcookie("width", "1", time() + 86400, "/");
     </style>
 </head>
 <body>
-    <select id="themeSelect" onchange="ThemeSelector()">
+    <select id="themeSelect" class="dropdown" onchange="ThemeSelector()">
         <option id="dark" value="1" selected="selected">Dark theme</option>
         <option id="light" value="2">Light theme</option>
         <option id="custom" value="3">custom theme</option>
