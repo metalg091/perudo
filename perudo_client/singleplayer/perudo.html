@@ -1,0 +1,220 @@
+<html>
+<head>
+    <link rel="stylesheet" href="../main_theme.css" id="theme">
+    <script src="../themeSwitch.js"></script>
+     <style>
+        #submit, #ainum{
+            display: inline-block;
+            border: none;
+            padding: 10 20 10 20px;
+            border-radius: 100px;
+            background-color: var(--inputbgcolor);
+            transition: background-color 0.4s;
+        }
+        #submit:hover,#ainum:hover{
+            background-color: var(--submitbgcolorhover);
+        }
+     </style>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8">
+</head>
+<body>
+    <!--iframe src="eventGetter.php?style=main_theme.css" id="eventGetter">
+    </iframe-->
+    <div id="eventGetter" style="border: 1px solid black;">
+
+    </div>
+    <div id="container">
+    <h2>Your name</h2>
+    <h3 id="username" class="data"></h3>
+    <h2>Number of AI players</h2>
+    <input id="aival" type="number" value="5" min="1" max="15">
+    <button id="ainum" onclick="setup()">Start Game</button>
+    <div id="others" class="data">
+    </div>
+    <h2>Cubes in game</h2>
+    <p id="allcubes" class="data"></p>
+    <h2>Your numbers</h2>
+    <p id="urnumbers" class="data">------</p>
+    <br>
+    <div id="form" style="display: none;">
+        <label for="guess">Your guess:</label>
+        <select id="gtype"class="dropdown" onchange="dropdown(this.value)">
+            <option value="0" selected="selected">Guess</option>
+            <option value="1">Doubt</option>
+            <option value="2">Equal</option>
+        </select>
+        <br>
+        <input type="text" value="0" id="guess" onkeyup="inputValidator()">
+        <input type="number" value="1" id="guess1" min="1" max="6" onkeyup="inputValidator()"><br><br>
+        <button id="submit" style="display: block" onclick="eval();">Guess</button>
+    </div>
+    <script type="text/javascript">
+        themeSetup(getCookie("theme"));
+        var url = new URL(window.location.href);
+        document.getElementById("username").innerHTML = url.searchParams.get("username");
+        let cpi = 0;
+        const player = class{
+            constructor(id, cube, numbers){
+                this.id = id;
+                this.cube = cube;
+                this.numbers = numbers;
+            }
+        };
+        const players = Array();
+        function setup(){
+            var ain = document.getElementById("aival").value;
+            players[0] = new player(0, 5, 11111);
+            for(var i = 1; i < ain; i++){
+                players[i] = new player(i, 5, 11111);
+            }
+            document.getElementById("aival").style = "display: none;";
+            document.getElementById("ainum").style = "display: none;";
+            document.getElementById("others").innerHTML = ain;
+            roll();
+            render();
+            document.getElementById("form").style = "display: block;"
+        }
+        function render(){
+            var cig = 0;
+            for(var i = 0; players.length > i; i++){
+                cig = parseInt(cig) + parseInt(players[i].cube);
+            }
+            document.getElementById("allcubes").innerHTML = cig;
+            document.getElementById("urnumbers").innerHTML = players[0].numbers;
+        }
+        function eval(){
+            var type = document.getElementById("gtype").value;
+            if(type == 0){
+                guess();
+            }
+            else if(type == 1){
+                doubt();
+            }
+            else if(type == 2){
+                equal();
+            }
+            else{
+                console.log("Error: " + type);
+            }
+        }
+        function guess(){
+            
+        }
+        function roll(){
+            var numstr = "";
+            var num = Array();
+            for(var y = 0; y < players.length; y++){
+                for(var x = 0; players[y].cube > x; x++){
+                    num[x] = getRandomInt(1, 7);
+                    numstr = numstr.toString() + num[x];
+                }
+                players[y].numbers = numstr;
+                //console.log(numstr);
+                num = Array();
+                numstr = "";
+            }
+        }
+        function getRandomInt(min, max) {
+            min = Math.ceil(min);
+            max = Math.floor(max);
+            return Math.floor(Math.random() * (max - min) + min); //The maximum is exclusive and the minimum is inclusive
+        }
+        function setInputFilter(textbox, inputFilter) { //only allows numeric input
+            ["input", "keydown", "keyup", "mousedown", "mouseup", "select", "contextmenu", "drop"].forEach(function(event) {
+                textbox.addEventListener(event, function() {
+                    if (inputFilter(this.value)) {
+                        this.oldValue = this.value;
+                        this.oldSelectionStart = this.selectionStart;
+                        this.oldSelectionEnd = this.selectionEnd;
+                    }
+                    else if (this.hasOwnProperty("oldValue")) {
+                        this.value = this.oldValue;
+                        this.setSelectionRange(this.oldSelectionStart, this.oldSelectionEnd);
+                    }
+                    else {
+                        this.value = "";
+                    }
+                });
+            });
+        }
+        function mguess(){
+            
+        }
+        setInputFilter(document.getElementById("guess"), function(value) {
+        return /^\d*$/.test(value); });
+        setInputFilter(document.getElementById("guess1"), function(value) {
+        return /^\d*$/.test(value); });
+        inputValidator();
+        function inputValidator(){ //onyl shows submit button when input is legit (larger than lastguess)
+            var times = parseInt(document.getElementById("guess").value);
+            var number = parseInt(document.getElementById("guess1").value);
+            var rellastguess = "100";
+            //console.log(rellastguess);
+            var lastguess = rellastguess.substr(0, rellastguess.length - 1);
+            //console.log(lastguess);
+            
+            if(rellastguess > 10){
+            
+            }
+            else{
+                rellastguess = 10;
+                //lastguess = 0;
+                document.getElementById("gtype").style.display = "none";
+            }
+        
+            var lastguesslastnum = rellastguess - lastguess * 10;
+            var relnum = parseInt(times*10+number);
+            if(lastguesslastnum == 1 || number == 1){
+                if(lastguesslastnum == 1 && number == 1){
+                    if(relnum > rellastguess){
+                        document.getElementById("submit").style.display ="block";
+                    }
+                    else{
+                        document.getElementById("submit").style.display ="none";
+                    }
+                }
+                else{
+                    if(number == 1){
+                        if(relnum > rellastguess/2){
+                            document.getElementById("submit").style.display ="block";
+                        }
+                        else{
+                            document.getElementById("submit").style.display ="none";
+                        }
+                    }
+                    else{
+                        if(relnum > rellastguess * 2){
+                            document.getElementById("submit").style.display ="block";
+                        }
+                        else{
+                            document.getElementById("submit").style.display ="none";
+                        }
+                    }
+                }
+            }
+            else{
+                if(relnum > rellastguess){
+                    document.getElementById("submit").style.display ="block";
+                }
+                else{
+                    document.getElementById("submit").style.display ="none";
+                }
+            }
+        }
+        
+        function dropdown(i){
+            if(i == 1 || i == 2){
+                document.getElementById("submit").style.display = "block";
+                document.getElementById("guess").style.display = "none";
+                document.getElementById("guess1").style.display = "none";
+            }
+            else{
+                inputValidator();
+                document.getElementById("guess").style.display = "inline-block";
+                document.getElementById("guess1").style.display = "inline-block";
+            }
+        }
+    </script>
+</body>
+</html>
