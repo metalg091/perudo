@@ -53,7 +53,8 @@
         themeSetup(getCookie("theme"));
         var url = new URL(window.location.href);
         document.getElementById("username").innerHTML = url.searchParams.get("username");
-        let cpi = 0;
+        const lastguess = 10;
+        const eventcount = 0;
         const player = class{
             constructor(id, cube, numbers){
                 this.id = id;
@@ -86,7 +87,7 @@
         function eval(){
             var type = document.getElementById("gtype").value;
             if(type == 0){
-                guess();
+                pguess();
             }
             else if(type == 1){
                 doubt();
@@ -98,8 +99,62 @@
                 console.log("Error: " + type);
             }
         }
-        function guess(){
-            
+        function pguess(){
+            var g = document.getElementById("guess").value;
+            var g1 = document.getElementById("guess1").value;
+            var guess = g.toString() + g1;
+            if(parseInt(guess) < lastguess){
+                console.log("too small input/validation bypassed");
+                alert("too small input");
+            }
+            else{
+                lastguess = parseInt(guess);
+                eventlog(0, guess);
+                aistart();
+            }
+        }
+        function aistart(){
+            var allcubes = document.getElementById("allcubes").value;
+            var one = parseInt(allcubes) / 6;
+            var notone = parseInt(allcubes) / 3;
+            if(lastguess.slice(-1) == 1){
+                var temp = one;
+            }
+            else if(lastguess.slice(-1) == 2){
+                var temp = notone;
+            }
+            var lg = lastguess.slice(0, -1);
+            if(lg < temp){
+                if(temp-lg > 5){
+                    //sure guess
+                }
+                else{
+                    var guesschance = temp-lg +x %;
+                }
+            }
+            else if(lg == temp){
+                //sure equal
+            }
+            else{
+                //sure? DOUBT
+            }
+            /*for(var i = 1; i < players.length - 2; i++){
+                var x = getRandomInt(0, 100);
+                switch(true){
+                    case (x<=34):
+                        aiguess();
+                        break;
+                    case (34<x && x<=67):
+                        break;
+                }
+            }*/
+        }
+        function eventlog(pl, guess){
+            eventcount = eventcount + 1; //error can't change constant!!!
+            var newevent = document.createElement("div");
+            var content = document.createTextNode(/*players[pl].name*/pl + " guessed " + guess);
+            newevent.appendChild(content);
+            document.getElementById("eventGetter").appendChild(newevent);
         }
         function roll(){
             var numstr = "";
