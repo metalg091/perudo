@@ -53,16 +53,16 @@
         themeSetup(getCookie("theme"));
         var url = new URL(window.location.href);
         document.getElementById("username").innerHTML = url.searchParams.get("username");
-        const lastguess = 10;
-        const eventcount = 0;
-        const player = class{
+        var lastguess = 10;
+        var eventcount = 0;
+        var players = Array();
+        var player = class{
             constructor(id, cube, numbers){
                 this.id = id;
                 this.cube = cube;
                 this.numbers = numbers;
             }
         };
-        const players = Array();
         function setup(){
             var ain = document.getElementById("aival").value;
             players[0] = new player(0, 5, 11111);
@@ -109,45 +109,74 @@
             }
             else{
                 lastguess = parseInt(guess);
-                eventlog(0, guess);
+                eventlog(0, eventcount, guess);
                 aistart();
             }
         }
         function aistart(){
-            var allcubes = document.getElementById("allcubes").value;
+            var allcubes = document.getElementById("allcubes").innerHTML;
+            console.log(allcubes);
             var one = parseInt(allcubes) / 6;
             var notone = parseInt(allcubes) / 3;
-            if(lastguess.slice(-1) == 1){
+            if(parseInt(lastguess.toString()[parseInt(lastguess.toString.length) - 1]) == 1){
                 var temp = one;
             }
-            else if(lastguess.slice(-1) == 2){
+            else if(parseInt(lastguess.toString()[parseInt(lastguess.toString.length) - 1]) == 2){
                 var temp = notone;
             }
-            var lg = lastguess.slice(0, -1);
+            var lg = (lastguess - parseInt(lastguess.toString()[parseInt(lastguess.toString().length) - 1])) / 10;
+            console.log(one + " and not " + notone);
+            console.log(temp);
+            console.log(lg)
             if(lg < temp){
                 if(temp-lg > 5){
                     //sure guess
+                    console.log("still in dev");
                 }
                 else{
-                    var guesschance = temp-lg +x %;
+                    var guesschance = temp - lg + 30;
+                    console.log(guesschance);
+                    var x = (100 - guesschance) / 2;
+                    var doubtchance = Math.round(x + 0.5);
+                    var equalchance = Math.round(x - 0.5);
                 }
             }
             else if(lg == temp){
-                //sure equal
+                var equalchance = 70;
+                var x = (100 - guesschance) / 2;
+                var guesschance = Math.round(x + 0.5);
+                var doubtchance = Math.round(x - 0.5);
             }
             else{
-                //sure? DOUBT
-            }
-            /*for(var i = 1; i < players.length - 2; i++){
-                var x = getRandomInt(0, 100);
-                switch(true){
-                    case (x<=34):
-                        aiguess();
-                        break;
-                    case (34<x && x<=67):
-                        break;
+                var doubtchance = (lg - temp) + 30;
+                if(doubtchance >= 100){
+                    doubtchance = 100;
+                    var guesschance = 0;
+                    var equalchance = 0;
                 }
-            }*/
+                else{
+                    var x = (100 - guesschance) / 2;
+                    var guesschance = Math.round(x + 0.5);
+                    var doubtchance = Math.round(x - 0.5);
+                }
+            }
+            var y = getRandomInt(0, 101);
+            if(y <= guesschance){
+                //aiguess();
+                console.log("guess");
+            }
+            else if(y > guesschance && y <= doubtchance + guesschance){
+                //aidoubt();
+                console.log("doubt");
+            }
+            else if(y > guesschance + doubtchance){
+                //aiequal();
+                console.log("equal");
+            }
+            else{
+                console.log("error " + y + " gc " + guesschance + " dc " + doubtchance + " ec " + equalchance);
+            }
+            /*for(var i = 1; i < players.length - 2; i++){}*/
         }
         function eventlog(pl, guess){
             eventcount = eventcount + 1; //error can't change constant!!!
@@ -170,7 +199,7 @@
                 numstr = "";
             }
         }
-        function getRandomInt(min, max) {
+        function getRandomInt(min, max) /*max exclusive, min inclusive*/ {
             min = Math.ceil(min);
             max = Math.floor(max);
             return Math.floor(Math.random() * (max - min) + min); //The maximum is exclusive and the minimum is inclusive
@@ -192,9 +221,6 @@
                     }
                 });
             });
-        }
-        function mguess(){
-            
         }
         setInputFilter(document.getElementById("guess"), function(value) {
         return /^\d*$/.test(value); });
