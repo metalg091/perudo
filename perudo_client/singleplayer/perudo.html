@@ -66,7 +66,7 @@
         function setup(){
             var ain = document.getElementById("aival").value;
             players[0] = new player(0, 5, 11111);
-            for(var i = 1; i < ain; i++){
+            for(var i = 1; i < parseInt(ain) + 1; i++){
                 players[i] = new player(i, 5, 11111);
             }
             document.getElementById("aival").style = "display: none;";
@@ -112,6 +112,17 @@
                 eventlog(0, eventcount, guess);
                 aistart();
             }
+        }
+        function count(num){
+            var sol = 0;
+            for(var a = 0; a < players.length; a++){    
+                for(var i = 0; i < players[a].cube; i++){
+                    if(players[a].numbers.toString()[i] == num || players[a].numbers.toString()[i] == 1){
+                        sol++;
+                    }
+                }
+            }
+            return sol;
         }
         function aistart(){
             var allcubes = document.getElementById("allcubes").innerHTML;
