@@ -54,6 +54,7 @@
         var url = new URL(window.location.href);
         document.getElementById("username").innerHTML = url.searchParams.get("username");
         var lastguess = 10;
+        var cpi = 0;
         var eventcount = 0;
         var players = Array();
         var player = class{
@@ -112,6 +113,18 @@
                 eventlog(0, eventcount, guess);
                 aistart();
             }
+        }
+        function doubt(){
+            var real = count(parseInt(lastguess.toString()[parseInt(lastguess.toString.length)]));
+            var lg = (lastguess - parseInt(lastguess.toString()[parseInt(lastguess.toString.length)])) / 10;
+            if(lg > real){
+                players[cpi].cube = players[cpi].cube - 1;
+            }
+            else{
+                players[cpi - 1].cube = players[cpi - 1].cube -1
+                cpi = cpi -1;
+            }
+            roll();
         }
         function count(num){
             var sol = 0;
