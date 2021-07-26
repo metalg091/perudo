@@ -110,21 +110,59 @@
             }
             else{
                 lastguess = parseInt(guess);
-                eventlog(0, eventcount, guess);
+                eventlog(0, guess);
                 aistart();
             }
+            cpi++;
         }
         function doubt(){
             var real = count(parseInt(lastguess.toString()[parseInt(lastguess.toString.length)]));
             var lg = (lastguess - parseInt(lastguess.toString()[parseInt(lastguess.toString.length)])) / 10;
-            if(lg > real){
-                players[cpi].cube = players[cpi].cube - 1;
+            //console.log("lg: " + lg + " real: " + real);
+            if(lg < real){
+                cubelosser();
             }
             else{
-                players[cpi - 1].cube = players[cpi - 1].cube -1
-                cpi = cpi -1;
+                if(cpi == 0){
+                    cpi = players.length - 1;
+                    cubelosser();
+                }
+                else{
+                    cpi = cpi -1;
+                    cubelosser();
+                }
             }
+            lastguess = 10;
             roll();
+        }
+        function equal(){
+            var real = count(parseInt(lastguess.toString()[parseInt(lastguess.toString.length)]));
+            var lg = (lastguess - parseInt(lastguess.toString()[parseInt(lastguess.toString.length)])) / 10;
+            //console.log("lg: " + lg + " real: " + real);
+            if(lg == real){
+                if(players[cpi].cubes < 5){
+                    players[cpi].cube = players[cpi].cube + 1;
+                }
+            }
+            else{
+                cubelosser();
+            }
+            lastguess = 10;
+            roll();
+        }
+        function cubelosser(){
+            if(players[cpi].cube < 2){
+                players[cpi].cube = 0;
+                if(cpi == 0){
+                    alert("Game Over!");
+                }
+                else{
+                    players.splice(cpi, 1);
+                }
+            }
+            else{
+                players[cpi].cube = players[cpi].cube - 1;
+            }
         }
         function count(num){
             var sol = 0;
@@ -210,11 +248,11 @@
             }
         }
         function eventlog(pl, guess){
-            eventcount = eventcount + 1; //error can't change constant!!!
             var newevent = document.createElement("div");
             var content = document.createTextNode(/*players[pl].name*/pl + " guessed " + guess);
             newevent.appendChild(content);
             document.getElementById("eventGetter").appendChild(newevent);
+            eventcount = eventcount + 1;
         }
         function roll(){
             var numstr = "";
@@ -261,9 +299,10 @@
         function inputValidator(){ //onyl shows submit button when input is legit (larger than lastguess)
             var times = parseInt(document.getElementById("guess").value);
             var number = parseInt(document.getElementById("guess1").value);
-            var rellastguess = "100";
+            var rellastguess = lastguess;
+            rellastguess = rellastguess.toString();
             //console.log(rellastguess);
-            var lastguess = rellastguess.substr(0, rellastguess.length - 1);
+            var lg = rellastguess.substr(0, rellastguess.length - 1);
             //console.log(lastguess);
             
             if(rellastguess > 10){
@@ -275,7 +314,7 @@
                 document.getElementById("gtype").style.display = "none";
             }
         
-            var lastguesslastnum = rellastguess - lastguess * 10;
+            var lastguesslastnum = rellastguess - lg * 10;
             var relnum = parseInt(times*10+number);
             if(lastguesslastnum == 1 || number == 1){
                 if(lastguesslastnum == 1 && number == 1){
