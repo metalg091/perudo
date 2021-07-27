@@ -176,76 +176,120 @@
             return sol;
         }
         function aistart(){
-            var allcubes = document.getElementById("allcubes").innerHTML;
-            var one = Math.round(parseInt(allcubes) / 6);
-            var notone = Math.round(parseInt(allcubes) / 3);
-            var temp = 0;
-            var lgln = parseInt(lastguess.toString()[parseInt(lastguess.toString.length)]);
-            if(lgln == 7 || lgln == 8 || lgln == 9){
-                temp = one;
-            }
-            else if(lgln == 1){
-                temp = one;
-            }
-            else{
-                temp = notone;
-            }
-            var lg = (lastguess - lgln) / 10;
-            /*console.log(one + " and not " + notone);
-            console.log(lgln + " and temp " +temp);
-            console.log("lg: " + lg);*/
-            var guesschance = 0;
-            var doubtchance = 0;
-            var equalchance = 0;
-            if(lg < temp){
-                if(temp - lg > 5){
-                    guesschance = 90;
-                    doubtchance = 5;
-                    equalchance = 5;
+            while (cpi !== 0){
+                var allcubes = document.getElementById("allcubes").innerHTML;
+                var one = Math.round(parseInt(allcubes) / 6);
+                var notone = Math.round(parseInt(allcubes) / 3);
+                var temp = 0;
+                var lg = (lastguess - lgln) / 10;
+                var lgln = parseInt(lastguess.toString()[parseInt(lastguess.toString.length)]);
+                if(lgln == 7 || lgln == 8 || lgln == 9){
+                    temp = one;
+                }
+                else if(lgln == 1){
+                    temp = one;
                 }
                 else{
-                    guesschance = Math.round((temp - lg) * 10 + 30);
-                    console.log(guesschance);
-                    var x = (100 - guesschance) / 2;
-                    doubtchance = Math.round(x - 0.5);
-                    equalchance = Math.round(x - 0.5);
+                    temp = notone;
                 }
-            }
-            else if(lg == temp){
-                equalchance = 70;
-                var x = (100 - equalchance) / 2;
-                guesschance = Math.round(x - 0.5);
-                doubtchance = Math.round(x - 0.5);
-            }
-            else{
-                doubtchance = (parseInt(lg) - parseInt(temp)) * 10 + 30;
-                if(doubtchance >= 100){
-                    doubtchance = 100;
-                    guesschance = 0;
-                    equalchance = 0;
+                /*console.log(one + " and not " + notone);
+                console.log(lgln + " and temp " +temp);
+                console.log("lg: " + lg);*/
+                var guesschance = 0;
+                var doubtchance = 0;
+                var equalchance = 0;
+                if(lg < temp){
+                    if(temp - lg > 5){
+                        guesschance = 90;
+                        doubtchance = 5;
+                        equalchance = 5;
+                    }
+                    else{
+                        guesschance = Math.round((temp - lg) * 10 + 30);
+                        console.log(guesschance);
+                        var x = (100 - guesschance) / 2;
+                        doubtchance = Math.round(x - 0.5);
+                        equalchance = Math.round(x - 0.5);
+                    }
                 }
-                else{
-                    var x = (100 - doubtchance) / 2;
+                else if(lg == temp){
+                    equalchance = 70;
+                    var x = (100 - equalchance) / 2;
                     guesschance = Math.round(x - 0.5);
-                    equalchance = Math.round(x - 0.5);
+                    doubtchance = Math.round(x - 0.5);
+                }
+                else{
+                    doubtchance = (parseInt(lg) - parseInt(temp)) * 10 + 30;
+                    if(doubtchance >= 100){
+                        doubtchance = 100;
+                        guesschance = 0;
+                        equalchance = 0;
+                    }
+                    else{
+                        var x = (100 - doubtchance) / 2;
+                        guesschance = Math.round(x - 0.5);
+                        equalchance = Math.round(x - 0.5);
+                    }
+                }
+                var y = getRandomInt(0, 101);
+                if(y <= guesschance){
+                    aiguess();
+                    console.log("guess " + y + " gc " + guesschance + " dc " + doubtchance + " ec " + equalchance);
+                }
+                else if(y > guesschance && y <= doubtchance + guesschance){
+                    doubt();
+                    console.log("doubt " + y + " gc " + guesschance + " dc " + doubtchance + " ec " + equalchance);
+                }
+                else if(y > guesschance + doubtchance){
+                    equal();
+                    console.log("equal " + y + " gc " + guesschance + " dc " + doubtchance + " ec " + equalchance);
+                }
+                else{
+                    console.log("error " + y + " gc " + guesschance + " dc " + doubtchance + " ec " + equalchance);
                 }
             }
-            var y = getRandomInt(0, 101);
-            if(y <= guesschance){
-                //aiguess();
-                console.log("guess " + y + " gc " + guesschance + " dc " + doubtchance + " ec " + equalchance);
+        }
+        function aiguess(){
+            var allcubes = document.getElementById("allcubes").innerHTML;
+            var lgln = parseInt(lastguess.toString()[parseInt(lastguess.toString.length)]);
+            var lg = (lastguess - lgln) / 10;
+            allcubes = allcubes - players[cpi].cube;
+            var predict = [allcubes / 6, allcubes / 6, allcubes / 6, allcubes / 6, allcubes / 6, allcubes / 6];
+            for(var i = 0; i < players[cpi].cube; i++){
+                predict[parseInt(players[cpi].numbers.toString[i]) - 1] = predict[parseInt(players[cpi].numbers.toString[i]) - 1] + 1; 
             }
-            else if(y > guesschance && y <= doubtchance + guesschance){
-                //aidoubt();
-                console.log("doubt " + y + " gc " + guesschance + " dc " + doubtchance + " ec " + equalchance);
-            }
-            else if(y > guesschance + doubtchance){
-                //aiequal();
-                console.log("equal " + y + " gc " + guesschance + " dc " + doubtchance + " ec " + equalchance);
+            var minimum = Array();
+            if(lg == 1){
+                for(var a = 0; a < 6; a++){
+                    if(a == 0){
+                        minimum[a] = lg;
+                    }
+                    else{
+                        if(a <= lgln){
+                            minimum[a] = lg * 2 + 1;
+                        }
+                        else{
+                            minimum[a] = lg * 2;
+                        }
+                    }
+                }
             }
             else{
-                console.log("error " + y + " gc " + guesschance + " dc " + doubtchance + " ec " + equalchance);
+                for(var a = 0; a < 6; a++){
+                    if(a == 0){
+                        minimum[a] = lg / 2;
+                    }
+                    else{
+                        if(a <= lgln){
+                            minimum[a] = lg + 1;
+                        }
+                        else{
+                            minimum[a] = lg;
+                        }
+                    }
+                }
             }
+            
         }
         function eventlog(pl, guess){
             var newevent = document.createElement("div");
