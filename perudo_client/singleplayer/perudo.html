@@ -206,7 +206,6 @@
                     }
                     else{
                         guesschance = Math.round((temp - lg) * 10 + 30);
-                        console.log(guesschance);
                         var x = (100 - guesschance) / 2;
                         doubtchance = Math.round(x - 0.5);
                         equalchance = Math.round(x - 0.5);
@@ -255,9 +254,11 @@
             var lg = (lastguess - lgln) / 10;
             allcubes = allcubes - players[cpi].cube;
             var predict = [allcubes / 6, allcubes / 6, allcubes / 6, allcubes / 6, allcubes / 6, allcubes / 6];
+            console.log(predict);
             for(var i = 0; i < players[cpi].cube; i++){
                 predict[parseInt(players[cpi].numbers.toString[i]) - 1] = predict[parseInt(players[cpi].numbers.toString[i]) - 1] + 1; 
             }
+            console.log(predict);
             var minimum = Array();
             if(lg == 1){
                 for(var a = 0; a < 6; a++){
@@ -289,7 +290,28 @@
                     }
                 }
             }
-            
+            var candidates = Array();
+            var c = 0;
+            for(var b = 0; b < 6; b++){
+                if(predict[b] >= minimum[b]){
+                    candidates[c] == b;
+                    c++;
+                }
+            }
+            if(candidates.length == 0){
+
+            }
+            else{
+                var range = Array();
+                for(var d = 0; d < candidates.length; d++){
+                    range[d] = predict[candidates[d]] - minimum[candidates[d]];
+                }
+                var random = getRandomInt(1, range.reduce((a, b) => a + b, 0) + 1);
+                var prev = 1;
+                for(var e = 0; e<range.length; e++){
+                    if(range[e])
+                }
+            }
         }
         function eventlog(pl, guess){
             var newevent = document.createElement("div");
