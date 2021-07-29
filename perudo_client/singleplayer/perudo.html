@@ -103,17 +103,43 @@
         function pguess(){
             var g = document.getElementById("guess").value;
             var g1 = document.getElementById("guess1").value;
+            var a = 1;
+            var b = 1;
+            if(g1 == "1"){
+                a = 2;
+            }
+            if(parseInt(lastguess.toString()[parseInt(lastguess.toString.length)]) == 1){
+                b = 2;
+            }
             var guess = g.toString() + g1;
-            if(parseInt(guess) < lastguess){
+            if(parseInt(guess) / a < lastguess / b){
                 console.log("too small input/validation bypassed");
                 alert("too small input");
             }
             else{
                 lastguess = parseInt(guess);
                 eventlog(0, guess);
+                cpi++;
                 aistart();
             }
-            cpi++;
+        }
+        function guess(newguess){
+            var a = 1;
+            var b = 1;
+            if(parseInt(newguess.toString()[parseInt(newguess.toString.length)]) == 1){
+                a = 2;
+            }
+            if(parseInt(lastguess.toString()[parseInt(lastguess.toString.length)]) == 1){
+                b = 2;
+            }
+            if(newguess / a < lastguess / b){
+                console.log("guess was too small");
+            }
+            else{
+                lastguess = newguess;
+                eventlog("ai" + cpi, newguess);
+                cpi++;
+            }
         }
         function doubt(){
             var real = count(parseInt(lastguess.toString()[parseInt(lastguess.toString.length)]));
@@ -254,11 +280,9 @@
             var lg = (lastguess - lgln) / 10;
             allcubes = allcubes - players[cpi].cube;
             var predict = [allcubes / 6, allcubes / 6, allcubes / 6, allcubes / 6, allcubes / 6, allcubes / 6];
-            console.log(predict);
             for(var i = 0; i < players[cpi].cube; i++){
                 predict[parseInt(players[cpi].numbers.toString[i]) - 1] = predict[parseInt(players[cpi].numbers.toString[i]) - 1] + 1; 
             }
-            console.log(predict);
             var minimum = Array();
             if(lg == 1){
                 for(var a = 0; a < 6; a++){
@@ -309,8 +333,15 @@
                 var random = getRandomInt(1, range.reduce((a, b) => a + b, 0) + 1);
                 var prev = 1;
                 for(var e = 0; e<range.length; e++){
-                    if(range[e])
+                    if(random < range[e] + prev && random >= prev){
+                        break;
+                    }
+                    else{
+                        prev = prev + range[e];
+                    }
                 }
+                var plusrand = getRandomInt(0, range[e] + 1);
+                var newguess = (minimum[candidates[e]] + plusrand) * 10 + candidates[e] + 1;
             }
         }
         function eventlog(pl, guess){
@@ -419,7 +450,6 @@
                 }
             }
         }
-        
         function dropdown(i){
             if(i == 1 || i == 2){
                 document.getElementById("submit").style.display = "block";
