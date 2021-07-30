@@ -1,1 +1,2 @@
-The perudo directiory contains the server side c# program and the perudo_client directory contains the website.
+The perudo directory contains the "old" single player played in command line (i messed that one up while making online multiplayer...)
+Th perudo_client directory contains a website which runs on php (and nothing else) and is online multiplayer compatible
