@@ -22,7 +22,8 @@
     <!--iframe src="eventGetter.php?style=main_theme.css" id="eventGetter">
     </iframe-->
     <div id="eventGetter" style="border: 1px solid black;">
-
+        <div id="eventFitter" style="margin: 10 15 10 15px;">
+        </div>
     </div>
     <div id="container">
     <h2>Your name</h2>
@@ -177,7 +178,7 @@
             roll();
         }
         function cubelosser(){
-            if(players[cpi].cube < 2){
+            if(players[cpi].cube == 1){
                 players[cpi].cube = 0;
                 if(cpi == 0){
                     alert("Game Over!");
@@ -190,7 +191,7 @@
                 players[cpi].cube = players[cpi].cube - 1;
             }
         }
-        function count(num){
+        function count(num) {
             var sol = 0;
             for(var a = 0; a < players.length; a++){    
                 for(var i = 0; i < players[a].cube; i++){
@@ -276,17 +277,18 @@
         }
         function aiguess(){
             var allcubes = document.getElementById("allcubes").innerHTML;
-            var lgln = parseInt(lastguess.toString()[parseInt(lastguess.toString.length)]);
-            var lg = (lastguess - lgln) / 10;
+            var lgln = parseInt(lastguess.toString()[parseInt(lastguess.toString.length)]); //lgln aka lastguess-lastnumber 2(1)
+            var lg = (lastguess - lgln) / 10; //lg aka the first number (2)1
             allcubes = allcubes - players[cpi].cube;
-            var predict = [allcubes / 6, allcubes / 6, allcubes / 6, allcubes / 6, allcubes / 6, allcubes / 6];
+            var pred1 = allcubes / 6;
+            var predict = [pred1, pred1, pred1, pred1, pred1, pred1];
             for(var i = 0; i < players[cpi].cube; i++){
-                predict[parseInt(players[cpi].numbers.toString[i]) - 1] = predict[parseInt(players[cpi].numbers.toString[i]) - 1] + 1; 
+                predict[parseInt(players[cpi].numbers.toString[i]) - 1] = predict[parseInt(players[cpi].numbers.toString[i]) - 1] + 1; //ads ai's own cube to the prediction
             }
-            var minimum = Array();
+            var minimum = Array(); //minimum for each number (1)-has doubling effects!!! & 15 is bigger than 13
             if(lg == 1){
                 for(var a = 0; a < 6; a++){
-                    if(a == 0){
+                    if(a == 0){ //0 only occures when its starts with 1!!!
                         minimum[a] = lg;
                     }
                     else{
@@ -318,12 +320,12 @@
             var c = 0;
             for(var b = 0; b < 6; b++){
                 if(predict[b] >= minimum[b]){
-                    candidates[c] == b;
+                    candidates[c] = b;
                     c++;
                 }
             }
             if(candidates.length == 0){
-
+                console.log("no reasonable guess targets");
             }
             else{
                 var range = Array();
@@ -332,7 +334,7 @@
                 }
                 var random = getRandomInt(1, range.reduce((a, b) => a + b, 0) + 1);
                 var prev = 1;
-                for(var e = 0; e<range.length; e++){
+                for(var e = 0; e < range.length; e++){
                     if(random < range[e] + prev && random >= prev){
                         break;
                     }
@@ -342,13 +344,14 @@
                 }
                 var plusrand = getRandomInt(0, range[e] + 1);
                 var newguess = (minimum[candidates[e]] + plusrand) * 10 + candidates[e] + 1;
+                guess(newguess);
             }
         }
         function eventlog(pl, guess){
             var newevent = document.createElement("div");
             var content = document.createTextNode(/*players[pl].name*/pl + " guessed " + guess);
             newevent.appendChild(content);
-            document.getElementById("eventGetter").appendChild(newevent);
+            document.getElementById("eventFitter").appendChild(newevent);
             eventcount = eventcount + 1;
         }
         function roll(){
