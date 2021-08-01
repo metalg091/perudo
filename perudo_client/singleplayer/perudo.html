@@ -53,7 +53,8 @@
     <script type="text/javascript">
         themeSetup(getCookie("theme"));
         var url = new URL(window.location.href);
-        document.getElementById("username").innerHTML = url.searchParams.get("username");
+        var username = url.searchParams.get("username");
+        document.getElementById("username").innerHTML = username;
         var lastguess = 10;
         var cpi = 0;
         var eventcount = 0;
@@ -119,7 +120,7 @@
             }
             else{
                 lastguess = parseInt(guess);
-                eventlog(0, guess);
+                eventlog(username + " guessed " + guess);
                 cpi++;
                 aistart();
             }
@@ -138,27 +139,37 @@
             }
             else{
                 lastguess = newguess;
-                eventlog("ai" + cpi, newguess);
+                eventlog("ai" + players[cpi].id + " guessed " + newguess);
                 cpi++;
             }
         }
         function doubt(){
             var real = count(parseInt(lastguess.toString()[parseInt(lastguess.toString.length)]));
             var lg = (lastguess - parseInt(lastguess.toString()[parseInt(lastguess.toString.length)])) / 10;
+            var tcpi = cpi;
             //console.log("lg: " + lg + " real: " + real);
-            if(lg < real){
-                cubelosser();
-            }
-            else{
+            if(lg >= real){
                 if(cpi == 0){
                     cpi = players.length - 1;
-                    cubelosser();
                 }
                 else{
                     cpi = cpi -1;
-                    cubelosser();
                 }
             }
+            if(cpi == 0){
+                var ntcpi = username;
+            }
+            else{
+                var ntcpi = "ai" + players[cpi].id;
+                if(tpci == 0){
+                    var otcpi = username;
+                }
+                else{
+                    var otcpi = "ai" + players[tcpi].id;
+                }
+            }
+            eventlog(otcpi + " doubted the " + lastguess + " from " + ntcpi);
+            cubelosser();
             lastguess = 10;
             roll();
         }
@@ -166,9 +177,23 @@
             var real = count(parseInt(lastguess.toString()[parseInt(lastguess.toString.length)]));
             var lg = (lastguess - parseInt(lastguess.toString()[parseInt(lastguess.toString.length)])) / 10;
             //console.log("lg: " + lg + " real: " + real);
+            if(cpi == 0){
+                var ntcpi = username;
+            }
+            else{
+                var ntcpi = "ai" + players[cpi].id;
+//                if(players[cpi - 1].id == 0){
+//                    var otcpi = username;
+//                }
+//                else{
+//                    var otcpi = "ai" + players[cpi - 1].id;
+//                }
+            }
+            eventlog(ntcpi + " thinks that there are exactly " + lastguess);
             if(lg == real){
                 if(players[cpi].cubes < 5){
                     players[cpi].cube = players[cpi].cube + 1;
+                    eventlog(ntcpi + " gained a cube and now owns " + players[cpi].cube);
                 }
             }
             else{
@@ -181,14 +206,22 @@
             if(players[cpi].cube == 1){
                 players[cpi].cube = 0;
                 if(cpi == 0){
+                    eventlog(username + " lost all of their cubes");
                     alert("Game Over!");
                 }
                 else{
+                    eventlog("ai" + players[cpi].id + " lost all of their cubes");
                     players.splice(cpi, 1);
                 }
             }
             else{
                 players[cpi].cube = players[cpi].cube - 1;
+                if(cpi !== 0){
+                    eventlog("ai" + players[cpi].id + " lost a cube and has only " + players[cpi].cube + " remaining");
+                }
+                else{
+                    eventlog(username + " lost a cube and has only " + players[0].cube + " remaining");
+                }
             }
         }
         function count(num) {
@@ -347,9 +380,9 @@
                 guess(newguess);
             }
         }
-        function eventlog(pl, guess){
+        function eventlog(message){
             var newevent = document.createElement("div");
-            var content = document.createTextNode(/*players[pl].name*/pl + " guessed " + guess);
+            var content = document.createTextNode(message);
             newevent.appendChild(content);
             document.getElementById("eventFitter").appendChild(newevent);
             eventcount = eventcount + 1;
