@@ -41,7 +41,7 @@ setcookie("width", "1", time() + 86400, "/");
         <option id="custom" value="3">custom theme</option>
     </select>
     <div style="position: relative; left: 10em; top: 1.05em; width: 25%;">
-    <button id="customize" onclick="redirect()" style="display: none; padding: 4px; border-radius: 7.5px">Change</button>
+        <button id="customize" onclick="document.location='customize.php'" style="display: none; padding: 4px; border-radius: 7.5px">Change</button>
     </div>
     <h2>Type in your username!</h2>
     
@@ -50,7 +50,7 @@ setcookie("width", "1", time() + 86400, "/");
             <input type="text" id="username" name="username" style="width: 220px;"><br><br>
             <div>
                 <input id="multi" type="submit" value="Multi Player">
-                <div id="single" onclick="document.location='singleplayer/perudo.html'">Single player</div>
+                <div id="single" onclick="document.location='singleplayer/perudo.html?username=' + document.getElementById('username').value ">Single player</div>
             </div>
         </div>
     </form>
@@ -72,9 +72,6 @@ setcookie("width", "1", time() + 86400, "/");
         case 3:
             document.getElementById("custom").selected = "selected";
             break;
-    }
-    function redirect(){
-        location.href = 'customize.php';
     }
     function ThemeSelector(){
         var themeId = document.getElementById("themeSelect").value;
