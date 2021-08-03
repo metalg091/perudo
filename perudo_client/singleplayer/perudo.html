@@ -40,7 +40,7 @@
     <br>
     <div id="form" style="display: none;">
         <label for="guess">Your guess:</label>
-        <select id="gtype"class="dropdown" onchange="dropdown(this.value)">
+        <select id="gtype" class="dropdown" onchange="dropdown(this.value)">
             <option value="0" selected="selected">Guess</option>
             <option value="1">Doubt</option>
             <option value="2">Equal</option>
@@ -140,7 +140,12 @@
             else{
                 lastguess = newguess;
                 eventlog("ai" + players[cpi].id + " guessed " + newguess);
-                cpi++;
+                if(players.length - 1 > cpi){
+                    cpi++;
+                }
+                else{
+                    cpi = 0;
+                }
             }
         }
         function doubt(){
@@ -161,7 +166,7 @@
             }
             else{
                 var ntcpi = "ai" + players[cpi].id;
-                if(tpci == 0){
+                if(tcpi == 0){
                     var otcpi = username;
                 }
                 else{
@@ -258,36 +263,41 @@
                 var guesschance = 0;
                 var doubtchance = 0;
                 var equalchance = 0;
-                if(lg < temp){
-                    if(temp - lg > 5){
-                        guesschance = 90;
-                        doubtchance = 5;
-                        equalchance = 5;
-                    }
-                    else{
-                        guesschance = Math.round((temp - lg) * 10 + 30);
-                        var x = (100 - guesschance) / 2;
-                        doubtchance = Math.round(x - 0.5);
-                        equalchance = Math.round(x - 0.5);
-                    }
-                }
-                else if(lg == temp){
-                    equalchance = 70;
-                    var x = (100 - equalchance) / 2;
-                    guesschance = Math.round(x - 0.5);
-                    doubtchance = Math.round(x - 0.5);
+                if(lgln == 0){
+                    guesschance = 100;
                 }
                 else{
-                    doubtchance = (parseInt(lg) - parseInt(temp)) * 10 + 30;
-                    if(doubtchance >= 100){
-                        doubtchance = 100;
-                        guesschance = 0;
-                        equalchance = 0;
+                    if(lg < temp){
+                        if(temp - lg > 5){
+                            guesschance = 90;
+                            doubtchance = 5;
+                            equalchance = 5;
+                        }
+                        else{
+                            guesschance = Math.round((temp - lg) * 10 + 30);
+                            var x = (100 - guesschance) / 2;
+                            doubtchance = Math.round(x - 0.5);
+                            equalchance = Math.round(x - 0.5);
+                        }
+                    }
+                    else if(lg == temp){
+                        equalchance = 70;
+                        var x = (100 - equalchance) / 2;
+                        guesschance = Math.round(x - 0.5);
+                        doubtchance = Math.round(x - 0.5);
                     }
                     else{
-                        var x = (100 - doubtchance) / 2;
-                        guesschance = Math.round(x - 0.5);
-                        equalchance = Math.round(x - 0.5);
+                        doubtchance = (parseInt(lg) - parseInt(temp)) * 10 + 30;
+                        if(doubtchance >= 100){
+                            doubtchance = 100;
+                            guesschance = 0;
+                            equalchance = 0;
+                        }
+                        else{
+                            var x = (100 - doubtchance) / 2;
+                            guesschance = Math.round(x - 0.5);
+                            equalchance = Math.round(x - 0.5);
+                        }
                     }
                 }
                 var y = getRandomInt(0, 101);
@@ -307,14 +317,20 @@
                     console.log("error " + y + " gc " + guesschance + " dc " + doubtchance + " ec " + equalchance);
                 }
             }
+            if(lastguess == 10){
+                document.getElementById("gtype").style = "display: none;";
+            }
+            else{
+                document.getElementById("gtype").style = "display: block;";    
+            }
         }
         function aiguess(){
             var allcubes = document.getElementById("allcubes").innerHTML;
             var lgln = parseInt(lastguess.toString()[parseInt(lastguess.toString.length)]); //lgln aka lastguess-lastnumber 2(1)
             var lg = (lastguess - lgln) / 10; //lg aka the first number (2)1
             allcubes = allcubes - players[cpi].cube;
-            var pred1 = allcubes / 6;
-            var predict = [pred1, pred1, pred1, pred1, pred1, pred1];
+            var pred1 = allcubes / 3;
+            var predict = [allcubes / 6, pred1, pred1, pred1, pred1, pred1];
             for(var i = 0; i < players[cpi].cube; i++){
                 predict[parseInt(players[cpi].numbers.toString[i]) - 1] = predict[parseInt(players[cpi].numbers.toString[i]) - 1] + 1; //ads ai's own cube to the prediction
             }
@@ -377,6 +393,10 @@
                 }
                 var plusrand = getRandomInt(0, range[e] + 1);
                 var newguess = (minimum[candidates[e]] + plusrand) * 10 + candidates[e] + 1;
+                console.log("guess is " + newguess);
+                if(newguess < lastguess){
+                    console.log("error");
+                }
                 guess(newguess);
             }
         }
