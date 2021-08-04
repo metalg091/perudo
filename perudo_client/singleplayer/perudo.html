@@ -89,17 +89,24 @@
         }
         function eval(){
             var type = document.getElementById("gtype").value;
-            if(type == 0){
-                pguess();
-            }
-            else if(type == 1){
-                doubt();
-            }
-            else if(type == 2){
-                equal();
+            if(lastguess == 10 && type != 0){
+                console.log(type);
+                document.getElementById("gtype").style = "display: none;";
+                document.getElementById("gtype").value = 0;                
             }
             else{
-                console.log("Error: " + type);
+                if(type == 0){
+                    pguess();
+                }
+                else if(type == 1){
+                    doubt();
+                }
+                else if(type == 2){
+                    equal();
+                }
+                else{
+                    console.log("Error: " + type);
+                }
             }
         }
         function pguess(){
@@ -161,7 +168,7 @@
                     cpi = cpi -1;
                 }
             }
-            if(cpi == 0){
+            if(tcpi - 1 == 0){
                 var ntcpi = username;
             }
             else{
@@ -200,6 +207,9 @@
                     players[cpi].cube = players[cpi].cube + 1;
                     eventlog(ntcpi + " gained a cube and now owns " + players[cpi].cube);
                 }
+                else{
+                    eventlog(ntcpi + "would have gained a cube but had the maximum amount already");
+                }
             }
             else{
                 cubelosser();
@@ -221,7 +231,7 @@
             }
             else{
                 players[cpi].cube = players[cpi].cube - 1;
-                if(cpi !== 0){
+                if(cpi != 0){
                     eventlog("ai" + players[cpi].id + " lost a cube and has only " + players[cpi].cube + " remaining");
                 }
                 else{
@@ -241,7 +251,7 @@
             return sol;
         }
         function aistart(){
-            while (cpi !== 0){
+            while (cpi != 0){
                 var allcubes = document.getElementById("allcubes").innerHTML;
                 var one = Math.round(parseInt(allcubes) / 6);
                 var notone = Math.round(parseInt(allcubes) / 3);
@@ -303,15 +313,15 @@
                 var y = getRandomInt(0, 101);
                 if(y <= guesschance){
                     aiguess();
-                    console.log("guess " + y + " gc " + guesschance + " dc " + doubtchance + " ec " + equalchance);
+                    //console.log("guess " + y + " gc " + guesschance + " dc " + doubtchance + " ec " + equalchance);
                 }
                 else if(y > guesschance && y <= doubtchance + guesschance){
                     doubt();
-                    console.log("doubt " + y + " gc " + guesschance + " dc " + doubtchance + " ec " + equalchance);
+                    //console.log("doubt " + y + " gc " + guesschance + " dc " + doubtchance + " ec " + equalchance);
                 }
                 else if(y > guesschance + doubtchance){
                     equal();
-                    console.log("equal " + y + " gc " + guesschance + " dc " + doubtchance + " ec " + equalchance);
+                    //console.log("equal " + y + " gc " + guesschance + " dc " + doubtchance + " ec " + equalchance);
                 }
                 else{
                     console.log("error " + y + " gc " + guesschance + " dc " + doubtchance + " ec " + equalchance);
@@ -319,6 +329,7 @@
             }
             if(lastguess == 10){
                 document.getElementById("gtype").style = "display: none;";
+                document.getElementById("gtype").value = 0;
             }
             else{
                 document.getElementById("gtype").style = "display: block;";    
