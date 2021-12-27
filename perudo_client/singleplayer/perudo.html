@@ -170,13 +170,9 @@
             }
             if(tcpi - 1 == 0){
                 var ntcpi = username;
-                var otcpi = "ai" + players[tcpi].id;
-            }
-            else if (tcpi == 0){
-                
             }
             else{
-                var ntcpi = "ai" + players[tcpi - 1].id;
+                var ntcpi = "ai" + players[cpi].id;
                 if(tcpi == 0){
                     var otcpi = username;
                 }
@@ -435,7 +431,6 @@
                 num = Array();
                 numstr = "";
             }
-            render();
         }
         function getRandomInt(min, max) /*max exclusive, min inclusive*/ {
             min = Math.ceil(min);
