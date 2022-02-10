@@ -3,3 +3,4 @@ perudo_client/databases/perudo.sqlite
 perudo_client/databases/perudo.sqlite
 perudo_client/databases/theme.sqlite
 *.sqlite
+perudo_cpp/a.out
