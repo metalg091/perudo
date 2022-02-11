@@ -1,6 +1,9 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <stdlib.h>
+#include <time.h>
+
 using namespace std;
 
 class playertype {
@@ -12,7 +15,19 @@ class playertype {
         vector<int> nums = {0, 0, 0, 0, 0};
 };
 
+void roll(vector<playertype>& players, int* allnumber){
+    for(int x = 0; x < size(players); ++x){
+        for(int y = 0; y < 6; ++y){
+            int a = rand() % 6;
+            ++*(allnumber + a);
+            players[x].nums[y] = a + 1; 
+        }
+    }
+}
+
 int main() {
+    time_t nTime;
+    srand((unsigned) time(&nTime)); //to make random numbers really number 
     string x;
     int y;
     int currentPlayerId = 0;
@@ -29,18 +44,24 @@ int main() {
     temp.id = 0;
     temp.name = x;
     players.push_back(temp);
-    for(int i = 1; i < y; ++i){
+    for(int i = 1; i <= y; ++i){
         temp.id = i;
         temp.name = "ai" + i;
         players.push_back(temp);
     }
+    roll(players, allnumber);
     //Game begin
-    //roll(&player, &allnumbers);
-    return 0;
-}
-
-void roll(vector<playertype> players, int* allnumber){
-    for(int x = 0; x < size(players); ++x){
-        //*allnumber[0] = 2;
+    
+    /*for (int y = 0; y < size(players); ++y){
+        cout << "player " << y << "cubes are: ";
+        for (int x = 0; x < 6; ++x){
+            cout << players[y].nums[x] << " ";
+        }
+        cout << "\n";
     }
+    cout << "all the numbers: ";
+    for (int x = 0; x < 6; ++x){
+        cout << allnumber[x] << " ";
+    }*/
+    return 0;
 }
