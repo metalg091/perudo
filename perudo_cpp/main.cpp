@@ -39,7 +39,7 @@ class playertype {
         }
 };
 
-void doubt(vector<playertype>& players, int current, int* allnumber, int cpi){
+void doubt(vector<playertype>& players, int current, int* allnumber, int &cpi){
     char a = to_string(current).back();
     int prevId;
     if (cpi == 0){
@@ -47,17 +47,45 @@ void doubt(vector<playertype>& players, int current, int* allnumber, int cpi){
     } else {
         prevId = cpi - 1;
     }
-    if(current < *(allnumber + (int)a - 1)){
+    int real;
+    if (int(a) == 1){
+        real = *allnumber;
+    } else{
+        real = *allnumber + *(allnumber + (int)a - 1);
+    }
+    if(current < real){
         players[prevId].loseCube();
-        roll(players, allnumber);
+        if(players[prevId].readCube() == 0){
+            players.erase(players.begin() + prevId);
+        }
+        cpi = prevId - 1;
     } else {
         players[cpi].loseCube();
-        roll(players, allnumber);
+        if(players[cpi].readCube() == 0){
+            players.erase(players.begin() + prevId);
+        }
     }
+    roll(players, allnumber);
 }
 
 void equal(vector<playertype>& players, int current, int* allnumber, int cpi){
-    
+    char a = to_string(current).back();
+    int real;
+    if (int(a) == 1){
+        real = *allnumber;
+    } else{
+        real = *allnumber + *(allnumber + (int)a - 1);
+    }
+    if(current != real){
+        players[cpi].loseCube();
+        if(players[cpi].readCube() == 0){
+            players.erase(players.begin() + cpi);
+        }
+    } else {
+        players[cpi].gainCube();
+    }
+    roll(players, allnumber);
+    --cpi;
 }
 
 void roll(vector<playertype>& players, int* allnumber){
@@ -83,7 +111,7 @@ bool isThisBigger(int inp, int last){
     }
 }
 
-void getGuess(vector<playertype>& players, int &lastOne, int* allnumber, int cpi){
+void getGuess(vector<playertype>& players, int &lastOne, int* allnumber, int &cpi){
     bool isitstr = false;
     do{
         string current_inp;
@@ -158,11 +186,9 @@ int main() {
         for(int i = 0; i < size(players); ++i){
             if(i == 0){
                 getGuess(players, guess, allnumber, i);
-                
             } else{
                 //ai()
             }
-            
         }
     }
     /*for (int y = 0; y < size(players); ++y){
