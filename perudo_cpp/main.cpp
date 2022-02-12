@@ -7,10 +7,11 @@
 using namespace std;
 
 class playertype {
+    private:
+        int cube = 5;
     public:
         int id;
         string name;
-        int cube = 5;
         bool hasCube = true;
         bool isAi;
         vector<int> nums = {0, 0, 0, 0, 0};
@@ -19,11 +20,49 @@ class playertype {
             name = name_n;
             isAi = isAi_n;
         }
+        void loseCube(){
+            --cube;
+            cout << name << " lost a cube, and has " << cube << "remaining \n";
+            nums.erase(nums.end() - 1);
+        }
+        void gainCube(){
+            if(cube != 5){
+                ++cube;
+                cout << name << " obtained an extra cube, and has " << cube << " now \n";
+                nums.push_back(0);
+            } else{
+                cout << name << " cannot obtain an extra cube \n";
+            }
+        }
+        int readCube(){
+            return cube;
+        }
 };
+
+void doubt(vector<playertype>& players, int current, int* allnumber, int cpi){
+    char a = to_string(current).back();
+    int prevId;
+    if (cpi == 0){
+        prevId = size(players) - 1;
+    } else {
+        prevId = cpi - 1;
+    }
+    if(current < *(allnumber + (int)a - 1)){
+        players[prevId].loseCube();
+        roll(players, allnumber);
+    } else {
+        players[cpi].loseCube();
+        roll(players, allnumber);
+    }
+}
+
+void equal(vector<playertype>& players, int current, int* allnumber, int cpi){
+    
+}
 
 void roll(vector<playertype>& players, int* allnumber){
     for(int x = 0; x < size(players); ++x){
-        for(int y = 0; y < 6; ++y){
+        for(int y = 0; y < players[x].readCube(); ++y){
             int a = rand() % 6;
             ++*(allnumber + a);
             players[x].nums[y] = a + 1; 
@@ -32,8 +71,8 @@ void roll(vector<playertype>& players, int* allnumber){
 }
 
 bool isThisBigger(int inp, int last){
-    if((to_string(last)[-1] == '1') != (to_string(inp)[-1] == '1')){
-        if(to_string(last)[-1] == '1'){
+    if((to_string(last).back() == '1') != (to_string(inp).back() == '1')){
+        if(to_string(last).back() == '1'){
             last = last * 2;
         } else{
             last = last / 2;
@@ -44,18 +83,50 @@ bool isThisBigger(int inp, int last){
     }
 }
 
-int getGuess(int lastOne){
-    int current;
-    cout << "Enter your guess!\n";
-    cin >> current;
-    cout << "\n";
-    if(isThisBigger(current, lastOne)){
-        return current;
-    } else{
-        cout << "Guess must be bigger than " << lastOne << "\n";
-        getGuess(lastOne);
+void getGuess(vector<playertype>& players, int &lastOne, int* allnumber, int cpi){
+    bool isitstr = false;
+    do{
+        string current_inp;
+        cout << "Enter your guess!\n";
+        cin >> current_inp;
+        cout << "\n";
+        if(lastOne != 10){
+            if(current_inp == "doubt" || current_inp == "d"){
+                doubt(players, lastOne, allnumber, cpi);
+                break;
+            } else if (current_inp == "equal" || current_inp == "e"){
+                equal(players, lastOne, allnumber, cpi);
+                break;
+            }
+        }
+        //check if input is a number
+        for (int i = 0; i < current_inp.length(); i++) {
+            if (isdigit(current_inp[i]) == false) {
+                isitstr = false;
+                break;
+            } else{
+                isitstr = true;
+            }
+        }
+        if(!isitstr){
+            cout << "Guess must be a number! \n";
+            continue;
+        }
+        if(current_inp.back() == '7' || current_inp.back() == '8' || current_inp.back() == '9' || current_inp.back() == '0'){
+            cout << "Guess last number must be within 1 and 6! \n";
+            continue;
+        }
+        int current = stoi(current_inp);
+        if(isThisBigger(current, lastOne)){
+            //secondlast = lastOne;
+            lastOne = current;
+            break;
+        } else{
+            cout << "Guess must be bigger than " << lastOne << ", or if its last digit is 1 it mustbe bigger than twice its value, or if your guess is one it must be bigger than half its value! \n";
+            continue;
+        }
     }
-    return -1;
+    while (isitstr);
 }
 
 int main() {
@@ -64,9 +135,7 @@ int main() {
     bool game = true;
     string x;
     int y;
-    int currentPlayerId = 0;
     int guess = 10;
-    int prevGuess;
     int allnumber[6] = {0, 0, 0, 0, 0, 0};
     cout << "Welcome to perudo c++! \n";
     cout << "Enter your user name \n";
@@ -87,15 +156,13 @@ int main() {
     //Game begin
     while (game){
         for(int i = 0; i < size(players); ++i){
-            prevGuess = guess;
             if(i == 0){
-                guess = getGuess(guess);
-                if (guess == -1){
-                    cout << "error";
-                }
+                getGuess(players, guess, allnumber, i);
+                
             } else{
                 //ai()
             }
+            
         }
     }
     /*for (int y = 0; y < size(players); ++y){
