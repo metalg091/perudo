@@ -157,6 +157,26 @@ void getGuess(vector<playertype>& players, int &lastOne, int* allnumber, int &cp
     while (isitstr);
 }
 
+void ai(vector<playertype>& players, int &lastOne, int* allnumber, int &cpi){
+    char a = to_string(lastOne).back();
+    int otherCubesInGame = 0;
+    for (int x = 0; x < size(players); ++x){
+        otherCubesInGame = otherCubesInGame + players[x].readCube();
+    }
+    otherCubesInGame = otherCubesInGame - players[cpi].readCube();
+    int predict[6] = {0, 0, 0, 0, 0, 0};
+    int* ptr = &predict[0];
+    predict[0] = otherCubesInGame / 6;
+    for(int i = 1; i < 6; ++i){
+        predict[i] = 2 * predict[0];
+    }
+    for(int i = 0; i < players[cpi].readCube(); ++i){
+        ++*(ptr + players[cpi].nums[i]);
+    }
+    int min[6] = {0, 0, 0, 0, 0, 0};
+    
+}
+
 int main() {
     time_t nTime;
     srand((unsigned) time(&nTime)); //to make random numbers really random 
