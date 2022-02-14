@@ -164,8 +164,8 @@ void ai(vector<playertype>& players, int &lastOne, int* allnumber, int &cpi){
         otherCubesInGame = otherCubesInGame + players[x].readCube();
     }
     otherCubesInGame = otherCubesInGame - players[cpi].readCube();
-    int predict[6] = {0, 0, 0, 0, 0, 0};
-    int* ptr = &predict[0];
+    double predict[6] = {0, 0, 0, 0, 0, 0};
+    double* ptr = &predict[0];
     predict[0] = otherCubesInGame / 6;
     for(int i = 1; i < 6; ++i){
         predict[i] = 2 * predict[0];
@@ -174,7 +174,40 @@ void ai(vector<playertype>& players, int &lastOne, int* allnumber, int &cpi){
         ++*(ptr + players[cpi].nums[i]);
     }
     int min[6] = {0, 0, 0, 0, 0, 0};
-    
+    if(to_string(lastOne).back() == '1'){
+        min[0] = (lastOne + 9) / 10;
+        for(int i = 1; i < 6; ++i){
+            min[i] = ((((lastOne - i) - 1) / 10) * 2) + 1;
+        }
+    } else {
+        min[0] = ((lastOne - 1) / 20) + 1;
+        for(int i = 1; i < 6; ++i){
+            min[i] = (((lastOne - i) - 1) / 10) + 1;
+        }
+    }
+    double diff[6] = {0, 0, 0, 0, 0, 0};
+    double biggestVal = -100;
+    int biggestId = 0;
+    int nonNegative = 0;
+    for(int i = 0; i < 6; ++i){
+        diff[i] = predict[i] - min[i];
+        if(diff[i] > biggestVal){
+            biggestVal = diff[i];
+            biggestId = i;
+        }
+        if(diff[i] > 0){
+            ++nonNegative;
+        }
+    }
+    if(nonNegative == 0){
+        if(biggestVal == 0){
+            //chance to equal
+        } else{
+            //doubt
+        }
+    } else{
+        //guess
+    }
 }
 
 int main() {
