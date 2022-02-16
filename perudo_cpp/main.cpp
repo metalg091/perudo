@@ -68,7 +68,7 @@ void doubt(vector<playertype>& players, int current, int* allnumber, int &cpi){
     roll(players, allnumber);
 }
 
-void equal(vector<playertype>& players, int current, int* allnumber, int cpi){
+void equal(vector<playertype>& players, int current, int* allnumber, int &cpi){
     char a = to_string(current).back();
     int real;
     if (int(a) == 1){
@@ -146,7 +146,6 @@ void getGuess(vector<playertype>& players, int &lastOne, int* allnumber, int &cp
         }
         int current = stoi(current_inp);
         if(isThisBigger(current, lastOne)){
-            //secondlast = lastOne;
             lastOne = current;
             break;
         } else{
@@ -200,13 +199,85 @@ void ai(vector<playertype>& players, int &lastOne, int* allnumber, int &cpi){
         }
     }
     if(nonNegative == 0){
-        if(biggestVal == 0){
-            //chance to equal
-        } else{
-            //doubt
+        if(biggestVal == 0){ //chance to equal
+            int chances[3]; // 0 -> equal, 1 -> doubt, 2 -> guess
+            chances[0] = (players[cpi].readCube() / otherCubesInGame) * 100;
+            chances[1] = ((100 - chances[0]) / 4) * 3;
+            chances[2] = chances[1] / 3;
+            int small = 0;
+            int big = 0;
+            for(int i = 0; i < 3; ++i){
+                if(chances[i] < chances[small]){
+                    small = i;
+                }
+                if(chances[i] > chances[big]){
+                    big = i;
+                }
+            }
+            int middle = 0;
+            while(middle == small || middle == big){
+                ++middle;
+            }
+            int a = rand() % 101;
+            if(a > chances[big]){
+                switch (big)
+                    {
+                    case 0:
+                        equal(players, lastOne, allnumber, cpi);
+                        return;
+                        break;
+                    case 1:
+                        doubt(players, lastOne, allnumber, cpi);
+                        return;
+                        break;
+                    case 2:
+                        break;
+                    }
+            } else if(a < chances[small]) {
+                switch (small)
+                    {
+                    case 0:
+                        equal(players, lastOne, allnumber, cpi);
+                        return;
+                        break;
+                    case 1:
+                        doubt(players, lastOne, allnumber, cpi);
+                        return;
+                        break;
+                    case 2:
+                        break;
+                    }
+            } else {
+                switch (middle)
+                    {
+                    case 0:
+                        equal(players, lastOne, allnumber, cpi);
+                        return;
+                        break;
+                    case 1:
+                        doubt(players, lastOne, allnumber, cpi);
+                        return;
+                        break;
+                    case 2:
+                        break;
+                    }
+            }
+        } else{ //doubt
+            int chances[3] = {15, 80, 5}; // 0 -> equal, 1 -> doubt, 2 -> guess
+            int a = rand() % 101;
+            if(a > chances[1]){
+                doubt(players, lastOne, allnumber, cpi);
+                return;
+            } else if(a < chances[2]) {
+                //nothing
+            } else {
+                equal(players, lastOne, allnumber, cpi);
+            }
         }
-    } else{
-        //guess
+    } else{ //guess
+        int chances[2]; // 0 -> doubt, 1 -> guess
+        chances[1];
+
     }
 }
 
