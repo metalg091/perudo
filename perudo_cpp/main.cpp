@@ -22,7 +22,7 @@ class playertype {
         }
         void loseCube(){
             --cube;
-            cout << name << " lost a cube, and has " << cube << "remaining \n";
+            cout << name << " lost a cube, and has " << cube << " remaining \n";
             nums.erase(nums.end() - 1);
         }
         void gainCube(){
@@ -39,7 +39,32 @@ class playertype {
         }
 };
 
-void doubt(vector<playertype>& players, int current, int* allnumber, int &cpi){
+void debugDisplay(vector<playertype> players, int current, int* allnumber, int cpi){
+    for(int i = 0; i<6; ++i){
+        cout << *(allnumber + i) << " | ";
+    }
+    string x;
+    cout << "\n";
+    cout << "guess: " << current << "\n";
+    cout << "current player: " << cpi << "\n";
+    cout << "continue?\n";
+    cin >> x;
+    return;
+}
+
+void roll(vector<playertype>& players, int* allnumber){
+    for(int x = 0; x < size(players); ++x){
+        for(int y = 0; y < players[x].readCube(); ++y){
+            int a = rand() % 6;
+            ++*(allnumber + a);
+            players[x].nums[y] = a + 1; 
+        }
+    }
+}
+
+void doubt(vector<playertype>& players, int &current, int* allnumber, int &cpi){
+    cout << "Doubt\n";
+    debugDisplay(players, current, allnumber, cpi);
     char a = to_string(current).back();
     int prevId;
     if (cpi == 0){
@@ -47,12 +72,20 @@ void doubt(vector<playertype>& players, int current, int* allnumber, int &cpi){
     } else {
         prevId = cpi - 1;
     }
+    cout << "a: " << a << "\n";
     int real;
-    if (int(a) == 1){
+    int b = a;
+    --b;
+    if (b == 0){
         real = *allnumber;
     } else{
-        real = *allnumber + *(allnumber + (int)a - 1);
+        int f = *allnumber;
+        cout << "f: " << f << "\n";
+        int g = *(allnumber + b); //error here
+        cout << "g: " << g << "\n";
+        real = f + g;
     }
+    cout << "real value " << real << "\n";
     if(current < real){
         players[prevId].loseCube();
         if(players[prevId].readCube() == 0){
@@ -65,10 +98,13 @@ void doubt(vector<playertype>& players, int current, int* allnumber, int &cpi){
             players.erase(players.begin() + prevId);
         }
     }
+    current = 10;
     roll(players, allnumber);
 }
 
-void equal(vector<playertype>& players, int current, int* allnumber, int &cpi){
+void equal(vector<playertype>& players, int &current, int* allnumber, int &cpi){
+    cout << "Equal\n";
+    debugDisplay(players, current, allnumber, cpi);
     char a = to_string(current).back();
     int real;
     if (int(a) == 1){
@@ -84,18 +120,9 @@ void equal(vector<playertype>& players, int current, int* allnumber, int &cpi){
     } else {
         players[cpi].gainCube();
     }
+    current = 10;
     roll(players, allnumber);
     --cpi;
-}
-
-void roll(vector<playertype>& players, int* allnumber){
-    for(int x = 0; x < size(players); ++x){
-        for(int y = 0; y < players[x].readCube(); ++y){
-            int a = rand() % 6;
-            ++*(allnumber + a);
-            players[x].nums[y] = a + 1; 
-        }
-    }
 }
 
 bool isThisBigger(int inp, int last){
@@ -131,7 +158,7 @@ void getGuess(vector<playertype>& players, int &lastOne, int* allnumber, int &cp
         for (int i = 0; i < current_inp.length(); i++) {
             if (isdigit(current_inp[i]) == false) {
                 isitstr = false;
-                break;
+                break; //is this right?
             } else{
                 isitstr = true;
             }
@@ -190,11 +217,13 @@ void ai(vector<playertype>& players, int &lastOne, int* allnumber, int &cpi){
     int nonNegative = 0;
     for(int i = 0; i < 6; ++i){
         diff[i] = predict[i] - min[i];
+    }
+    for(int i = 0; i<6; ++i){
         if(diff[i] > biggestVal){
             biggestVal = diff[i];
             biggestId = i;
         }
-        if(diff[i] > 0){
+        if(diff[i] > -1){
             ++nonNegative;
         }
     }
@@ -219,21 +248,7 @@ void ai(vector<playertype>& players, int &lastOne, int* allnumber, int &cpi){
                 ++middle;
             }
             int a = rand() % 101;
-            if(a > chances[big]){
-                switch (big)
-                    {
-                    case 0:
-                        equal(players, lastOne, allnumber, cpi);
-                        return;
-                        break;
-                    case 1:
-                        doubt(players, lastOne, allnumber, cpi);
-                        return;
-                        break;
-                    case 2:
-                        break;
-                    }
-            } else if(a < chances[small]) {
+            if(a <= chances[small]){
                 switch (small)
                     {
                     case 0:
@@ -247,8 +262,22 @@ void ai(vector<playertype>& players, int &lastOne, int* allnumber, int &cpi){
                     case 2:
                         break;
                     }
-            } else {
+            } else if(a > chances[small] && a <= chances[middle] + chances[small]) {
                 switch (middle)
+                    {
+                    case 0:
+                        equal(players, lastOne, allnumber, cpi);
+                        return;
+                        break;
+                    case 1:
+                        doubt(players, lastOne, allnumber, cpi);
+                        return;
+                        break;
+                    case 2:
+                        break;
+                    }
+            } else {
+                switch (big)
                     {
                     case 0:
                         equal(players, lastOne, allnumber, cpi);
@@ -265,20 +294,40 @@ void ai(vector<playertype>& players, int &lastOne, int* allnumber, int &cpi){
         } else{ //doubt
             int chances[3] = {15, 80, 5}; // 0 -> equal, 1 -> doubt, 2 -> guess
             int a = rand() % 101;
-            if(a > chances[1]){
+            if(a > chances[2] + chances[0] && a <= chances[2] + chances[1] + chances[0]){
                 doubt(players, lastOne, allnumber, cpi);
                 return;
-            } else if(a < chances[2]) {
-                //nothing
-            } else {
+            } else if(a > chances[2] && a <= chances[0] + chances[2]) {
                 equal(players, lastOne, allnumber, cpi);
+                return;
             }
         }
     } else{ //guess
-        int chances[2]; // 0 -> doubt, 1 -> guess
-        chances[1];
-
+        if(biggestVal < 5){
+            int chances[2]; // 0 -> doubt, 1 -> guess
+            chances[1] = biggestVal * 20;
+            chances[0] = 100 - chances[1];
+            int a = rand() % 101;
+            if(chances[0] > a){
+                doubt(players, lastOne, allnumber, cpi);
+                return;
+            }
+        }
     }
+    //guess mechanic
+    int newguess = min[biggestId] * 10 + biggestId + 1;
+    bool gut = false;
+    do{
+        if(isThisBigger(newguess, lastOne)){
+            lastOne = newguess;
+            gut = true;
+            debugDisplay(players, lastOne, allnumber, cpi);
+            cout << players[cpi].name << " guessed " << newguess << "\n";
+        } else{
+            newguess += 10;
+        }
+    }
+    while (!gut);
 }
 
 int main() {
@@ -301,18 +350,24 @@ int main() {
     temp.isAi = false;
     for(int i = 1; i <= y; ++i){
         temp.id = i;
-        temp.name = "ai" + i;
+        temp.name = "ai" + to_string(i);
         players.push_back(temp);
     }
     roll(players, allnumber);
+    debugDisplay(players, guess, allnumber, 0);
+    cout << "\n";
     //Game begin
     while (game){
         for(int i = 0; i < size(players); ++i){
+            cout << "cpi: " << i << "\n";
             if(i == 0){
                 getGuess(players, guess, allnumber, i);
             } else{
-                //ai()
+                ai(players, guess, allnumber, i);
             }
+        }
+        if(size(players) == 1){
+            game = false;
         }
     }
     /*for (int y = 0; y < size(players); ++y){
