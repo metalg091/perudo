@@ -66,9 +66,18 @@ executable perudo
 
     -- Other library packages from which modules are imported.
     build-depends:    base ^>=4.17.2.0, 
+                      -- web server
                       scotty, 
-                      aeson,
-                      wai-cors
+                      -- json parser
+                      aeson, 
+                      -- CORS limitation bypass 
+                      wai-cors, 
+                      -- database
+                      sqlite-simple, 
+                      -- random number generator for dice and sessonid
+                      string-random, 
+                      -- text
+                      text
 
     -- Directories containing source files.
     hs-source-dirs:   app
