@@ -67,7 +67,8 @@ executable perudo
     -- Other library packages from which modules are imported.
     build-depends:    base ^>=4.17.2.0, 
                       scotty, 
-                      aeson
+                      aeson,
+                      wai-cors
 
     -- Directories containing source files.
     hs-source-dirs:   app
