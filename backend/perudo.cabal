@@ -68,10 +68,18 @@ executable perudo
     build-depends:    base ^>=4.17.2.0, 
                       -- web server
                       scotty, 
+                      -- scotty tls
+                      --scotty-tls, 
                       -- json parser
                       aeson, 
                       -- CORS limitation bypass 
                       wai-cors, 
+                      -- web server
+                      warp, 
+                      -- TLS (HTTPS)
+                      warp-tls, 
+                      -- wai-extra
+                      wai-extra, 
                       -- database
                       sqlite-simple, 
                       -- random number generator for dice and sessonid
