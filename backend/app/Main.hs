@@ -1,16 +1,20 @@
 {-# LANGUAGE OverloadedStrings #-}
+-- Scotty tls failed me, switching to servant
 import Web.Scotty
 import Web.Scotty.Cookie
+--import Web.Scotty.TLS
 import Data.Aeson (FromJSON, ToJSON)
 import GHC.Generics (Generic)
+import Network.Wai.Handler.Warp (defaultSettings, setPort)
+import Network.Wai.Handler.WarpTLS (runTLS, tlsSettings)
 import Network.Wai.Middleware.Cors (simpleCors)
+import Network.Wai.Middleware.RequestLogger (logStdoutDev)
 import Database.SQLite.Simple
-import Database.SQLite.Simple.FromRow
 import Text.StringRandom
 import Data.Text (Text)
 import Data.Text.Lazy as LT
-import Foreign.Marshal.Unsafe (unsafeLocalState)
-import GHC.TypeError (ErrorMessage(Text))
+import Prelude hiding (id)
+
 
 data User = User { userName :: String, gameId :: Int } deriving (Show, Generic)
 instance ToJSON User
@@ -42,7 +46,11 @@ main = do
     execute_ conn "CREATE TABLE IF NOT EXISTS game (id INTEGER PRIMARY KEY, gameid INT UNIQUE, participants INT, ongoing BOOL, host TEXT)"
     --execute_ conn "CREATE TABLE game (id INTEGER PRIMARY KEY, gameid INT UNIQUE, participants INT, ongoing BOOL, host TEXT)"
     -- start web server
-    scotty 3000 $ routes conn
+    --scottyTLS 3000 "example.key" "example.crt" $ routes conn
+    let tlsConfig = tlsSettings "your.crt" "your.key"
+        config    = setPort 3000 defaultSettings
+    waiApp <- scottyApp $ routes conn
+    runTLS tlsConfig config (logStdoutDev waiApp)
     -- close the connection
     close conn
 
@@ -51,7 +59,7 @@ routes conn = do
     -- Need to enable CORS to allow the frontend to access the backend
     middleware simpleCors
     -- Lisening on:
-    get "/" $ genHelloWord
+    get "/" genHelloWord
     post "/join" $ enlistUser conn
 
 genHelloWord :: ActionM()
@@ -62,9 +70,9 @@ enlistUser :: Connection -> ActionM()
 enlistUser conn = do
     user <- jsonData :: ActionM User
     sessionId <- liftIO $ initUser conn user
-    let cookie = "SESSIONID=\"" <> sessionId <> "\"; Path=/; SameSite=Lax"
-    setHeader "Set-Cookie" (LT.fromStrict cookie)
-    --setSimpleCookie "SESSIONID" sessionId
+    --let cookie = "SESSIONID=\"" <> sessionId <> "\"; Path=/; SameSite=Lax"
+    --setHeader "Set-Cookie" (LT.fromStrict cookie)
+    setSimpleCookie "SESSIONID" sessionId
     json user
 
 -- can't get this right
