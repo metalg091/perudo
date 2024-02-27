@@ -11,14 +11,15 @@ import Network.Wai.Middleware.Cors (simpleCors)
 import Network.Wai.Middleware.RequestLogger (logStdoutDev)
 import Database.SQLite.Simple
 import Text.StringRandom
-import Data.Text (Text)
-import Data.Text.Lazy as LT
+import Data.Text
 import Prelude hiding (id)
-
 
 data User = User { userName :: String, gameId :: Int } deriving (Show, Generic)
 instance ToJSON User
 instance FromJSON User
+
+newtype SuccessR = SuccessR { success :: Bool } deriving (Show, Generic)
+instance ToJSON SuccessR
 
 data Session = Session String String Int String deriving (Show)
 
@@ -59,35 +60,54 @@ routes conn = do
     -- Need to enable CORS to allow the frontend to access the backend
     middleware simpleCors
     -- Lisening on:
-    get "/" genHelloWord
+    get "/" giveWelcomePage
     post "/join" $ enlistUser conn
 
-genHelloWord :: ActionM()
-genHelloWord = do
-    text "Hello World!"
+giveWelcomePage :: ActionM()
+giveWelcomePage = do
+    file "../frontend/index.html"
 
 enlistUser :: Connection -> ActionM()
 enlistUser conn = do
     user <- jsonData :: ActionM User
-    sessionId <- liftIO $ initUser conn user
-    --let cookie = "SESSIONID=\"" <> sessionId <> "\"; Path=/; SameSite=Lax"
-    --setHeader "Set-Cookie" (LT.fromStrict cookie)
+    sessionId <- liftIO $ initUser conn $ sanitizeUser user
     setSimpleCookie "SESSIONID" sessionId
-    json user
+    json $ SuccessR True
 
 -- can't get this right
 initUser :: Connection -> User -> IO Data.Text.Text
 initUser conn (User name 0) = do
-    sesid <- stringRandomIO "................"
+    sesid <- getNewSessionId conn
     gameId <- getFreeId conn
     execute conn "INSERT INTO session (sesid, name, gameid, numbers) VALUES (?, ?, ?, ?)" (sesid :: Data.Text.Text, name :: String, gameId :: Int, "00000" :: String)
     execute conn "INSERT INTO game (gameid, participants, ongoing) VALUES (?, ?, ?)" (gameId :: Int, 1 :: Int, False :: Bool)
     return sesid
 initUser conn (User name gameId) = do
-    sesid <- stringRandomIO "................"
+    sesid <- getNewSessionId conn
     execute conn "INSERT INTO session (sesid, name, gameid, numbers) VALUES (?, ?, ?, ?)" (sesid :: Data.Text.Text, name :: String, gameId :: Int, "00000" :: String)
     execute conn "UPDATE game SET participants = participants + 1 WHERE gameid = ?" (Only gameId)
     return sesid
+
+sanitizeUser :: User -> User
+sanitizeUser (User name gameId) = User (Data.Text.unpack $ sqlFilter $ Data.Text.pack name) gameId
+
+sqlFilter :: Data.Text.Text -> Data.Text.Text
+sqlFilter query = Data.Text.replace "," "" $ Data.Text.replace "(" "" $ Data.Text.replace ")" "" $ Data.Text.replace "\"" "" $ Data.Text.replace "'" "" $ Data.Text.replace "\\" "" query
+
+getNewSessionId :: Connection -> IO Data.Text.Text
+getNewSessionId conn = do
+    sesid <- stringRandomIO $ Data.Text.replicate 192 "[A-Za-z0-9]" -- should be enought for any number of users
+    isValid <- checkSessionId conn sesid
+    if isValid then return sesid else getNewSessionId conn
+
+-- may be an infinite loop if there are no free unique ids, thats approximately 10^57 user
+checkSessionId :: Connection -> Data.Text.Text -> IO Bool
+checkSessionId conn sesid = do
+    sessions <- query conn "SELECT sesid FROM session WHERE sesid = ?" (Only sesid) :: IO [Only Data.Text.Text]
+    if isEmpty sessions then return True else return False where
+        isEmpty :: [Only Data.Text.Text] -> Bool
+        isEmpty [] = True
+        isEmpty _ = False
 
 getFreeId :: Connection -> IO Int
 getFreeId conn = do
