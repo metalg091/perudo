@@ -73,7 +73,7 @@ executable perudo
                       -- json parser
                       aeson, 
                       -- CORS limitation bypass 
-                      wai-cors, 
+                      --wai-cors, 
                       -- web server
                       warp, 
                       -- TLS (HTTPS)
