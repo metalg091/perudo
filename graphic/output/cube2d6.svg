@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Friction - https://friction.graphics -->
+
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 300 300">
+ <rect fill="rgba(0, 0, 0, 0)" width="300" height="300"/>
+ <g transform="translate(0 0)">
+  <g transform="translate(209.65 210.35)">
+   <g transform="rotate(0)">
+    <g transform="scale(1.043 1.043)">
+     <g transform="skewX(0) skewY(0)">
+      <g transform="translate(0 0)" opacity="1">
+       <ellipse fill="rgba(255, 0, 114, 1)" stroke="none" stroke-width="10" stroke-linecap="round" rx="23.0487" ry="23.0487" cy="0" id="Circle33" stroke-linejoin="round" cx="0"/>
+      </g>
+     </g>
+    </g>
+   </g>
+  </g>
+ </g>
+ <g transform="translate(0 0)">
+  <g transform="translate(209.65 150.35)">
+   <g transform="rotate(0)">
+    <g transform="scale(1.043 1.043)">
+     <g transform="skewX(0) skewY(0)">
+      <g transform="translate(0 0)" opacity="1">
+       <ellipse fill="rgba(255, 0, 114, 1)" stroke="none" stroke-width="10" stroke-linecap="round" rx="23.0487" ry="23.0487" cy="0" id="Circle32" stroke-linejoin="round" cx="0"/>
+      </g>
+     </g>
+    </g>
+   </g>
+  </g>
+ </g>
+ <g transform="translate(0 0)">
+  <g transform="translate(209.65 90.35)">
+   <g transform="rotate(0)">
+    <g transform="scale(1.043 1.043)">
+     <g transform="skewX(0) skewY(0)">
+      <g transform="translate(0 0)" opacity="1">
+       <ellipse fill="rgba(255, 0, 114, 1)" stroke="none" stroke-width="10" stroke-linecap="round" rx="23.0487" ry="23.0487" cy="0" id="Circle31" stroke-linejoin="round" cx="0"/>
+      </g>
+     </g>
+    </g>
+   </g>
+  </g>
+ </g>
+ <g transform="translate(0 0)">
+  <g transform="translate(89.65 210.35)">
+   <g transform="rotate(0)">
+    <g transform="scale(1.043 1.043)">
+     <g transform="skewX(0) skewY(0)">
+      <g transform="translate(0 0)" opacity="1">
+       <ellipse fill="rgba(255, 0, 114, 1)" stroke="none" stroke-width="10" stroke-linecap="round" rx="23.0487" ry="23.0487" cy="0" id="Circle13" stroke-linejoin="round" cx="0"/>
+      </g>
+     </g>
+    </g>
+   </g>
+  </g>
+ </g>
+ <g transform="translate(0 0)">
+  <g transform="translate(89.65 150.35)">
+   <g transform="rotate(0)">
+    <g transform="scale(1.043 1.043)">
+     <g transform="skewX(0) skewY(0)">
+      <g transform="translate(0 0)" opacity="1">
+       <ellipse fill="rgba(255, 0, 114, 1)" stroke="none" stroke-width="10" stroke-linecap="round" rx="23.0487" ry="23.0487" cy="0" id="Circle12" stroke-linejoin="round" cx="0"/>
+      </g>
+     </g>
+    </g>
+   </g>
+  </g>
+ </g>
+ <g transform="translate(0 0)">
+  <g transform="translate(89.65 90.35)">
+   <g transform="rotate(0)">
+    <g transform="scale(1.043 1.043)">
+     <g transform="skewX(0) skewY(0)">
+      <g transform="translate(0 0)" opacity="1">
+       <ellipse fill="rgba(255, 0, 114, 1)" stroke="none" stroke-width="10" stroke-linecap="round" rx="23.0487" ry="23.0487" cy="0" id="Circle11" stroke-linejoin="round" cx="0"/>
+      </g>
+     </g>
+    </g>
+   </g>
+  </g>
+ </g>
+ <g transform="translate(128 128)">
+  <g transform="translate(21.6437 22.3573)">
+   <g transform="rotate(0)">
+    <g transform="scale(1.5 1.5)">
+     <g transform="skewX(0) skewY(0)">
+      <g transform="translate(-128 -128)" opacity="1">
+       <path fill="rgba(255, 0, 114, 1)" stroke="none" stroke-width="1" stroke-linecap="butt" fill-rule="evenodd" id="Border" stroke-linejoin="miter" d="M192 28C192 28 64 28 64 28C44.127 28.0224 28.0224 44.127 28 64C28 64 28 192 28 192C28.0224 211.873 44.127 227.978 64 228C64 228 192 228 192 228C211.873 227.978 227.978 211.873 228 192C228 192 228 64 228 64C227.978 44.127 211.873 28.0224 192 28ZM204 192C203.993 198.624 198.624 203.993 192 204C192 204 64 204 64 204C57.3756 203.993 52.0072 198.624 52 192C52 192 52 64 52 64C52.0072 57.3756 57.3756 52.0072 64 52C64 52 192 52 192 52C198.624 52.0072 203.993 57.3756 204 64C204 64 204 192 204 192Z"/>
+      </g>
+     </g>
+    </g>
+   </g>
+  </g>
+ </g>
+ <defs/>
+</svg>
