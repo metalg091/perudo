@@ -1,4 +1,4 @@
-#include "uWebsockets/src/App.h"
+#include "uWebSockets/src/App.h"
 #include "game.hpp"
 #include <unordered_map>
 

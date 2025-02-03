@@ -1,6 +1,6 @@
 #ifndef GAME_H
 #define GAME_H
-#include "uWebsockets/src/App.h"
+#include "uWebSockets/src/App.h"
 #include "iosfwd"
 #include <map>
 
