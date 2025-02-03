@@ -1,102 +1,119 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <!--meta name="viewport" content="width=device-width, initial-scale=1.0"-->
-  <meta name="view-transition" content="same-origin">
-  <title>Lobby</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
-  <style>
-    .card {
-      cursor: pointer;
-      opacity: 1;
-      transition: 1s;
-    }
-  </style>
-</head>
-<body data-bs-theme="dark">
-  <header class="container mt-2">
-    <div class="row">
-      <h1 class="col-12 text-center">Perudo</h1>
-    </div>
-  </header>
-  <hr class="mt-2 mb-5">
-  <div class="container-lg">
-    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4" id="main">
-      
-    </div>
-  </div>
-</body>
-<script>
-  displayPlayer({ name: sessionStorage.getItem("userName"), dice: 5, guess: 0 });
-  let me = document.getElementsByClassName("card")[0];
-  me.setAttribute("id", "me");
-  me.classList.add("border", "border-primary", "border-3", "rounded-3");
-  document.getElementsByClassName("card-title")[0].textContent = document.getElementsByClassName("card-title")[0].textContent + " (You)";
-  document.getElementsByClassName("card-text")[1].textContent = "Your numbers: ";
-  fetchPlayers();
+	<head>
+		<meta charset="UTF-8" />
+		<!--meta name="viewport" content="width=device-width, initial-scale=1.0"-->
+		<meta name="view-transition" content="same-origin" />
+		<title>Lobby</title>
+		<link
+			href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+			rel="stylesheet"
+			integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
+			crossorigin="anonymous"
+		/>
+		<script
+			src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+			integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+			crossorigin="anonymous"
+		></script>
+		<style>
+			.card {
+				cursor: pointer;
+				opacity: 1;
+				transition: 1s;
+			}
+		</style>
+	</head>
+	<body data-bs-theme="dark">
+		<header class="container mt-2">
+			<div class="row">
+				<h1 class="col-12 text-center">Perudo</h1>
+			</div>
+		</header>
+		<hr class="mt-2 mb-5" />
+		<div class="container-lg">
+			<div
+				class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4"
+				id="main"
+			></div>
+		</div>
+	</body>
+	<script>
+		displayPlayer({
+			name: sessionStorage.getItem("userName"),
+			dice: 5,
+			guess: 0,
+		});
+		let me = document.getElementsByClassName("card")[0];
+		me.setAttribute("id", "me");
+		me.classList.add("border", "border-primary", "border-3", "rounded-3");
+		document.getElementsByClassName("card-title")[0].textContent =
+			document.getElementsByClassName("card-title")[0].textContent +
+			" (You)";
+		document.getElementsByClassName("card-text")[1].textContent =
+			"Your numbers: ";
+		fetchPlayers();
 
-  async function fetchPlayers() {
-    let resp;
-    try {
-      const response = await fetch("/api/players", {
-        method: "POST",
-        //credentials: "include",
-        body: "",
-      });
-      resp = (await response.json());
-      for(let i = 0; i < resp.length; i++){
-        displayPlayer(resp[i]);
-      }
-    } catch (e) {
-      console.error(e);
-    }
-  }
+		async function fetchPlayers() {
+			let resp;
+			try {
+				const response = await fetch("/api/players", {
+					method: "POST",
+					//credentials: "include",
+					body: "",
+				});
+				resp = await response.json();
+				for (let i = 0; i < resp.length; i++) {
+					displayPlayer(resp[i]);
+				}
+			} catch (e) {
+				console.error(e);
+			}
+		}
 
-  function examplePlayer(){
-    let player = {
-      name: "Gamertag",
-      dice: 6,
-      guess: 69
-    }
-    displayPlayer(player);
-  }
-  // this will generate a card for a player and append it to the lobby
-  function displayPlayer(player) {
-    // create a new card
-    let col = document.createElement("div");
-    col.classList.add("col");
-      let card = document.createElement("div");
-      card.classList.add("card", "h-100");
-        let img = document.createElement("img");
-        img.classList.add("card-img-top");
-        img.src = "https://fakeimg.pl/300x200";
-        card.appendChild(img);
-        let body = document.createElement("div");
-          body.classList.add("card-body");
-          let title = document.createElement("h5");
-          title.classList.add("card-title");
-          title.textContent = player.name;
-          body.appendChild(title);
+		function examplePlayer() {
+			let player = {
+				name: "Gamertag",
+				dice: 6,
+				guess: 69,
+			};
+			displayPlayer(player);
+		}
+		// this will generate a card for a player and append it to the lobby
+		function displayPlayer(player) {
+			// create a new card
+			let col = document.createElement("div");
+			col.classList.add("col");
+			let card = document.createElement("div");
+			card.classList.add("card", "h-100");
+			let img = document.createElement("img");
+			img.classList.add("card-img-top");
+			img.src = "https://fakeimg.pl/300x200";
+			card.appendChild(img);
+			let body = document.createElement("div");
+			body.classList.add("card-body");
+			let title = document.createElement("h5");
+			title.classList.add("card-title");
+			title.textContent = player.name;
+			body.appendChild(title);
 
-          let hr = document.createElement("hr");
-          hr.classList.add("my-2");
-          body.appendChild(hr);
+			let hr = document.createElement("hr");
+			hr.classList.add("my-2");
+			body.appendChild(hr);
 
-          let dice = document.createElement("p");
-          dice.classList.add("card-text", "mb-0");
-          dice.textContent = "dice: " + player.dice;
-          body.appendChild(dice);
+			let dice = document.createElement("p");
+			dice.classList.add("card-text", "mb-0");
+			dice.textContent = "dice: " + player.dice;
+			body.appendChild(dice);
 
-          let guess = document.createElement("p");
-          guess.classList.add("card-text");
-          guess.textContent = "guess: " + player.guess;
-          body.appendChild(guess);
-      card.appendChild(body);
-    col.appendChild(card);
-    // append the card to the lobby
-    document.getElementById("main").appendChild(col);
-  }
-</script>
+			let guess = document.createElement("p");
+			guess.classList.add("card-text");
+			guess.textContent = "guess: " + player.guess;
+			body.appendChild(guess);
+			card.appendChild(body);
+			col.appendChild(card);
+			// append the card to the lobby
+			document.getElementById("main").appendChild(col);
+		}
+	</script>
 </html>
