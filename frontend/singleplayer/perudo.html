@@ -1,539 +1,535 @@
 <html>
 <head>
-    <link rel="stylesheet" href="../main_theme.css" id="theme">
-    <script src="../themeSwitch.js"></script>
-     <style>
-        #submit, #ainum{
-            display: inline-block;
-            border: none;
-            padding: 10 20 10 20px;
-            border-radius: 100px;
-            background-color: var(--inputbgcolor);
-            transition: background-color 0.4s;
-        }
-        #submit:hover,#ainum:hover{
-            background-color: var(--submitbgcolorhover);
-        }
-     </style>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta charset="UTF-8">
+	 <style>
+		#submit, #ainum{
+			display: inline-block;
+			border: none;
+			padding: 10 20 10 20px;
+			border-radius: 100px;
+			background-color: var(--inputbgcolor);
+			transition: background-color 0.4s;
+		}
+		#submit:hover,#ainum:hover{
+			background-color: var(--submitbgcolorhover);
+		}
+	 </style>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta charset="UTF-8">
 </head>
 <body>
-    <!--iframe src="eventGetter.php?style=main_theme.css" id="eventGetter">
-    </iframe-->
-    <div id="eventGetter" style="border: 1px solid black;">
-        <div id="eventFitter" style="margin: 10 15 10 15px;">
-        </div>
-    </div>
-    <div id="container">
-    <h2>Your name</h2>
-    <h3 id="username" class="data"></h3>
-    <h2>Number of AI players</h2>
-    <input id="aival" type="number" value="5" min="1" max="15">
-    <button id="ainum" onclick="setup()">Start Game</button>
-    <div id="others" class="data">
-    </div>
-    <h2>Cubes in game</h2>
-    <p id="allcubes" class="data"></p>
-    <h2>Your numbers</h2>
-    <p id="urnumbers" class="data">------</p>
-    <br>
-    <div id="form" style="display: none;">
-        <label for="guess">Your guess:</label>
-        <select id="gtype" class="dropdown" onchange="dropdown(this.value)">
-            <option value="0" selected="selected">Guess</option>
-            <option value="1">Doubt</option>
-            <option value="2">Equal</option>
-        </select>
-        <br>
-        <input type="text" value="0" id="guess" onkeyup="inputValidator()">
-        <input type="number" value="1" id="guess1" min="1" max="6" onkeyup="inputValidator()"><br><br>
-        <button id="submit" style="display: block" onclick="eval();">Guess</button>
-    </div>
-    <script type="text/javascript">
-        themeSetup(getCookie("theme"));
-        var url = new URL(window.location.href);
-        var username = url.searchParams.get("username");
-        document.getElementById("username").innerHTML = username;
-        var lastguess = 10;
-        var cpi = 0;
-        var eventcount = 0;
-        var players = Array();
-        var player = class{
-            constructor(id, cube, numbers){
-                this.id = id;
-                this.cube = cube;
-                this.numbers = numbers;
-            }
-        };
-        function setup(){
-            var ain = document.getElementById("aival").value;
-            players[0] = new player(0, 5, 11111);
-            for(var i = 1; i < parseInt(ain) + 1; i++){
-                players[i] = new player(i, 5, 11111);
-            }
-            document.getElementById("aival").style = "display: none;";
-            document.getElementById("ainum").style = "display: none;";
-            document.getElementById("others").innerHTML = ain;
-            roll();
-            render();
-            document.getElementById("form").style = "display: block;"
-        }
-        function render(){
-            var cig = 0;
-            for(var i = 0; players.length > i; i++){
-                cig = parseInt(cig) + parseInt(players[i].cube);
-            }
-            document.getElementById("allcubes").innerHTML = cig;
-            document.getElementById("urnumbers").innerHTML = players[0].numbers;
-        }
-        function eval(){
-            var type = document.getElementById("gtype").value;
-            if(lastguess == 10 && type != 0){
-                console.log(type);
-                document.getElementById("gtype").style = "display: none;";
-                document.getElementById("gtype").value = 0;                
-            }
-            else{
-                if(type == 0){
-                    pguess();
-                }
-                else if(type == 1){
-                    doubt();
-                }
-                else if(type == 2){
-                    equal();
-                }
-                else{
-                    console.log("Error: " + type);
-                }
-            }
-        }
-        function pguess(){
-            var g = document.getElementById("guess").value;
-            var g1 = document.getElementById("guess1").value;
-            var a = 1;
-            var b = 1;
-            if(g1 == "1"){
-                a = 2;
-            }
-            if(parseInt(lastguess.toString()[parseInt(lastguess.toString.length)]) == 1){
-                b = 2;
-            }
-            var guess = g.toString() + g1;
-            if(parseInt(guess) / a < lastguess / b){
-                console.log("too small input/validation bypassed");
-                alert("too small input");
-            }
-            else{
-                lastguess = parseInt(guess);
-                eventlog(username + " guessed " + guess);
-                cpi++;
-                aistart();
-            }
-        }
-        function guess(newguess){
-            var a = 1;
-            var b = 1;
-            if(parseInt(newguess.toString()[parseInt(newguess.toString.length)]) == 1){
-                a = 2;
-            }
-            if(parseInt(lastguess.toString()[parseInt(lastguess.toString.length)]) == 1){
-                b = 2;
-            }
-            if(newguess / a < lastguess / b){
-                console.log("guess was too small");
-            }
-            else{
-                lastguess = newguess;
-                eventlog("ai" + players[cpi].id + " guessed " + newguess);
-                if(players.length - 1 > cpi){
-                    cpi++;
-                }
-                else{
-                    cpi = 0;
-                }
-            }
-        }
-        function doubt(){
-            var real = count(parseInt(lastguess.toString()[parseInt(lastguess.toString.length)]));
-            var lg = (lastguess - parseInt(lastguess.toString()[parseInt(lastguess.toString.length)])) / 10;
-            var tcpi = cpi;
-            //console.log("lg: " + lg + " real: " + real);
-            if(lg >= real){
-                if(cpi == 0){
-                    cpi = players.length - 1;
-                }
-                else{
-                    cpi = cpi -1;
-                }
-            }
-            if(tcpi - 1 == 0){
-                var ntcpi = username;
-                var otcpi = "ai" + players[tcpi].id;
-            }
-            else if (tcpi == 0){
-                
-            }
-            else{
-                var ntcpi = "ai" + players[tcpi - 1].id;
-                if(tcpi == 0){
-                    var otcpi = username;
-                }
-                else{
-                    var otcpi = "ai" + players[tcpi].id;
-                }
-            }
-            eventlog(otcpi + " doubted the " + lastguess + " from " + ntcpi);
-            cubelosser();
-            lastguess = 10;
-            roll();
-        }
-        function equal(){
-            var real = count(parseInt(lastguess.toString()[parseInt(lastguess.toString.length)]));
-            var lg = (lastguess - parseInt(lastguess.toString()[parseInt(lastguess.toString.length)])) / 10;
-            //console.log("lg: " + lg + " real: " + real);
-            if(cpi == 0){
-                var ntcpi = username;
-            }
-            else{
-                var ntcpi = "ai" + players[cpi].id;
-//                if(players[cpi - 1].id == 0){
-//                    var otcpi = username;
-//                }
-//                else{
-//                    var otcpi = "ai" + players[cpi - 1].id;
-//                }
-            }
-            eventlog(ntcpi + " thinks that there are exactly " + lastguess);
-            if(lg == real){
-                if(players[cpi].cubes < 5){
-                    players[cpi].cube = players[cpi].cube + 1;
-                    eventlog(ntcpi + " gained a cube and now owns " + players[cpi].cube);
-                }
-                else{
-                    eventlog(ntcpi + "would have gained a cube but had the maximum amount already");
-                }
-            }
-            else{
-                cubelosser();
-            }
-            lastguess = 10;
-            roll();
-        }
-        function cubelosser(){
-            if(players[cpi].cube == 1){
-                players[cpi].cube = 0;
-                if(cpi == 0){
-                    eventlog(username + " lost all of their cubes");
-                    alert("Game Over!");
-                }
-                else{
-                    eventlog("ai" + players[cpi].id + " lost all of their cubes");
-                    players.splice(cpi, 1);
-                }
-            }
-            else{
-                players[cpi].cube = players[cpi].cube - 1;
-                if(cpi != 0){
-                    eventlog("ai" + players[cpi].id + " lost a cube and has only " + players[cpi].cube + " remaining");
-                }
-                else{
-                    eventlog(username + " lost a cube and has only " + players[0].cube + " remaining");
-                }
-            }
-        }
-        function count(num) {
-            var sol = 0;
-            for(var a = 0; a < players.length; a++){    
-                for(var i = 0; i < players[a].cube; i++){
-                    if(players[a].numbers.toString()[i] == num || players[a].numbers.toString()[i] == 1){
-                        sol++;
-                    }
-                }
-            }
-            return sol;
-        }
-        function aistart(){
-            while (cpi != 0){
-                var allcubes = document.getElementById("allcubes").innerHTML;
-                var one = Math.round(parseInt(allcubes) / 6);
-                var notone = Math.round(parseInt(allcubes) / 3);
-                var temp = 0;
-                var lg = (lastguess - lgln) / 10;
-                var lgln = parseInt(lastguess.toString()[parseInt(lastguess.toString.length)]);
-                if(lgln == 7 || lgln == 8 || lgln == 9){
-                    temp = one;
-                }
-                else if(lgln == 1){
-                    temp = one;
-                }
-                else{
-                    temp = notone;
-                }
-                /*console.log(one + " and not " + notone);
-                console.log(lgln + " and temp " +temp);
-                console.log("lg: " + lg);*/
-                var guesschance = 0;
-                var doubtchance = 0;
-                var equalchance = 0;
-                if(lgln == 0){
-                    guesschance = 100;
-                }
-                else{
-                    if(lg < temp){
-                        if(temp - lg > 5){
-                            guesschance = 90;
-                            doubtchance = 5;
-                            equalchance = 5;
-                        }
-                        else{
-                            guesschance = Math.round((temp - lg) * 10 + 30);
-                            var x = (100 - guesschance) / 2;
-                            doubtchance = Math.round(x - 0.5);
-                            equalchance = Math.round(x - 0.5);
-                        }
-                    }
-                    else if(lg == temp){
-                        equalchance = 70;
-                        var x = (100 - equalchance) / 2;
-                        guesschance = Math.round(x - 0.5);
-                        doubtchance = Math.round(x - 0.5);
-                    }
-                    else{
-                        doubtchance = (parseInt(lg) - parseInt(temp)) * 10 + 30;
-                        if(doubtchance >= 100){
-                            doubtchance = 100;
-                            guesschance = 0;
-                            equalchance = 0;
-                        }
-                        else{
-                            var x = (100 - doubtchance) / 2;
-                            guesschance = Math.round(x - 0.5);
-                            equalchance = Math.round(x - 0.5);
-                        }
-                    }
-                }
-                var y = getRandomInt(0, 101);
-                if(y <= guesschance){
-                    aiguess();
-                    //console.log("guess " + y + " gc " + guesschance + " dc " + doubtchance + " ec " + equalchance);
-                }
-                else if(y > guesschance && y <= doubtchance + guesschance){
-                    doubt();
-                    //console.log("doubt " + y + " gc " + guesschance + " dc " + doubtchance + " ec " + equalchance);
-                }
-                else if(y > guesschance + doubtchance){
-                    equal();
-                    //console.log("equal " + y + " gc " + guesschance + " dc " + doubtchance + " ec " + equalchance);
-                }
-                else{
-                    console.log("error " + y + " gc " + guesschance + " dc " + doubtchance + " ec " + equalchance);
-                }
-            }
-            if(lastguess == 10){
-                document.getElementById("gtype").style = "display: none;";
-                document.getElementById("gtype").value = 0;
-            }
-            else{
-                document.getElementById("gtype").style = "display: block;";    
-            }
-        }
-        function aiguess(){
-            var allcubes = document.getElementById("allcubes").innerHTML;
-            var lgln = parseInt(lastguess.toString()[parseInt(lastguess.toString.length)]); //lgln aka lastguess-lastnumber 2(1)
-            var lg = (lastguess - lgln) / 10; //lg aka the first number (2)1
-            allcubes = allcubes - players[cpi].cube;
-            var pred1 = allcubes / 3;
-            var predict = [allcubes / 6, pred1, pred1, pred1, pred1, pred1];
-            for(var i = 0; i < players[cpi].cube; i++){
-                predict[parseInt(players[cpi].numbers.toString[i]) - 1] = predict[parseInt(players[cpi].numbers.toString[i]) - 1] + 1; //ads ai's own cube to the prediction
-            }
-            var minimum = Array(); //minimum for each number (1)-has doubling effects!!! & 15 is bigger than 13
-            if(lg == 1){
-                for(var a = 0; a < 6; a++){
-                    if(a == 0){ //0 only occures when its starts with 1!!!
-                        minimum[a] = lg;
-                    }
-                    else{
-                        if(a <= lgln){
-                            minimum[a] = lg * 2 + 1;
-                        }
-                        else{
-                            minimum[a] = lg * 2;
-                        }
-                    }
-                }
-            }
-            else{
-                for(var a = 0; a < 6; a++){
-                    if(a == 0){
-                        minimum[a] = lg / 2;
-                    }
-                    else{
-                        if(a <= lgln){
-                            minimum[a] = lg + 1;
-                        }
-                        else{
-                            minimum[a] = lg;
-                        }
-                    }
-                }
-            }
-            var candidates = Array();
-            var c = 0;
-            for(var b = 0; b < 6; b++){
-                if(predict[b] >= minimum[b]){
-                    candidates[c] = b;
-                    c++;
-                }
-            }
-            if(candidates.length == 0){
-                console.log("no reasonable guess targets");
-            }
-            else{
-                var range = Array();
-                for(var d = 0; d < candidates.length; d++){
-                    range[d] = predict[candidates[d]] - minimum[candidates[d]];
-                }
-                var random = getRandomInt(1, range.reduce((a, b) => a + b, 0) + 1);
-                var prev = 1;
-                for(var e = 0; e < range.length; e++){
-                    if(random < range[e] + prev && random >= prev){
-                        break;
-                    }
-                    else{
-                        prev = prev + range[e];
-                    }
-                }
-                var plusrand = getRandomInt(0, range[e] + 1);
-                var newguess = (minimum[candidates[e]] + plusrand) * 10 + candidates[e] + 1;
-                console.log("guess is " + newguess);
-                if(newguess < lastguess){
-                    console.log("error");
-                }
-                guess(newguess);
-            }
-        }
-        function eventlog(message){
-            var newevent = document.createElement("div");
-            var content = document.createTextNode(message);
-            newevent.appendChild(content);
-            document.getElementById("eventFitter").appendChild(newevent);
-            eventcount = eventcount + 1;
-        }
-        function roll(){
-            var numstr = "";
-            var num = Array();
-            for(var y = 0; y < players.length; y++){
-                for(var x = 0; players[y].cube > x; x++){
-                    num[x] = getRandomInt(1, 7);
-                    numstr = numstr.toString() + num[x];
-                }
-                players[y].numbers = numstr;
-                //console.log(numstr);
-                num = Array();
-                numstr = "";
-            }
-            render();
-        }
-        function getRandomInt(min, max) /*max exclusive, min inclusive*/ {
-            min = Math.ceil(min);
-            max = Math.floor(max);
-            return Math.floor(Math.random() * (max - min) + min); //The maximum is exclusive and the minimum is inclusive
-        }
-        function setInputFilter(textbox, inputFilter) { //only allows numeric input
-            ["input", "keydown", "keyup", "mousedown", "mouseup", "select", "contextmenu", "drop"].forEach(function(event) {
-                textbox.addEventListener(event, function() {
-                    if (inputFilter(this.value)) {
-                        this.oldValue = this.value;
-                        this.oldSelectionStart = this.selectionStart;
-                        this.oldSelectionEnd = this.selectionEnd;
-                    }
-                    else if (this.hasOwnProperty("oldValue")) {
-                        this.value = this.oldValue;
-                        this.setSelectionRange(this.oldSelectionStart, this.oldSelectionEnd);
-                    }
-                    else {
-                        this.value = "";
-                    }
-                });
-            });
-        }
-        setInputFilter(document.getElementById("guess"), function(value) {
-        return /^\d*$/.test(value); });
-        setInputFilter(document.getElementById("guess1"), function(value) {
-        return /^\d*$/.test(value); });
-        inputValidator();
-        function inputValidator(){ //onyl shows submit button when input is legit (larger than lastguess)
-            var times = parseInt(document.getElementById("guess").value);
-            var number = parseInt(document.getElementById("guess1").value);
-            var rellastguess = lastguess;
-            rellastguess = rellastguess.toString();
-            //console.log(rellastguess);
-            var lg = rellastguess.substr(0, rellastguess.length - 1);
-            //console.log(lastguess);
-            
-            if(rellastguess > 10){
-            
-            }
-            else{
-                rellastguess = 10;
-                //lastguess = 0;
-                document.getElementById("gtype").style.display = "none";
-            }
-        
-            var lastguesslastnum = rellastguess - lg * 10;
-            var relnum = parseInt(times*10+number);
-            if(lastguesslastnum == 1 || number == 1){
-                if(lastguesslastnum == 1 && number == 1){
-                    if(relnum > rellastguess){
-                        document.getElementById("submit").style.display ="block";
-                    }
-                    else{
-                        document.getElementById("submit").style.display ="none";
-                    }
-                }
-                else{
-                    if(number == 1){
-                        if(relnum > rellastguess/2){
-                            document.getElementById("submit").style.display ="block";
-                        }
-                        else{
-                            document.getElementById("submit").style.display ="none";
-                        }
-                    }
-                    else{
-                        if(relnum > rellastguess * 2){
-                            document.getElementById("submit").style.display ="block";
-                        }
-                        else{
-                            document.getElementById("submit").style.display ="none";
-                        }
-                    }
-                }
-            }
-            else{
-                if(relnum > rellastguess){
-                    document.getElementById("submit").style.display ="block";
-                }
-                else{
-                    document.getElementById("submit").style.display ="none";
-                }
-            }
-        }
-        function dropdown(i){
-            if(i == 1 || i == 2){
-                document.getElementById("submit").style.display = "block";
-                document.getElementById("guess").style.display = "none";
-                document.getElementById("guess1").style.display = "none";
-            }
-            else{
-                inputValidator();
-                document.getElementById("guess").style.display = "inline-block";
-                document.getElementById("guess1").style.display = "inline-block";
-            }
-        }
-    </script>
+	<div id="eventGetter" style="border: 1px solid black;">
+		<div id="eventFitter" style="margin: 10 15 10 15px;">
+		</div>
+	</div>q
+	<div id="container">
+	<h2>Your name</h2>
+	<h3 id="username" class="data"></h3>
+	<h2>Number of AI players</h2>
+	<input id="aival" type="number" value="5" min="1" max="15">
+	<button id="ainum" onclick="setup()">Start Game</button>
+	<div id="others" class="data">
+	</div>
+	<h2>Cubes in game</h2>
+	<p id="allcubes" class="data"></p>
+	<h2>Your numbers</h2>
+	<p id="urnumbers" class="data">------</p>
+	<br>
+	<div id="form" style="display: none;">
+		<label for="guess">Your guess:</label>
+		<select id="gtype" class="dropdown" onchange="dropdown(this.value)">
+			<option value="0" selected="selected">Guess</option>
+			<option value="1">Doubt</option>
+			<option value="2">Equal</option>
+		</select>
+		<br>
+		<input type="text" value="0" id="guess" onkeyup="inputValidator()">
+		<input type="number" value="1" id="guess1" min="1" max="6" onkeyup="inputValidator()"><br><br>
+		<button id="submit" style="display: block" onclick="eval();">Guess</button>
+	</div>
+	<script type="text/javascript">
+		themeSetup(getCookie("theme"));
+		var url = new URL(window.location.href);
+		var username = url.searchParams.get("username");
+		document.getElementById("username").innerHTML = username;
+		var lastguess = 10;
+		var cpi = 0;
+		var eventcount = 0;
+		var players = Array();
+		var player = class{
+			constructor(id, cube, numbers){
+				this.id = id;
+				this.cube = cube;
+				this.numbers = numbers;
+			}
+		};
+		function setup(){
+			var ain = document.getElementById("aival").value;
+			players[0] = new player(0, 5, 11111);
+			for(var i = 1; i < parseInt(ain) + 1; i++){
+				players[i] = new player(i, 5, 11111);
+			}
+			document.getElementById("aival").style = "display: none;";
+			document.getElementById("ainum").style = "display: none;";
+			document.getElementById("others").innerHTML = ain;
+			roll();
+			render();
+			document.getElementById("form").style = "display: block;"
+		}
+		function render(){
+			var cig = 0;
+			for(var i = 0; players.length > i; i++){
+				cig = parseInt(cig) + parseInt(players[i].cube);
+			}
+			document.getElementById("allcubes").innerHTML = cig;
+			document.getElementById("urnumbers").innerHTML = players[0].numbers;
+		}
+		function eval(){
+			var type = document.getElementById("gtype").value;
+			if(lastguess == 10 && type != 0){
+				console.log(type);
+				document.getElementById("gtype").style = "display: none;";
+				document.getElementById("gtype").value = 0;
+			}
+			else{
+				if(type == 0){
+					pguess();
+				}
+				else if(type == 1){
+					doubt();
+				}
+				else if(type == 2){
+					equal();
+				}
+				else{
+					console.log("Error: " + type);
+				}
+			}
+		}
+		function pguess(){
+			var g = document.getElementById("guess").value;
+			var g1 = document.getElementById("guess1").value;
+			var a = 1;
+			var b = 1;
+			if(g1 == "1"){
+				a = 2;
+			}
+			if(parseInt(lastguess.toString()[parseInt(lastguess.toString.length)]) == 1){
+				b = 2;
+			}
+			var guess = g.toString() + g1;
+			if(parseInt(guess) / a < lastguess / b){
+				console.log("too small input/validation bypassed");
+				alert("too small input");
+			}
+			else{
+				lastguess = parseInt(guess);
+				eventlog(username + " guessed " + guess);
+				cpi++;
+				aistart();
+			}
+		}
+		function guess(newguess){
+			var a = 1;
+			var b = 1;
+			if(parseInt(newguess.toString()[parseInt(newguess.toString.length)]) == 1){
+				a = 2;
+			}
+			if(parseInt(lastguess.toString()[parseInt(lastguess.toString.length)]) == 1){
+				b = 2;
+			}
+			if(newguess / a < lastguess / b){
+				console.log("guess was too small");
+			}
+			else{
+				lastguess = newguess;
+				eventlog("ai" + players[cpi].id + " guessed " + newguess);
+				if(players.length - 1 > cpi){
+					cpi++;
+				}
+				else{
+					cpi = 0;
+				}
+			}
+		}
+		function doubt(){
+			var real = count(parseInt(lastguess.toString()[parseInt(lastguess.toString.length)]));
+			var lg = (lastguess - parseInt(lastguess.toString()[parseInt(lastguess.toString.length)])) / 10;
+			var tcpi = cpi;
+			//console.log("lg: " + lg + " real: " + real);
+			if(lg >= real){
+				if(cpi == 0){
+					cpi = players.length - 1;
+				}
+				else{
+					cpi = cpi -1;
+				}
+			}
+			if(tcpi - 1 == 0){
+				var ntcpi = username;
+				var otcpi = "ai" + players[tcpi].id;
+			}
+			else if (tcpi == 0){
+
+			}
+			else{
+				var ntcpi = "ai" + players[tcpi - 1].id;
+				if(tcpi == 0){
+					var otcpi = username;
+				}
+				else{
+					var otcpi = "ai" + players[tcpi].id;
+				}
+			}
+			eventlog(otcpi + " doubted the " + lastguess + " from " + ntcpi);
+			cubelosser();
+			lastguess = 10;
+			roll();
+		}
+		function equal(){
+			var real = count(parseInt(lastguess.toString()[parseInt(lastguess.toString.length)]));
+			var lg = (lastguess - parseInt(lastguess.toString()[parseInt(lastguess.toString.length)])) / 10;
+			//console.log("lg: " + lg + " real: " + real);
+			if(cpi == 0){
+				var ntcpi = username;
+			}
+			else{
+				var ntcpi = "ai" + players[cpi].id;
+//				if(players[cpi - 1].id == 0){
+//					var otcpi = username;
+//				}
+//				else{
+//					var otcpi = "ai" + players[cpi - 1].id;
+//				}
+			}
+			eventlog(ntcpi + " thinks that there are exactly " + lastguess);
+			if(lg == real){
+				if(players[cpi].cubes < 5){
+					players[cpi].cube = players[cpi].cube + 1;
+					eventlog(ntcpi + " gained a cube and now owns " + players[cpi].cube);
+				}
+				else{
+					eventlog(ntcpi + "would have gained a cube but had the maximum amount already");
+				}
+			}
+			else{
+				cubelosser();
+			}
+			lastguess = 10;
+			roll();
+		}
+		function cubelosser(){
+			if(players[cpi].cube == 1){
+				players[cpi].cube = 0;
+				if(cpi == 0){
+					eventlog(username + " lost all of their cubes");
+					alert("Game Over!");
+				}
+				else{
+					eventlog("ai" + players[cpi].id + " lost all of their cubes");
+					players.splice(cpi, 1);
+				}
+			}
+			else{
+				players[cpi].cube = players[cpi].cube - 1;
+				if(cpi != 0){
+					eventlog("ai" + players[cpi].id + " lost a cube and has only " + players[cpi].cube + " remaining");
+				}
+				else{
+					eventlog(username + " lost a cube and has only " + players[0].cube + " remaining");
+				}
+			}
+		}
+		function count(num) {
+			var sol = 0;
+			for(var a = 0; a < players.length; a++){
+				for(var i = 0; i < players[a].cube; i++){
+					if(players[a].numbers.toString()[i] == num || players[a].numbers.toString()[i] == 1){
+						sol++;
+					}
+				}
+			}
+			return sol;
+		}
+		function aistart(){
+			while (cpi != 0){
+				var allcubes = document.getElementById("allcubes").innerHTML;
+				var one = Math.round(parseInt(allcubes) / 6);
+				var notone = Math.round(parseInt(allcubes) / 3);
+				var temp = 0;
+				var lg = (lastguess - lgln) / 10;
+				var lgln = parseInt(lastguess.toString()[parseInt(lastguess.toString.length)]);
+				if(lgln == 7 || lgln == 8 || lgln == 9){
+					temp = one;
+				}
+				else if(lgln == 1){
+					temp = one;
+				}
+				else{
+					temp = notone;
+				}
+				/*console.log(one + " and not " + notone);
+				console.log(lgln + " and temp " +temp);
+				console.log("lg: " + lg);*/
+				var guesschance = 0;
+				var doubtchance = 0;
+				var equalchance = 0;
+				if(lgln == 0){
+					guesschance = 100;
+				}
+				else{
+					if(lg < temp){
+						if(temp - lg > 5){
+							guesschance = 90;
+							doubtchance = 5;
+							equalchance = 5;
+						}
+						else{
+							guesschance = Math.round((temp - lg) * 10 + 30);
+							var x = (100 - guesschance) / 2;
+							doubtchance = Math.round(x - 0.5);
+							equalchance = Math.round(x - 0.5);
+						}
+					}
+					else if(lg == temp){
+						equalchance = 70;
+						var x = (100 - equalchance) / 2;
+						guesschance = Math.round(x - 0.5);
+						doubtchance = Math.round(x - 0.5);
+					}
+					else{
+						doubtchance = (parseInt(lg) - parseInt(temp)) * 10 + 30;
+						if(doubtchance >= 100){
+							doubtchance = 100;
+							guesschance = 0;
+							equalchance = 0;
+						}
+						else{
+							var x = (100 - doubtchance) / 2;
+							guesschance = Math.round(x - 0.5);
+							equalchance = Math.round(x - 0.5);
+						}
+					}
+				}
+				var y = getRandomInt(0, 101);
+				if(y <= guesschance){
+					aiguess();
+					//console.log("guess " + y + " gc " + guesschance + " dc " + doubtchance + " ec " + equalchance);
+				}
+				else if(y > guesschance && y <= doubtchance + guesschance){
+					doubt();
+					//console.log("doubt " + y + " gc " + guesschance + " dc " + doubtchance + " ec " + equalchance);
+				}
+				else if(y > guesschance + doubtchance){
+					equal();
+					//console.log("equal " + y + " gc " + guesschance + " dc " + doubtchance + " ec " + equalchance);
+				}
+				else{
+					console.log("error " + y + " gc " + guesschance + " dc " + doubtchance + " ec " + equalchance);
+				}
+			}
+			if(lastguess == 10){
+				document.getElementById("gtype").style = "display: none;";
+				document.getElementById("gtype").value = 0;
+			}
+			else{
+				document.getElementById("gtype").style = "display: block;";
+			}
+		}
+		function aiguess(){
+			var allcubes = document.getElementById("allcubes").innerHTML;
+			var lgln = parseInt(lastguess.toString()[parseInt(lastguess.toString.length)]); //lgln aka lastguess-lastnumber 2(1)
+			var lg = (lastguess - lgln) / 10; //lg aka the first number (2)1
+			allcubes = allcubes - players[cpi].cube;
+			var pred1 = allcubes / 3;
+			var predict = [allcubes / 6, pred1, pred1, pred1, pred1, pred1];
+			for(var i = 0; i < players[cpi].cube; i++){
+				predict[parseInt(players[cpi].numbers.toString[i]) - 1] = predict[parseInt(players[cpi].numbers.toString[i]) - 1] + 1; //ads ai's own cube to the prediction
+			}
+			var minimum = Array(); //minimum for each number (1)-has doubling effects!!! & 15 is bigger than 13
+			if(lg == 1){
+				for(var a = 0; a < 6; a++){
+					if(a == 0){ //0 only occures when its starts with 1!!!
+						minimum[a] = lg;
+					}
+					else{
+						if(a <= lgln){
+							minimum[a] = lg * 2 + 1;
+						}
+						else{
+							minimum[a] = lg * 2;
+						}
+					}
+				}
+			}
+			else{
+				for(var a = 0; a < 6; a++){
+					if(a == 0){
+						minimum[a] = lg / 2;
+					}
+					else{
+						if(a <= lgln){
+							minimum[a] = lg + 1;
+						}
+						else{
+							minimum[a] = lg;
+						}
+					}
+				}
+			}
+			var candidates = Array();
+			var c = 0;
+			for(var b = 0; b < 6; b++){
+				if(predict[b] >= minimum[b]){
+					candidates[c] = b;
+					c++;
+				}
+			}
+			if(candidates.length == 0){
+				console.log("no reasonable guess targets");
+			}
+			else{
+				var range = Array();
+				for(var d = 0; d < candidates.length; d++){
+					range[d] = predict[candidates[d]] - minimum[candidates[d]];
+				}
+				var random = getRandomInt(1, range.reduce((a, b) => a + b, 0) + 1);
+				var prev = 1;
+				for(var e = 0; e < range.length; e++){
+					if(random < range[e] + prev && random >= prev){
+						break;
+					}
+					else{
+						prev = prev + range[e];
+					}
+				}
+				var plusrand = getRandomInt(0, range[e] + 1);
+				var newguess = (minimum[candidates[e]] + plusrand) * 10 + candidates[e] + 1;
+				console.log("guess is " + newguess);
+				if(newguess < lastguess){
+					console.log("error");
+				}
+				guess(newguess);
+			}
+		}
+		function eventlog(message){
+			var newevent = document.createElement("div");
+			var content = document.createTextNode(message);
+			newevent.appendChild(content);
+			document.getElementById("eventFitter").appendChild(newevent);
+			eventcount = eventcount + 1;
+		}
+		function roll(){
+			var numstr = "";
+			var num = Array();
+			for(var y = 0; y < players.length; y++){
+				for(var x = 0; players[y].cube > x; x++){
+					num[x] = getRandomInt(1, 7);
+					numstr = numstr.toString() + num[x];
+				}
+				players[y].numbers = numstr;
+				//console.log(numstr);
+				num = Array();
+				numstr = "";
+			}
+			render();
+		}
+		function getRandomInt(min, max) /*max exclusive, min inclusive*/ {
+			min = Math.ceil(min);
+			max = Math.floor(max);
+			return Math.floor(Math.random() * (max - min) + min); //The maximum is exclusive and the minimum is inclusive
+		}
+		function setInputFilter(textbox, inputFilter) { //only allows numeric input
+			["input", "keydown", "keyup", "mousedown", "mouseup", "select", "contextmenu", "drop"].forEach(function(event) {
+				textbox.addEventListener(event, function() {
+					if (inputFilter(this.value)) {
+						this.oldValue = this.value;
+						this.oldSelectionStart = this.selectionStart;
+						this.oldSelectionEnd = this.selectionEnd;
+					}
+					else if (this.hasOwnProperty("oldValue")) {
+						this.value = this.oldValue;
+						this.setSelectionRange(this.oldSelectionStart, this.oldSelectionEnd);
+					}
+					else {
+						this.value = "";
+					}
+				});
+			});
+		}
+		setInputFilter(document.getElementById("guess"), function(value) {
+		return /^\d*$/.test(value); });
+		setInputFilter(document.getElementById("guess1"), function(value) {
+		return /^\d*$/.test(value); });
+		inputValidator();
+		function inputValidator(){ //onyl shows submit button when input is legit (larger than lastguess)
+			var times = parseInt(document.getElementById("guess").value);
+			var number = parseInt(document.getElementById("guess1").value);
+			var rellastguess = lastguess;
+			rellastguess = rellastguess.toString();
+			//console.log(rellastguess);
+			var lg = rellastguess.substr(0, rellastguess.length - 1);
+			//console.log(lastguess);
+
+			if(rellastguess > 10){
+
+			}
+			else{
+				rellastguess = 10;
+				//lastguess = 0;
+				document.getElementById("gtype").style.display = "none";
+			}
+
+			var lastguesslastnum = rellastguess - lg * 10;
+			var relnum = parseInt(times*10+number);
+			if(lastguesslastnum == 1 || number == 1){
+				if(lastguesslastnum == 1 && number == 1){
+					if(relnum > rellastguess){
+						document.getElementById("submit").style.display ="block";
+					}
+					else{
+						document.getElementById("submit").style.display ="none";
+					}
+				}
+				else{
+					if(number == 1){
+						if(relnum > rellastguess/2){
+							document.getElementById("submit").style.display ="block";
+						}
+						else{
+							document.getElementById("submit").style.display ="none";
+						}
+					}
+					else{
+						if(relnum > rellastguess * 2){
+							document.getElementById("submit").style.display ="block";
+						}
+						else{
+							document.getElementById("submit").style.display ="none";
+						}
+					}
+				}
+			}
+			else{
+				if(relnum > rellastguess){
+					document.getElementById("submit").style.display ="block";
+				}
+				else{
+					document.getElementById("submit").style.display ="none";
+				}
+			}
+		}
+		function dropdown(i){
+			if(i == 1 || i == 2){
+				document.getElementById("submit").style.display = "block";
+				document.getElementById("guess").style.display = "none";
+				document.getElementById("guess1").style.display = "none";
+			}
+			else{
+				inputValidator();
+				document.getElementById("guess").style.display = "inline-block";
+				document.getElementById("guess1").style.display = "inline-block";
+			}
+		}
+	</script>
 </body>
 </html>

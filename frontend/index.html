@@ -1,57 +1,57 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <!--meta name="viewport" content="width=device-width, initial-scale=1.0"-->
-  <meta name="view-transition" content="same-origin">
-  <title>Perudo</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
-  <style>
-    .card {
-      cursor: pointer;
-      scale: 1;
-      transition: 1s;
-    }
-    .card:hover {
-      scale: 1.1;
-      transition: 1s;
-    }
-    body {
-      opacity: 1;
-      transition: 1s;
-    }
-  </style>
+	<meta charset="UTF-8">
+	<!--meta name="viewport" content="width=device-width, initial-scale=1.0"-->
+	<meta name="view-transition" content="same-origin">
+	<title>Perudo</title>
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+	<style>
+	.card {
+		cursor: pointer;
+		scale: 1;
+		transition: 1s;
+	}
+	.card:hover {
+		scale: 1.1;
+		transition: 1s;
+	}
+	body {
+		opacity: 1;
+		transition: 1s;
+	}
+	</style>
 </head>
 <body data-bs-theme="dark">
 <header class="container mt-2">
-  <div class="row">
-    <h1 class="col-12 text-center">Perudo</h1>
-  </div>
+	<div class="row">
+	<h1 class="col-12 text-center">Perudo</h1>
+	</div>
 </header>
 <div id="body1">
-  <hr class="mt-2 mb-5">
-  <div class="container">
-    <div class="row">
-      <h2 class="col-12 text-center">Type in your username!</h2>
-    </div>
-    <form id="form">
-      <div class="row my-4">
-        <div class="d-flex justify-content-center"><input class="form-control" style="width: 300px;" type="text" id="username" name="username" placeholder="Username..."></div>
-      </div>
-      <div class="row justify-content-center">
-        <div class="col-2"><input type="submit" class="btn btn-primary" id="multi" value="Multi Player"></div>
-        <div class="col-2"><button type="button" class="btn btn-outline-primary" id="single" onclick="document.location='singleplayer/perudo.html?username=' + document.getElementById('username').value ">Single player</div>
-      </div>
-    </form>
-  </div>
+	<hr class="mt-2 mb-5">
+	<div class="container">
+	<div class="row">
+		<h2 class="col-12 text-center">Type in your username!</h2>
+	</div>
+	<form id="form">
+		<div class="row my-4">
+		<div class="d-flex justify-content-center"><input class="form-control" style="width: 300px;" type="text" id="username" name="username" placeholder="Username..."></div>
+		</div>
+		<div class="row justify-content-center">
+		<div class="col-2"><input type="submit" class="btn btn-primary" id="multi" value="Multi Player"></div>
+		<div class="col-2"><button type="button" class="btn btn-outline-primary" id="single" onclick="document.location='singleplayer/perudo.html?username=' + document.getElementById('username').value ">Single player</div>
+		</div>
+	</form>
+	</div>
 </div>
 <div id="body2" style="display: none;">
-  <div class="container-lg mt-5">
-    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4" id="main">
-      
-    </div>
-  </div>
+	<div class="container-lg mt-5">
+	<div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4" id="main">
+
+	</div>
+	</div>
 </div>
 <script type="text/javascript">
 alert("This website uses cookies!");
@@ -59,92 +59,92 @@ alert("This website uses cookies!");
 const form = document.querySelector("#form");
 
 async function getGameList(){
-  let resp;
-  try {
-    const response = await fetch("/api/games", {
-      method: "POST",
-      //credentials: "include",
-      body: "",
-    });
-    resp = (await response.json());
-    document.getElementById("body1").style.display = "none";
-    document.getElementById("body2").style.display = "block";
-    makeGameCard({ gmid: 0, participants: 0, host: "" });
-    document.getElementsByClassName("card-title")[0].textContent = "Create a new game";
-    document.getElementsByClassName("card-text")[0].textContent = "";
-    for(let i = 0; i < resp.length; i++){
-      makeGameCard(resp[i]);
-    }
-    console.log(resp);
-  } catch (e) {
-    console.error(e);
-  }
+	let resp;
+	try {
+	const response = await fetch("/api/games", {
+		method: "POST",
+		//credentials: "include",
+		body: "",
+	});
+	resp = (await response.json());
+	document.getElementById("body1").style.display = "none";
+	document.getElementById("body2").style.display = "block";
+	makeGameCard({ gmid: 0, participants: 0, host: "" });
+	document.getElementsByClassName("card-title")[0].textContent = "Create a new game";
+	document.getElementsByClassName("card-text")[0].textContent = "";
+	for(let i = 0; i < resp.length; i++){
+		makeGameCard(resp[i]);
+	}
+	console.log(resp);
+	} catch (e) {
+	console.error(e);
+	}
 }
 
 function makeGameCard(oneGame){
-  // create a new card
-  let col = document.createElement("div");
-    col.classList.add("col");
-    col.style.height = "100px;"
-      let card = document.createElement("div");
-      card.classList.add("card", "h-100");
-      card.onclick = function() { Join(oneGame.gmid); };
-        /*let img = document.createElement("img");
-        img.classList.add("card-img-top");
-        img.src = "https://fakeimg.pl/300x200";
-        card.appendChild(img);*/
-        let body = document.createElement("div");
-          body.classList.add("card-body");
-          let title = document.createElement("h5");
-          title.classList.add("card-title");
-          title.textContent = "Game " + oneGame.gmid;
-          body.appendChild(title);
+	// create a new card
+	let col = document.createElement("div");
+	col.classList.add("col");
+	col.style.height = "100px;"
+		let card = document.createElement("div");
+		card.classList.add("card", "h-100");
+		card.onclick = function() { Join(oneGame.gmid); };
+		/*let img = document.createElement("img");
+		img.classList.add("card-img-top");
+		img.src = "https://fakeimg.pl/300x200";
+		card.appendChild(img);*/
+		let body = document.createElement("div");
+			body.classList.add("card-body");
+			let title = document.createElement("h5");
+			title.classList.add("card-title");
+			title.textContent = "Game " + oneGame.gmid;
+			body.appendChild(title);
 
-          let hr = document.createElement("hr");
-          hr.classList.add("my-2");
-          body.appendChild(hr);
+			let hr = document.createElement("hr");
+			hr.classList.add("my-2");
+			body.appendChild(hr);
 
-          let users = document.createElement("p");
-          users.classList.add("card-text", "mb-0");
-          users.textContent = oneGame.participants + "/10";
-          body.appendChild(users);
+			let users = document.createElement("p");
+			users.classList.add("card-text", "mb-0");
+			users.textContent = oneGame.participants + "/10";
+			body.appendChild(users);
 
-          let host = document.createElement("p");
-          host.classList.add("card-text");
-          host.textContent = oneGame.host;
-          body.appendChild(host);
-      card.appendChild(body);
-    col.appendChild(card);
-    // append the card to the lobby
-    document.getElementById("main").appendChild(col);
+			let host = document.createElement("p");
+			host.classList.add("card-text");
+			host.textContent = oneGame.host;
+			body.appendChild(host);
+		card.appendChild(body);
+	col.appendChild(card);
+	// append the card to the lobby
+	document.getElementById("main").appendChild(col);
 }
 
 async function Join(gmid) {
-    // Associate the FormData object with the form element
-    const formData = new FormData(form);
-    let resp;
-    try {
-        const response = await fetch("/api/join", {
-            method: "POST",
-            // Set the FormData instance as the request body
-            body: JSON.stringify({ "userName": document.getElementById('username').value, "gameId": gmid }),
-        });
-        resp = (await response.json());
-    } catch (e) {
-        console.error(e);
-    }
-    if (resp.success) {
-        sessionStorage.setItem("userName", document.getElementById('username').value);
-        sessionStorage.setItem("gameId", 1);
-        window.location.replace("/multiplayer/lobby");
-    }
+	// Associate the FormData object with the form element
+	const formData = new FormData(form);
+	let resp;
+	try {
+		const response = await fetch("/api/join", {
+			method: "POST",
+			// Set the FormData instance as the request body
+			body: JSON.stringify({ "userName": document.getElementById('username').value, "gameId": gmid }),
+		});
+		resp = (await response.json());
+	} catch (e) {
+		console.error(e);
+	}
+	if (resp.success) {
+		sessionStorage.setItem("userName", document.getElementById('username').value);
+		sessionStorage.setItem("gameId", 1);
+		window.location.replace("/multiplayer/lobby");
+	}
 }
 
 form.addEventListener("submit", (event) => {
-  event.preventDefault();
-  document.getElementById("body1").style.display = "none";
-  document.getElementById("body2").style.display = "block";
-  getGameList();
+	event.preventDefault();
+	document.getElementById("body1").style.display = "none";
+	document.getElementById("body2").style.display = "block";
+	getGameList();
 });
 
 </script>
