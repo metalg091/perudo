@@ -5,14 +5,14 @@ CFLAGS = -Wall -O3 -flto -std=c++17
 # Linker flags
 LDFLAGS = -lssl -lcrypto -lz
 # Source files
-SRCS = main.cpp
+SRCS = src/main.cpp src/game.cpp
 # Object files
 OBJS = $(SRCS:.cpp=.o)
 # Output executable
-TARGET = main.out
+TARGET = build/bin/main.out
 
 # Submodule directories
-UWEBSOCKETS_DIR = uWebsockets
+UWEBSOCKETS_DIR = src/uWebsockets
 USOCKETS_DIR = $(UWEBSOCKETS_DIR)/uSockets
 
 # Environment variable for submodules
@@ -26,16 +26,23 @@ check_submodules:
 	@if [ ! -d $(UWEBSOCKETS_DIR) ]; then \
 		git submodule update --init --recursive; \
 	fi
+
+# Rule to create build directory
+build:
+	@mkdir -p build
+	@mkdir -p build/bin
+
+
 # Rule to link the executable
-$(TARGET): $(OBJS) $(USOCKETS_DIR)/libusockets.a
-	$(CXX) $(CFLAGS) -o $(TARGET) $(OBJS) $(USOCKETS_DIR)/*.o $(LDFLAGS)
+$(TARGET): $(OBJS) $(USOCKETS_DIR)/uSockets.a | build
+	$(CXX) $(CFLAGS) -o $(TARGET) $(OBJS) $(USOCKETS_DIR)/uSockets.a $(LDFLAGS)
 
 # Rule to compile source files into object files
-%.o: %.cpp
+build/%.o: src/%.cpp | build
 	$(CXX) $(CFLAGS) -c $< -o $@
 
 # Rule to build uWebsockets and uSockets
-$(USOCKETS_DIR)/libusockets.a: check_submodules
+$(USOCKETS_DIR)/uSockets.a: check_submodules
 	WITH_OPENSSL=$(WITH_OPENSSL) $(MAKE) -C $(USOCKETS_DIR)
 
 # Clean rule to remove generated files
