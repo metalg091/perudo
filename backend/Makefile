@@ -1,9 +1,7 @@
 # compile command should look like: g++ -o main main.cpp uWebsockets/uSockets/*.o -lssl -lcrypto -lz
 # vps arch: -march=neoverse-n1+crc+crypto+ssbs (maybe with clang++)
-# Compiler
-CC = g++
-# Compiler flags
-CFLAGS = -Wall
+# Compiler flags lto is necessary (uSocket is compiled with lto)
+CFLAGS = -Wall -O3 -flto -std=c++17
 # Linker flags
 LDFLAGS = -lssl -lcrypto -lz
 # Source files
@@ -30,11 +28,11 @@ check_submodules:
 	fi
 # Rule to link the executable
 $(TARGET): $(OBJS) $(USOCKETS_DIR)/libusockets.a
-	$(CC) $(CFLAGS) -o $(TARGET) $(OBJS) $(USOCKETS_DIR)/*.o $(LDFLAGS)
+	$(CXX) $(CFLAGS) -o $(TARGET) $(OBJS) $(USOCKETS_DIR)/*.o $(LDFLAGS)
 
 # Rule to compile source files into object files
 %.o: %.cpp
-	$(CC) $(CFLAGS) -c $< -o $@
+	$(CXX) $(CFLAGS) -c $< -o $@
 
 # Rule to build uWebsockets and uSockets
 $(USOCKETS_DIR)/libusockets.a: check_submodules
