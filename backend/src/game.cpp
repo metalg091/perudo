@@ -1,13 +1,24 @@
 #include "game.hpp"
+#include <iostream>
+#include <string>
 
-bool room::join(socket* conn, std::string name){
+bool room::join(void* conn, std::string name){
     if(started){
-        conn->send("started,", uWS::OpCode::TEXT);
+    	message(conn, "started");
         return false;
     }
+    getAllUser();
     players[conn] = std::pair<std::vector<int>, std::pair<int, std::string> >{std::vector<int>(5, 0), std::pair<int, std::string>{id++, name}};
-    broadCast("new" + name + ",id" + std::to_string(getId(conn))+ ',');
+    broadcast(std::to_string(roomId), "new" + name + ",id" + std::to_string(getId(conn))+ ';');
     return true;
+}
+
+void room::getAllUser(){
+	std::string msg = "";
+	for(players_t::iterator it = players.begin(); it != players.end(); ++it){
+		msg += getName(it->first) + ",id" + std::to_string(getId(it->first)) + ';';
+	}
+	broadcast(std::to_string(roomId), msg);
 }
 
 int room::lastGuessValue(){
@@ -17,19 +28,19 @@ int room::lastGuessValue(){
     return lastGuess.first;
 }
 
-std::string room::getCubes(socket* conn){
+std::string room::getCubes(void* conn){
     if(!started){
-        return "cubes11111,";
+        return "cubes11111;";
     }
     std::string s = "cubes";
     for(auto it = players.at(conn).first.begin(); it != players.at(conn).first.end(); ++it){
         s += std::to_string(*it);
     }
-    s += ",";
+    s += ";";
     return s;
 }
 
-void room::setLastGuess(std::pair<int, socket*> &&p) {
+void room::setLastGuess(std::pair<int, void*> &&p) {
     std::string msg = "guess" + std::to_string(p.first) + ",by" + std::to_string(getId(p.second));
     if(p.first % 10 == 7 || p.first % 10 == 8){
         msg += "res";
@@ -46,31 +57,26 @@ void room::setLastGuess(std::pair<int, socket*> &&p) {
             msg += "f";
             getCubeVec(p.second).pop_back();
         }
-        msg += ',';
+        msg += ';';
         shake();
     }
     lastGuess = p;
-    broadCast(msg);
+    broadcast(std::to_string(roomId), msg);
 }
 
-void room::leave(socket* conn){
-    broadCast("leave" + std::to_string(getId(conn)) + ',');
+bool room::leave(void* conn){
+    broadcast(std::to_string(roomId), "leave" + std::to_string(getId(conn)) + ';');
     players.erase(conn);
+    return players.size() == 0;
 }
 
-void room::start(socket* s){
-    if(getId(s) == 0){
+void room::start(void* conn){
+    if(getId(conn) == 0){
         started = true;
         shake();
     } else{
-        std::cout << s->getRemoteAddressAsText() << " tried to start the game but is not the host" << std::endl;
-        s->send("403 - Not the host", uWS::OpCode::TEXT);
-    }
-}
-
-void room::broadCast(std::string s){
-    for(auto it = players.begin(); it != players.end(); ++it){
-        it->first->send(s, uWS::OpCode::TEXT);
+        std::cout << getAddr(conn) << " tried to start the game but is not the host" << std::endl;
+        message(conn, "403 - Not the host");
     }
 }
 
@@ -82,6 +88,6 @@ void room::shake(){
             resp += std::to_string(*vit);
         }
         resp += ",";
-        it->first->send(resp, uWS::OpCode::TEXT);
+        message(it->first, resp);
     }
 }

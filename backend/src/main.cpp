@@ -2,14 +2,32 @@
 #include "game.hpp"
 #include <unordered_map>
 
+
+struct PerSocketData {
+    int roomId;
+};
+typedef uWS::WebSocket<false, true, PerSocketData> socket;
+
 uWS::App *globalApp;
 
-/*void broadcast(std::string s){
-    globalApp->publish("broadcast", s, uWS::OpCode::TEXT, false);
-}*/
+void broadcast(std::string roomId, std::string msg){
+    globalApp->publish(roomId, msg, uWS::OpCode::TEXT);
+}
+
+void message(void* conn /* should be a socket* */, std::string msg){
+	try{
+		static_cast<socket*>(conn)->send(msg, uWS::OpCode::TEXT);
+	} catch(std::exception &e){
+		std::cout << e.what() << std::endl;
+	}
+}
+
+std::string getAddr(void* conn){
+	return static_cast<std::string>(static_cast<socket*>(conn)->getRemoteAddressAsText());
+}
 
 int main() {
-    std::unordered_map < int, room > rooms; // room map
+    std::unordered_map < int, room* > rooms; // room map
 
     uWS::App app = uWS::App().ws<PerSocketData>("/*", {
         /* Settings */
@@ -43,11 +61,12 @@ int main() {
                     return;
                 }
                 if(rooms.find(roomId) == rooms.end()){
-                    rooms[roomId] = {};
+                    rooms[roomId] = new room(roomId);
                 }
-                rooms.at(roomId).join(ws,
+                rooms.at(roomId)->join(ws,
                     static_cast<std::string>(message.substr(message.find(',') + 1).substr(4, message.substr(message.find(',')+1).find(',') - 4)));
                 ws->getUserData()->roomId = roomId;
+                ws->subscribe(message.substr(2, message.find(',') - 2)); // room id
             } else if(ws->getUserData()->roomId != -1){
                 int roomId = ws->getUserData()->roomId;
                 if(rooms.find(roomId) == rooms.end()){
@@ -59,13 +78,13 @@ int main() {
                     if(message.find("guess") != std::string::npos){
                         int guess = std::stoi(static_cast<std::string>(message.substr(message.find("guess") + 5,
                             message.substr(message.find("guess") + 5).find(','))));
-                        rooms.at(roomId).setLastGuess(std::pair<int, socket*>(guess, ws));
+                        rooms.at(roomId)->setLastGuess(std::pair<int, socket*>(guess, ws));
                     }
                     if(message.find("getcubes") != std::string::npos){
-                        ws->send(rooms.at(roomId).getCubes(ws), uWS::OpCode::TEXT);
+                        ws->send(rooms.at(roomId)->getCubes(ws), uWS::OpCode::TEXT);
                     }
                     if(message.find("start") != std::string::npos){
-                        rooms.at(roomId).start(ws);
+                        rooms.at(roomId)->start(ws);
                     }
                 } catch(std::exception &e){
                     std::cout << e.what() << std::endl;
@@ -82,7 +101,10 @@ int main() {
         },
         .close = [&rooms](socket *ws, int code, std::string_view /*message*/) {
             if(ws->getUserData()->roomId != -1){
-                rooms.at(ws->getUserData()->roomId).leave(ws);
+                if(rooms.at(ws->getUserData()->roomId)->leave(ws)){
+                	delete rooms.at(ws->getUserData()->roomId);
+					rooms.erase(ws->getUserData()->roomId);
+			    }
             }
         }
     }).listen(9001, [](auto *listen_socket) {
