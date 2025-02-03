@@ -1,3 +1,5 @@
+# compile command should look like: g++ -o main main.cpp uWebsockets/uSockets/*.o -lssl -lcrypto -lz
+# vps arch: -march=neoverse-n1+crc+crypto+ssbs (maybe with clang++)
 # Compiler
 CC = g++
 # Compiler flags

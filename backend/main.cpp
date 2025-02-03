@@ -1,7 +1,3 @@
-/* compile command: g++ -o main main.cpp -lusockets -lz */
-/* vps arch: -march=neoverse-n1+crc+crypto+ssbs */
-
-
 #include "uWebsockets/src/App.h"
 #include <unordered_map>
 #include <vector>
