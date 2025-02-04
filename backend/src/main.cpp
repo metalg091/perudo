@@ -1,6 +1,9 @@
 #include "uWebSockets/src/App.h"
 #include "game.hpp"
+#include "uWebSockets/src/WebSocketProtocol.h"
+#include <string>
 #include <unordered_map>
+#include <vector>
 
 
 struct PerSocketData {
@@ -11,12 +14,13 @@ typedef uWS::WebSocket<false, true, PerSocketData> socket;
 uWS::App *globalApp;
 
 void broadcast(std::string roomId, std::string msg){
-	globalApp->publish(roomId, msg, uWS::OpCode::TEXT);
+	std::cout << "broadcasting to " << roomId << " " << msg << std::endl;
+	globalApp->publish(roomId, msg, uWS::OpCode::TEXT, false);
 }
 
 void message(void* conn /* should be a socket* */, std::string msg){
 	try{
-		static_cast<socket*>(conn)->send(msg, uWS::OpCode::TEXT);
+		static_cast<socket*>(conn)->send(msg, uWS::OpCode::TEXT, false);
 	} catch(std::exception &e){
 		std::cout << e.what() << std::endl;
 	}
@@ -24,6 +28,43 @@ void message(void* conn /* should be a socket* */, std::string msg){
 
 std::string getAddr(void* conn){
 	return static_cast<std::string>(static_cast<socket*>(conn)->getRemoteAddressAsText());
+}
+
+struct BinMsg {
+    int target;
+    union {
+        std::string name;
+        int guess;
+    };
+
+    BinMsg(int t, const std::string& n) : target(t), name(n) {}
+    BinMsg(int t, int g) : target(t), guess(g) {}
+    ~BinMsg() {
+        /*if (target == 1) {
+            name.~basic_string(); // i think this would be a double free
+        }*/
+    }
+};
+
+void invalidMessage(socket* ws,const std::string& msg){
+	std::cout << ws->getRemoteAddressAsText() << " " << msg << " " << std::endl;
+	ws->send("400 - Invalid message", uWS::OpCode::TEXT);
+}
+
+bool isRoomReal(const std::unordered_map<int, room*>& rooms, socket* ws, const std::string&& logmsg){
+	if(rooms.find(ws->getUserData()->roomId) == rooms.end()){
+		invalidMessage(ws, logmsg);
+		return false;
+	}
+	return true;
+}
+
+bool hasRoom(const std::unordered_map<int, room*>& rooms, socket* ws, const std::string&& logmsg){
+	if(ws->getUserData()->roomId == -1){
+		invalidMessage(ws, logmsg);
+		return false;
+	}
+	return true;
 }
 
 int main() {
@@ -45,50 +86,63 @@ int main() {
 			ws->getUserData()->roomId = -1;
 		},
 		.message = [&rooms](socket *ws, std::string_view message, uWS::OpCode opCode) {
-			if(message.rfind("jr", 0) == 0){
-				int roomId;
-				try{
-					roomId = std::stoi(static_cast<std::string>(message.substr(2, message.find(',') - 2)));
-				}
-				catch(std::exception &e){
-					std::cout << ws->getRemoteAddressAsText() << " tried join a room " << " but have not provided valid room id" << std::endl;
-					ws->send("400 - Invalid room id", uWS::OpCode::TEXT);
+			if(opCode == uWS::OpCode::BINARY){
+				std::vector<uint8_t> data(message.begin(), message.end());
+				if(data.size() < 4){
+					invalidMessage(ws, "sent an invalid binmsg (<4)");
 					return;
 				}
-				if( (message.find(',') == std::string::npos) || message.substr(message.find(',')+1).rfind("name", 0) != 0){
-					std::cout << ws->getRemoteAddressAsText() << " tried join room " << roomId << " but have not provided name" << std::endl;
-					ws->send("400 - Name not provided", uWS::OpCode::TEXT);
-					return;
-				}
-				if(rooms.find(roomId) == rooms.end()){
-					rooms[roomId] = new room(roomId);
-				}
-				rooms.at(roomId)->join(ws,
-					static_cast<std::string>(message.substr(message.find(',') + 1).substr(4, message.substr(message.find(',')+1).find(',') - 4)));
-				ws->getUserData()->roomId = roomId;
-				ws->subscribe(message.substr(2, message.find(',') - 2)); // room id
-			} else if(ws->getUserData()->roomId != -1){
-				int roomId = ws->getUserData()->roomId;
-				if(rooms.find(roomId) == rooms.end()){
-					ws->send("404 - Room vanished!", uWS::OpCode::TEXT);
-					std::cout << ws->getRemoteAddressAsText() << " got assign a non existent room " << roomId <<  std::endl;
-					return;
-				}
-				try{
-					if(message.find("guess") != std::string::npos){
-						int guess = std::stoi(static_cast<std::string>(message.substr(message.find("guess") + 5,
-							message.substr(message.find("guess") + 5).find(','))));
-						rooms.at(roomId)->setLastGuess(std::pair<int, socket*>(guess, ws));
-					}
-					if(message.find("getcubes") != std::string::npos){
-						ws->send(rooms.at(roomId)->getCubes(ws), uWS::OpCode::TEXT);
-					}
-					if(message.find("start") != std::string::npos){
-						rooms.at(roomId)->start(ws);
-					}
-				} catch(std::exception &e){
-					std::cout << e.what() << std::endl;
-					return;
+				int target = *reinterpret_cast<const int*>(data.data());
+				// must declare all variables before switch
+				int roomId, guess;
+				std::string* name;
+				switch (target) {
+					case 0: // start
+						if(!hasRoom(rooms, ws, "user tried to start a room before joining one") || !isRoomReal(rooms, ws, "user tried to start not existing room")){
+							return;
+						}
+						rooms.at(ws->getUserData()->roomId)->start(ws);
+						break;
+					case 1: // join room
+						if(data.size() < 9){ // 4 bytes for target, 4 bytes for room id, at least 1 byte for name
+							invalidMessage(ws, "sent an invalid binmsg (join room)");
+							return;
+						}
+						if(hasRoom(rooms, ws, "joining room despite being in one")){
+							return;
+						}
+						roomId = *reinterpret_cast<const int*>(data.data() + 4);
+						if(rooms.find(roomId) == rooms.end()){
+							rooms[roomId] = new room(roomId);
+						}
+						name = new std::string(reinterpret_cast<const char*>(data.data() + 8), data.size() - 8);
+						if(rooms.at(roomId)->join(ws, *name)){
+							ws->getUserData()->roomId = roomId;
+							ws->subscribe(std::to_string(roomId));
+						}
+						delete name;
+						break;
+					case 2: //guess
+						if(data.size() < 8){
+							invalidMessage(ws, "sent an invalid binmsg (guess)");
+							return;
+						}
+						if(!hasRoom(rooms, ws, "tried to guess without being in a room") || !isRoomReal(rooms, ws, "tried to guess in a non existent room")){
+							return;
+						}
+						guess = *reinterpret_cast<const int*>(data.data() + 4);
+						rooms.at(ws->getUserData()->roomId)->setLastGuess(std::pair<int, socket*>(guess, ws));
+						break;
+					case 3: // getcubes
+						if(!hasRoom(rooms, ws, "tried to get cubes without being in a room") || !isRoomReal(rooms, ws, "tried to get cubes in a non existent room")){
+							return;
+						}
+						ws->send(rooms.at(ws->getUserData()->roomId)->getCubes(ws), uWS::OpCode::TEXT);
+						break;
+					default:
+						std::cout << ws->getRemoteAddressAsText() << " sent an invalid binmsg (unknown target) " << message << std::endl;
+						ws->send("400 - Invalid message", uWS::OpCode::TEXT);
+						break;
 				}
 			}
 		},
