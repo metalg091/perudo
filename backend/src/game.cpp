@@ -2,9 +2,13 @@
 #include <iostream>
 #include <string>
 
-bool room::join(void* conn, std::string name){
+bool room::join(void* conn, std::string& name){
 	if(started){
 		message(conn, "started");
+		return false;
+	}
+	if(players.find(conn) != players.end()){
+		message(conn, "already in room");
 		return false;
 	}
 	getAllUser();
@@ -41,6 +45,9 @@ std::string room::getCubes(void* conn){
 }
 
 void room::setLastGuess(std::pair<int, void*> &&p) {
+	if(!started){
+		return;
+	}
 	std::string msg = "guess" + std::to_string(p.first) + ",by" + std::to_string(getId(p.second));
 	if(p.first % 10 == 7 || p.first % 10 == 8){
 		msg += "res";

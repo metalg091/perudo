@@ -14,7 +14,7 @@ public:
 	room (int roomId) : roomId(roomId) {}
 	~room (){}
 
-	bool join(void* conn, std::string name);
+	bool join(void* conn, std::string& name);
 	int lastGuessValue();
 	std::string getCubes(void* conn);
 	void setLastGuess(std::pair<int, void*> &&p);
